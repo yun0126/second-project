@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<script src="//cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
+	<style>
+		h3 {
+			text-align: center;
+			color: #667380;
+			;
+		}
+
+		table {
+			margin: 20px auto;
+			border-collapse: collapse;
+			width: 80%;
+			background-color: white;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 12px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #667380;
+			;
+			color: white;
+		}
+
+		select,
+		input[type="text"] {
+			width: 100%;
+			padding: 8px;
+			margin-top: 5px;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-sizing: border-box;
+		}
+
+		textarea {
+			width: 100%;
+			height: 200px;
+			padding: 10px;
+			margin: 8px 0;
+			display: inline-block;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+			border-radius: 5px;
+			resize: none;
+		}
+
+		table button {
+			background-color: #667380;
+			;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #0066cc;
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	<h3 style="margin-top:30px;">[ 게시물 수정 ]</h3>
+	<table style="text-align: center;" border="1">
+		<tr>
+			<td>제목</td>
+			<td><input type="text" id="bqiTitle" placeholder="게시물 제목"></td>
+		</tr>
+		<tr>
+			<td>상품카테고리</td>
+			<td id="type"></td>
+		</tr>
+		<tr id="detail-name">
+			<td>상품명</td>
+			<td id="productName"></td>
+		</tr>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<!-- ckEditor 불러오는 곳 테이블태그로 게시물올리는듯한 모양주면 그럴듯하겠지 ?-->
+			<td>
+				<textarea name="contents" id="contents"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="button-container">
+				<button onclick="updateBoard()">수정</button>
+				<button onclick="history.back()">취소</button>
+			</td>
+		</tr>
+	</table>
+
+
+	<script>
+		let boardFiles;
+		let uiNum;
+		let boardRes;	// 밑에 piNum 가져올때 사용
+		window.addEventListener('load', async function () {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+
+			// 선택한 게시물에 해당하는 정보를 요청함
+			const res = await fetch('/board-qna-infos/[[${param.bqiNum}]]');
+			const boardInfo = await res.json();
+			console.log(boardInfo);
+			boardRes = boardInfo;
+			boardFiles = boardInfo.boardFiles;
+			uiNum = boardInfo.uiNum;
+			document.querySelector('#bqiTitle').value = boardInfo.bqiTitle;
+
+			//CKEDITOR 시작하는곳
+			//{}는 옵션들임 추가하거나 삭제가능함	
+			CKEDITOR.replace('contents', {
+				filebrowserUploadUrl: '/upload-img',
+				font_names:
+					'맑은 고딕/Malgun Gothic;굴림/Gulim;돋움/Dotum;바탕/Batang;궁서/Gungsuh;Arial/Arial;Comic Sans MS/Comic Sans MS;Courier New/Courier New;Georgia/Georgia;Lucida Sans Unicode/Lucida Sans Unicode;Tahoma/Tahoma;Times New Roman/Times New Roman;MS Mincho/MS Mincho;Trebuchet MS/Trebuchet MS;Verdana/Verdana',
+				font_defaultLabel: '맑은 고딕/Malgun Gothic',
+				fontSize_defaultLabel: '12',
+			});
+			//set사용하면 안에있는 내용을 집어넣을수있음 contents는 태그 id임 
+			CKEDITOR.instances.contents.setData(boardInfo.bqiContent);
+			//-----------------------타입가져오는곳 async써야지 밑에 길이를 구해올수가있어서..----------------------------------
+			const res2 = await fetch('/type-infos');
+			let html = '';
+			const objs = await res2.json();
+			// 상품 타입이랑 상품명을 텍스트로 불러옴
+			document.querySelector('#type').innerHTML = boardInfo.tiName;
+			document.querySelector('#productName').innerHTML = boardInfo.piName;
+
+		})
+
+		// 수정 버튼 눌렀을때
+		function updateBoard() {
+			const piNum = boardRes.piNum;
+
+			const data = {
+				bqiTitle: document.querySelector('#bqiTitle').value,
+				bqiContent: CKEDITOR.instances.contents.getData(),
+				piNum: piNum,
+				bqiNum: '[[${param.bqiNum}]]',
+				uiNum: uiNum,
+				boardFiles: boardFiles
+			}
+
+			console.log(data);
+			let json = JSON.stringify(data);
+
+			const xhr = new XMLHttpRequest();
+			xhr.open('PATCH', '/board-qna-infos');		///update-board-qna 이게 원래
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						alert("수정이 완료되었습니다.");
+						window.location.href = `/fbs/qna/view?bqiNum=[[${param.bqiNum}]]`;
+					} else {
+						alert("수정 오류")
+					}
+				}
+			}
+			xhr.send(json);
+		}
+
+	</script>
+</body>
+
+</html>

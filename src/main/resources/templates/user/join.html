@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="/css/navbar.css" rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+	<title>Document</title>
+	<style>
+		body {
+			font-family: 'Arial', sans-serif;
+			background-color: #f5f5f5;
+			margin: 0;
+			padding: 0;
+		}
+
+		.join-container {
+			text-align: left;
+			max-width: 450px;
+			margin-top: 50px;
+			padding: 20px;
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.join-container input {
+			margin-bottom: 10px;
+		}
+
+		.join-container h1 {
+			font-size: 20px;
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}
+
+
+		.labelText {
+			text-align: left;
+		}
+
+		.join-container label:contains("(필수)") {
+			color: red;
+		}
+
+		.join-container input:required::placeholder,
+		.join-container select:required::placeholder {
+			color: red;
+		}
+
+		.join-container label:not(:contains("(필수)")) {
+			color: black;
+		}
+
+		.joinType {
+			color: red;
+			font-size: 15px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- nav header modal(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<div class="join-container container">
+		<div class="container" style="width: 80%;">
+			<div class="row">
+				<div>
+					<img th:src="@{/imgs/logo2.png}" onclick="location.href='/'" alt="logo" width="200px"
+						class="logo" />
+				</div>
+				<div>
+					<h1 style="text-align: center;">회원가입</h1>
+				</div>
+			</div>
+			<label for="uiId">아이디</label><label class="joinType"> *</label>
+			<input id="uiId" class="form-control" placeholder="아이디">
+
+			<label>비밀번호</label><label class="joinType"> *</label><br>
+			<input id="uiPwd" class="form-control" type="password" placeholder="비밀번호">
+
+			<label>비밀번호 확인</label><label class="joinType"> *</label><br>
+			<input id="uiPwdCheck" class="form-control" type="password" placeholder="비밀번호 확인">
+			<button onclick="doubleCheck()" id="checkBtn" class="btn btn-outline-success">확인</button><br>
+			<label>이름</label><label class="joinType"> *</label><br>
+			<input id="uiName" class="form-control" placeholder="이름">
+
+			<label>핸드폰</label><label class="joinType"> *</label><br>
+			<input id="uiPhone" class="form-control" placeholder="핸드폰">
+			<label>이메일</label><label class="joinType"> *</label><br>
+			<input id="uiEmail" class="form-control" type="email" placeholder="이메일">
+
+			<label>생일</label><label class="joinType"> *</label><br>
+			<input id="uiBirth" class="form-control" type="date" placeholder="생일">
+
+			<label>성별</label><label class="joinType"> *</label><br>
+			<select id="uiGender" class="form-select">
+				<option value="">성별을 선택해주세요</option>
+				<option value="M">남자</option>
+				<option value="F">여자</option>
+			</select>
+			<br>
+			<div class="container text-center">
+				<button onclick="join()" class="btn btn-outline-info">회원가입</button>
+			</div>
+		</div>
+	</div>
+	<!-- footer-fragment / script-fragment -->
+
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	<script>
+		let isPasswordOk = false;
+		async function join() {
+			let emailVaildation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			let phoneRule = /^(01[016789]{1})[0-9]{3,4}[0-9]{4}$/;
+
+
+			if (document.querySelector('#uiId').value == '') {
+				alert('아이디를 입력해주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiId').value.length < 4) {
+				alert('아이디는 4자이상 입력해주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiPwd').value == '') {
+				alert('비밀번호를 입력해주세요');
+				return;
+			}
+			if (document.querySelector('#uiPwd').value.length < 4) {
+				alert('비밀번호는 4자이상 입력해주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiName').value == '') {
+				alert('이름을 입력해주세요');
+				return;
+			}
+			if (document.querySelector('#uiName').value.length < 3) {
+				alert('이름은 3자 이상 입력해주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiPhone').value == '') {
+				alert('핸드폰 번호를 입력해주세요');
+				return;
+			}
+
+			if (!phoneRule.test(document.querySelector('#uiPhone').value)) {
+				alert('핸드폰 번호를 제대로 입력해주세요');
+				return;
+			}
+
+			if (!emailVaildation.test(document.querySelector('#uiEmail').value)) {
+				alert('이메일을 입력해주시거나 제대로 입력해주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiBirth').value == '') {
+				alert('생년월일을 골라주세요');
+				return;
+			}
+
+			if (document.querySelector('#uiGender').value == '') {
+				alert('성별을 선택해주세요');
+				return;
+			}
+			let birth = document.querySelector('#uiBirth').value
+			birth = birth.replaceAll('-', '');
+
+
+			const data = {
+				uiId: document.querySelector('#uiId').value,
+				uiPwd: document.querySelector('#uiPwd').value,
+				uiName: document.querySelector('#uiName').value,
+				uiPhone: document.querySelector('#uiPhone').value,
+				uiEmail: document.querySelector('#uiEmail').value,
+				uiBirth: birth,
+				uiGender: document.querySelector('#uiGender').value,
+			}
+			if (isPasswordOk) {
+				const res = await fetch('/join', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json;charset=UTF-8'
+					},
+					body: JSON.stringify(data)
+				})
+
+				const resObjs = await res.json();
+
+				if (res.status === 200) {
+					alert(resObjs.uiId);
+					if (resObjs.uiId == "중복된 아이디가 있습니다") {
+						return;
+					}
+					location.href = '/';
+				} else {
+					alert('에러');
+				}
+			} else {
+				alert('비밀번호 확인을 진행해주세요');
+			}
+
+		}
+
+		function doubleCheck() {
+			const uiPwd = document.querySelector('#uiPwd').value;
+
+			const uiPwdCheck = document.querySelector('#uiPwdCheck').value;
+
+			if (uiPwd == "") {
+				console.log(uiPwd);
+				alert('비밀번호를 입력해주세요');
+				return;
+			}
+
+			if (uiPwdCheck == "") {
+				alert('비밀번호 확인을 입력해주세요');
+				return;
+			}
+
+			if (uiPwd == uiPwdCheck) {
+				alert('비밀번호 일치');
+				isPasswordOk = true;
+			} else {
+				alert('비밀번호 불일치');
+			}
+		}
+
+	</script>
+</body>
+
+</html>

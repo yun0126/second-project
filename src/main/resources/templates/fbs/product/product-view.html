@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- head 태그들 -->
+<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+
+<head>
+	<title>Zay Shop - Product Detail Page</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link th:href="@{/css/starpreview.css}" rel="stylesheet" />
+	<link rel="apple-touch-icon" th:href="@{/assets/img/apple-icon.png}">
+
+	<link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/templatemo.css}">
+	<link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+
+	<!-- Load fonts style after rendering the layout styles -->
+	<link rel="stylesheet"
+		href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+	<link rel="stylesheet" th:href="@{/assets/css/fontawesome.min.css}">
+
+	<!-- Slick -->
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/slick.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/assets/css/slick-theme.css}">
+	<style>
+		#productDetail {
+			height: 70vh;
+
+		}
+
+		.product-wap.card.rounded-0 {
+			height: 500px;
+		}
+
+		.product-wap.card {
+			height: 100%;
+		}
+
+		/* 간격 테스트 
+		.viewCon{
+			height: 70vh;
+			width: auto;
+		} */
+
+
+
+
+		.c-badge {
+			background-color: #35b69f;
+			color: white;
+			height: 20px;
+			font-size: 11px;
+			width: 92px;
+			border-radius: 5px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			margin-top: 2px;
+		}
+
+		.comment-text {
+			font-size: 13px;
+		}
+
+		.wish {
+
+			color: #35b69f;
+		}
+
+
+		.user-feed {
+
+			font-size: 14px;
+			margin-top: 12px;
+		}
+
+		#thumbnailContainer img {
+			height: 100px;
+		}
+
+		#ProductImgBox img {
+			height: 70vh;
+		}
+
+		#productDetail {
+			height: 70vh;
+		}
+
+		/* 컨텐츠가 넘치지 않도록 설정 */
+		.card {
+			height: auto;
+
+
+		}
+
+
+		@media (max-width: 1200px) {
+
+
+
+			#productDetail,
+			#ProductImgBox {
+				width: 100%;
+				/* 부모 컨테이너의 너비에 맞게 설정 */
+				height: 100% auto;
+				/* 높이를 내용에 맞춰서 자동 조절 */
+				overflow: hidden;
+
+			}
+
+			#prodBtn button {
+				flex: 1;
+				margin-bottom: 10px;
+			}
+
+			#prodBtn button:last-child {
+				margin-bottom: 0;
+			}
+
+
+
+			.btn {
+				width: 100%;
+				/* 버튼 너비를 부모 컨테이너에 맞춤 */
+				margin-bottom: 10px;
+				/* 버튼 아래 여백 추가 */
+			}
+
+		}
+
+		/* 중간 크기의 화면과 큰 화면에 대한 스타일 */
+		@media (min-width: 992px) {
+			.card {
+				height: auto;
+			}
+		}
+
+		/* 소형 화면에 대한 스타일 */
+		@media (max-width: 768px) {
+
+			#productDetail,
+			#ProductImgBox {
+				width: 100%;
+				height: auto;
+				overflow: hidden;
+
+				#prodBtn {
+					display: flex;
+					flex-direction: column;
+				}
+
+			}
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+
+	<!-- Modal -->
+	<div class="modal fade bg-white" id="templatemo_search" tabindex="-1" role="dialog"
+		aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="w-100 pt-1 mb-5 text-right">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<form action="" method="get" class="modal-content modal-body border-0 p-0">
+				<div class="input-group mb-2">
+					<input type="text" class="form-control" id="inputModalSearch" name="q" placeholder="Search ...">
+					<button type="submit" class="input-group-text bg-success text-light">
+						<i class="fa fa-fw fa-search text-white"></i>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- Open Content -->
+
+
+	<!-- Start Content -->
+
+	<section class="bg-light">
+		<div class="container pb-5">
+			<div class="row">
+				<div class="col-lg-5 mt-5">
+					<div class="productView">
+						<div id="prod">
+							<div id="ProductImgBox" style="width:100%;">
+
+							</div>
+							<div id="thumbnailContainer">
+
+							</div>
+						</div>
+					</div>
+					<div class="card mb-3">
+					</div>
+					<div class="row">
+					</div>
+				</div>
+				<!-- col end -->
+
+				<div class="col-lg-7 mt-5">
+					<div class="card">
+						<div class="card-body" id="productDetail">
+							상품명 : <span id="piNames"></span><br>
+							가격 : <span id="piPrice"></span>원<br>
+							<p class="py-2">
+							<div id="star"></div>
+							평점 : <span class="list-inline-item text-dark" id="Rating"></span>
+							</p>
+							<ul class="list-inline">
+								<li class="list-inline-item">
+									종류 : <strong><span id="type-subtype"></span></strong>
+								</li>
+							</ul>
+
+							<h6>상세 정보:</h6>
+							<div id="piDesc" placeholder="상품 상세 설명" disabled style="text-align: center;"></div> <br>
+							<ul class="list-inline">
+								<li class="list-inline-item">
+									<h6>색상 :</h6>
+								</li>
+								<li class="list-inline-item">
+									<strong>Black</strong></p>
+								</li>
+							</ul>
+
+
+							<input type="hidden" name="product-title" value="Activewear">
+							<div class="row">
+								<div class="col-auto">
+									<ul class="list-inline pb-3">
+										<li class="list-inline-item">사이즈 :
+											<input type="hidden" name="product-size" id="product-size" value="S">
+										</li>
+										<li class="list-inline-item"><span class="btn btn-success btn-size">S</span>
+										</li>
+										<li class="list-inline-item"><span class="btn btn-success btn-size">M</span>
+										</li>
+										<li class="list-inline-item"><span class="btn btn-success btn-size">L</span>
+										</li>
+										<li class="list-inline-item"><span class="btn btn-success btn-size">XL</span>
+										</li>
+									</ul>
+								</div>
+								<div class="col-auto">
+									<ul class="list-inline pb-3">
+										<li class="list-inline-item text-right">
+											수량
+											<input type="hidden" name="product-quanity" id="product-quanity" value="1">
+										</li>
+										<li class="list-inline-item"><span class="btn btn-success"
+												id="btn-minus">-</span></li>
+										<li class="list-inline-item"><span style="padding: 1.35em 1.65em;"
+												class="badge bg-secondary" id="var-value">1</span></li>
+										<li class="list-inline-item"><span class="btn btn-success"
+												id="btn-plus">+</span></li>
+									</ul>
+								</div>
+							</div>
+
+							<div class="row pb-3">
+								<div id="prodBtn" sec:authorize="hasRole('ROLE_USER')">
+									<div class="col d-grid">
+										<button type="submit" class="btn btn-success btn-lg" name="submit" id="pay"
+											onclick="shopping()">구매하기</button>
+									</div><br>
+									<div class="col d-grid">
+										<button type="submit" class="btn btn-success btn-lg" name="submit" id="cart"
+											onclick="insertCart()">장바구니 담기</button>
+									</div>
+								</div>
+								<div sec:authorize="isAnonymous()" class="row">
+									<h3 style="text-align: center; font-size: calc(1.1rem + .6vw); ">상품 구매는 로그인후 이용해주세요
+									</h3> <button class="btn btn-success" onclick="location.href='/user/login'"
+										style="margin-left: 10px;">Login</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<div class="container mt-5 mb-5">
+		<div class="row height d-flex justify-content-center align-items-center">
+
+			<div class="card" style="width: 100%;">
+				<div class="p-3">
+					<h6>Comments<span id="count"></span></h6>
+				</div>
+				<div class="mt-2" id="comment">
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class"container-center">
+		<div class="row">
+			<ul class="pagination pagination-lg justify-content-center" id="pageDiv">
+
+			</ul>
+		</div>
+	</div>
+	<!-- End Content -->
+
+	<!-- Start Article -->
+	<section class="py-5">
+		<div class="container">
+			<div class="row text-left p-2 pb-3">
+				<h4>추천 상품</h4>
+			</div>
+
+			<!--Start Carousel Wrapper-->
+			<div id="carousel-related-product">
+				<!-- ㅇㅅㅇ -->
+				<div class="p-2 pb-3" style="height: 400px;">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg1">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView1">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body1">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star1">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice1"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3" style="height: 400px;">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg2">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView2">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body2">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star2">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice2"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0" style="height: 300px;">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg3">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView3">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body3">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star3">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice3"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg4">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView4">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body4">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star4">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice4"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg5">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView5">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body5">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star5">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice5"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg6">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView6">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body6">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star6">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice6"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg7">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView7">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body7">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star7">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice7"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg8">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView8">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body8">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star8">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice8"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg9">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView9">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body9">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star9">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice9"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg10">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView10">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body10">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star10">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice10"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg11">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView11">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body11">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star11">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice11"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg12">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView12">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body12">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star12">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice12"></p>
+						</div>
+					</div>
+				</div>
+
+				<div class="p-2 pb-3">
+					<div class="product-wap card rounded-0">
+						<div class="card rounded-0">
+							<img class="card-img rounded-0 img-fluid" src="" id="cardImg13">
+							<div
+								class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+								<ul class="list-unstyled" id="CartView13">
+
+								</ul>
+							</div>
+						</div>
+						<div class="card-body" id="card-body13">
+							<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+								<li>M/L/X/XL</li>
+								<li class="pt-2">
+									<span class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+									<span
+										class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+								</li>
+							</ul>
+							<ul class="list-unstyled d-flex justify-content-center mb-1">
+								<li id="star13">
+
+								</li>
+							</ul>
+							<p class="text-center mb-0" id="piPrice13"></p>
+						</div>
+					</div>
+				</div>
+
+
+
+
+			</div>
+		</div>
+	</section>
+
+	<!-- End Article -->
+
+	<!-- footer-fragment / script-fragment -->
+	<th:block th:replace="fragments/footer-fragment :: footer-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<!-- Start Slider Script -->
+	<script th:src="@{/assets/js/slick.min.js}"></script>
+	<script>
+		let total = 0;
+		let pageSize = 10;
+		const blockSize = 10;
+
+		let prodInfo;
+		let currentImageIndex = 0;
+
+		function showImage(index) {
+			const images = document.querySelectorAll('[id^="ProductImgBox"] img');
+			currentImageIndex = (index + images.length) % images.length;
+
+			images.forEach((image, i) => {
+				image.style.display = i === currentImageIndex ? 'block' : 'none';
+			});
+
+			updateThumbnails(); // 메인 이미지 변경 시 썸네일도 업데이트
+		}
+
+		function updateThumbnails() {
+			const thumbnailsContainer = document.querySelector('#thumbnailContainer');
+			thumbnailsContainer.innerHTML = ''; // 기존 썸네일 지우기
+			if (prodInfo.productFiles.length > 1) {
+
+				for (let i = 0; i < prodInfo.productFiles.length; i++) {
+					const thumbnailSrc = prodInfo.productFiles[i].pfiImgPath;
+					const thumbnail = document.createElement('img');
+					thumbnail.src = thumbnailSrc;
+					thumbnail.style.width = '80px'; // 썸네일의 너비를 필요에 맞게 조절
+
+
+					// 클릭 시 메인 이미지 변경
+					thumbnail.onclick = () => showImage(i);
+
+					thumbnailsContainer.appendChild(thumbnail);
+				}
+			}
+		}
+
+		//이미지가 2장일 경우 슬라이드 형태로 설정
+		function nextImage() {
+			showImage(currentImageIndex + 1);
+		}
+
+		function prevImage() {
+			showImage(currentImageIndex - 1);
+		}
+
+		// 해당 상품의 상세정보 불러오기
+		window.addEventListener('load', async function () {
+
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+
+
+			const res = await fetch('/product-infos/[[${param.piNum}]]');
+			const productInfo = await res.json();
+
+			prodInfo = productInfo;
+			document.querySelector('#piNames').innerHTML = productInfo.piName; // 상품 이름
+			document.querySelector('#piPrice').innerHTML = productInfo.piPrice; // 상품 가격
+			document.querySelector('#piDesc').innerHTML = productInfo.piDesc; // 상품 설명
+			for (let i = 0; i < productInfo.productFiles.length; i++) {
+				const productFile = productInfo.productFiles[i];
+				let html = `<div id="ProductImgBox${i + 1}">`
+					+ `<img src="${productFile.pfiImgPath}" id="img${i + 1}" style="width:100%;">`
+					+ `<input type="hidden" id="sort${i + 1}" value="${productFile.pfiSort}" readonly>`;
+
+				document.querySelector('#ProductImgBox').insertAdjacentHTML('beforeend', html);
+			}
+
+			// 이미지가 2장이상일 경우 슬라이드 설정
+			if (productInfo.productFiles.length > 1) {
+				document.querySelector('#ProductImgBox').innerHTML += `
+				<br>
+	            <button onclick="prevImage()">◀</button>
+	            <button onclick="nextImage()">▶</button>
+	        `;
+			} else {
+				document.querySelector('#ProductImgBox').innerHTML += '<br>';
+			}
+
+			updateThumbnails();
+			showImage(0); // 처음 이미지를 초기에 표시
+
+			const AvgRes = await fetch(`/comment-info/average?piNum=[[${param.piNum}]]`);
+			console.log(AvgRes);
+			const average = await AvgRes.text();
+			const avg = Number(average);
+
+
+			let html = '';
+			if (avg != 0) {
+				document.querySelector('#Rating').innerText = average + '/5.0';
+
+			} else {
+				document.querySelector('#Rating').innerText = '해당 상품에 대한 평점이 없습니다.';
+			}
+
+			for (let is = 0; is < avg; is++) {
+				html += `<i class="text-warning fa fa-star"></i>`
+			}
+			for (let j = 0; j < 5 - avg; j++) {
+				html += `<i class="text-muted fa fa-star"></i>`
+			}
+			document.querySelector('#star').innerHTML = html;
+
+			const CntRes = await fetch(`/comment-infos/count?piNum=[[${param.piNum}]]`);
+			console.log(CntRes);
+			const counts = await CntRes.text();
+			console.log(counts);
+
+			if (counts != 0) {
+				document.querySelector('#count').innerText = '(' + (counts) + ')';
+			} else {
+				document.querySelector('#count').innerText = '(' + (counts) + ')';
+				document.querySelector('#comment').style.textAlign = 'center';
+				document.querySelector('#comment').innerHTML = '작성된 리뷰가 없습니다.<br><br><br>';
+			}
+
+			const slideRes = await fetch('/product-infos');
+			const productSlide = await slideRes.json();
+
+			const productFiles = [];
+
+			let slidehtml = '';
+			//랜덤으로 16개 상품 골라와서 추천상품에 보여줍니다
+			for (let i = 0; i < 13; i++) {
+				const product = productSlide[Math.floor(Math.random() * productSlide.length)];
+				if (productFiles.includes(product)) {
+					i--;
+				} else {
+					productFiles.push(product);
+					//평점평균구해서 별개수 표시. 리뷰개수 표현하기
+
+					//이미지
+					document.querySelector(`#cardImg${i + 1}`).src = product.pfiImgPath;
+
+
+					//상품보기랑 장바구니 담기
+					slidehtml = `		
+										<li><a class="btn btn-success text-white mt-2" href="/fbs/product/product-view?piNum=${product.piNum}"><i
+												class="far fa-eye"></i></a></li>
+										<li><a class="btn btn-success text-white mt-2" href="#" onclick="insertCart2(${product.piNum})"><i
+												class="fas fa-cart-plus"></i></a></li>`
+
+					document.querySelector(`#CartView${i + 1}`).insertAdjacentHTML("beforeend", slidehtml);
+
+					//제목
+					slidehtml = `<a href="/fbs/product/product-view?piNum=${product.piNum}" class="h3 text-decoration-none">${product.piName}</a>`;
+					document.querySelector(`#card-body${i + 1}`).insertAdjacentHTML("afterbegin", slidehtml);
+
+					const AvgRes = await fetch(`/comment-info/average?piNum=${product.piNum}`);
+					const average = await AvgRes.text();
+					const avg = Number(average);
+					slidehtml = ''
+					for (let is = 0; is < avg; is++) {
+						slidehtml += `<i class="text-warning fa fa-star"></i>`
+					}
+					for (let j = 0; j < 5 - avg; j++) {
+						slidehtml += `<i class="text-muted fa fa-star"></i>`
+					}
+
+					//별점
+					document.querySelector(`#star${i + 1}`).insertAdjacentHTML("beforeend", slidehtml);
+
+					//가격
+					document.querySelector(`#piPrice${i + 1}`).innerText = product.piPrice + ' 원';
+					document.querySelector(`#card-body${i + 1}`).addEventListener("click", function () {
+
+						location.href = `/fbs/product/product-view?piNum=${product.piNum}`;
+
+					})
+					document.querySelector(`#card-body${i + 1}`).style.cursor = "pointer";
+				}
+
+			}
+
+			const typeRes = await fetch(`/subtype-infos/type?piNum=[[${param.piNum}]]`);
+			const productType = await typeRes.json();
+
+			let typeHtml = `${productType.stiName}/${productType.tiName}`;
+			document.querySelector('#type-subtype').innerHTML = typeHtml;
+		})
+
+		// 페이지 load할때 상품 이미지를 가져오기 위한 함수
+		function preview(input, imgId, pfiNum) {
+
+			document.querySelector(`#${imgId}`).src = URL.createObjectURL(input.files[0]);
+		}
+
+		//상품 쇼핑카트에 추가
+		async function insertCart() {
+			const cart = {
+				piNum: prodInfo.piNum,
+				scAmount: Number($("#var-value").html()) // 상품 구매 수량
+			}
+			const res = await fetch('/shopping-carts', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(cart)
+			});
+			const text = await res.json();
+			if (text == 1) {
+				// 상품 쇼핑카트에 추가시 확인 메시지
+				if (confirm("장바구니에 추가 되었습니다. 장바구니로 이동하시겠습니까?") == true) {
+					//장바구니 화면으로 이동하게하기
+					location.href = '/fbs/shoppingcart/cart-list';
+				} else {
+					location.href = '/fbs/product/product-list';
+				}
+			}
+		}
+		//구매하기
+		async function shopping() {
+			location.href = `/fbs/order/order-buy?piNum=${prodInfo.piNum}&amount=${document.querySelector('#product-quanity').value}`;
+		}
+
+		const getComments = async function (evt, page) {
+			if (!page) {
+				page = 1;
+			}
+			let url = `/comment-infos/[[${param.piNum}]]/helper?page=${page}&pageSize=${pageSize}`;
+			const res = await fetch(url);
+			const json = await res.json();
+			console.log(json);
+			const totalCnt = json.total; //102
+			const pageBlock = Math.ceil(totalCnt / pageSize); //21
+			let pageHtml = '';
+			const startBlock = (Math.ceil(page / blockSize) - 1) * blockSize + 1; // 1
+			let endBlock = startBlock + blockSize - 1; // 10
+			if (endBlock > pageBlock) { // 10 > 21
+				endBlock = pageBlock;
+			}
+			if (startBlock != 1) {
+				pageHtml += `<li class="page-item">
+                            	<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="javascript:void(0)" tabindex="-1" onclick="getComments(event,${startBlock - 1})">◀</a>
+							 </li>`;
+			}
+			for (let i = startBlock; i <= endBlock; i++) {
+				pageHtml += `<li class="page-item">
+                            	<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="javascript:void(0)" tabindex="-1" onclick="getComments(event,${i})">${i}</a>    
+							</li>`
+			}
+			if (endBlock < pageBlock) { // 10 <= 21
+				pageHtml += `<li class="page-item">
+                            	<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="javascript:void(0)" tabindex="-1" onclick="getComments(event,${startBlock - 1})">▶</a>
+							 </li>`;
+			}
+			document.querySelector('#pageDiv').innerHTML = pageHtml;
+			let html = '';
+			for (const comment of json.list) {
+				html += '<div class="d-flex flex-row p-3">';
+				html += '<img src="https://secu-team5-bucket.s3.ap-northeast-2.amazonaws.com/27bafffa-3d26-4e74-a7d5-9bb7e1205c13.png" width="30" height="30" class="rounded-circle mr-3">';
+				html += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<div class="w-100">';
+				html += '<div class="d-flex justify-content-between align-items-center">';
+				html += '<div class="d-flex flex-row align-items-center">';
+				html += `<span class="mr-2">${comment.uiName}</span>&nbsp;&nbsp;&nbsp;`;
+				html += `<small class="c-badge">${comment.credat}</small><br><br>`;
+				html += '</div>';
+				html += '</div>';
+				html += `<p class="text-justify comment-text mb-0">${comment.ciContent}</p>`;
+				html += '<div class="d-flex flex-row user-feed">';
+				html += '<div id="review">';
+				html += '<fieldset>';
+				//상품 별점 구현
+				for (let i = 5; i >= 1; i--) {
+					const isChecked = `${comment.ciScore}` == i ? 'checked' : '';
+					const isDisabled = 'disabled';
+
+					html += `<input type="radio" name="reviewStar_${comment.ciNum}" value="${i}" id="rate${comment.ciNum}_${i}" ${isChecked} ${isDisabled}><label for="rate${comment.ciNum}_${i}" class="star">★</label>`;
+				}
+				html += '</fieldset>';
+				html += '</div>';
+				html += '</div>';
+				html += '</div>';
+				html += '</div>';
+			}
+			document.querySelector('#comment').innerHTML = html;
+
+
+		}
+
+		//상품 쇼핑카트에 추가
+		async function insertCart2(piNum) {
+			const pordRes = await fetch(`/product-infos/${piNum}`);
+			const prodInfo = await pordRes.json();
+
+			const cart = {
+				piNum: prodInfo.piNum,
+				scAmount: document.querySelector('#var-value').value // 상품 구매 수량
+			}
+			const res = await fetch('/shopping-carts', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(cart)
+			});
+			const text = await res.json();
+			if (text == 1) {
+				// 상품 쇼핑카트에 추가시 확인 메시지
+				if (confirm("장바구니에 추가 되었습니다. 장바구니로 이동하시겠습니까?") == true) {
+					//장바구니 화면으로 이동하게하기
+					location.href = '/fbs/shoppingcart/cart-list';
+				} else {
+					location.href = '/fbs/product/product-list';
+				}
+			}
+		}
+
+		window.addEventListener('load', getComments);
+
+
+
+	</script>
+	<script>
+		$('#carousel-related-product').slick({
+			infinite: true,
+			arrows: false,
+			slidesToShow: 4,
+			slidesToScroll: 4,
+			dots: true,
+			responsive: [{
+				breakpoint: 1024,
+				settings: {
+					slidesToShow: 3,
+					slidesToScroll: 3
+				}
+			},
+			{
+				breakpoint: 600,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 3
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 2,
+					slidesToScroll: 3
+				}
+			}
+			]
+		});
+	</script>
+</body>
+
+</html>

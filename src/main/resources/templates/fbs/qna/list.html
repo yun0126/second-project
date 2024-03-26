@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>FBSports 쇼핑몰</title>
+	<style>
+		@media (max-width: 1500px) {
+
+			table {
+				font-size: 12px;
+			}
+
+			th,
+			td {
+				padding: 8px;
+			}
+		}
+
+		h1 {
+			margin-top: 30px;
+			text-align: center;
+		}
+
+		h3 {
+			text-align: center;
+			color: #667380;
+			;
+		}
+
+		/* 게시판 테이블에 대한 스타일 정의 */
+		table {
+			border-spacing: 5px;
+			width: 100%;
+		}
+
+		th,
+		td {
+			border: 1px;
+			background-color: #f2f2f2;
+			text-align: center;
+			padding: 10px;
+		}
+
+		th {
+			background-color: #667380;
+			;
+			text-align: center;
+			color: white;
+		}
+
+		td:nth-child(3) {
+			text-align: center;
+		}
+
+		td:nth-child(1) {
+			width: 70px;
+		}
+
+		/* 컨테이너에 대한 스타일 정의 */
+		.container {
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			width: 70%;
+		}
+
+		/* 테이블 컨테이너에 대한 스타일 정의 */
+		.boardTable {
+			margin-top: 30px;
+			flex: 1;
+			margin-right: 20px;
+		}
+
+		.addButton {
+			float: right;
+			padding: 8px;
+			margin-top: 5px;
+			background-color: #667380;
+			;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+
+		}
+
+		#pageDiv {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-top: 10px;
+		}
+
+		#searchDiv {
+			display: flex;
+			align-items: center;
+			margin-bottom: 5px;
+			float: right;
+		}
+
+
+		#type {
+			padding: 8px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+		}
+
+		#bqiTitle {
+			padding: 8px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			flex: 1;
+			/* Take up remaining space in the flex container */
+		}
+
+		#searchButton {
+			padding: 8px;
+			background-color: #667380;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+
+
+		@media (max-width: 1000px) {
+
+			/* 작은 화면일때 채팅방 크기 */
+			.chat-container {
+				width: 100%;
+			}
+
+			thead {
+				font-size: 18px;
+				max-width: auto;
+				width: 100vh auto;
+			}
+
+
+
+			td:nth-child(1) {
+				width: 70px;
+			}
+
+			td:nth-child(2) {
+				width: 100px;
+			}
+
+			td:nth-child(3) {
+				text-align: center;
+				width: 60px;
+			}
+
+			td:nth-child(4) {
+				width: 100px;
+			}
+
+			td:nth-child(7) {
+				width: 70px;
+
+			}
+
+			.boardTable {
+				min-width: 300px;
+				width: 100%;
+			}
+
+			#bqiTitle {
+				padding: 8px;
+				border: 1px solid #ddd;
+				border-radius: 5px;
+				min-width: 300;
+				width: 100%
+			}
+
+			table {
+				width: 100%;
+			}
+			
+			
+		/*  th     */
+
+			th {
+				padding: 1px;
+			}
+
+			th:nth-child(1) {
+			}
+			th:nth-child(2) {}
+
+			th:nth-child(3) {
+			
+			}
+
+			td:nth-child(7) {}
+
+
+	
+
+			th:nth-child(2) {
+				display: none;
+			}
+
+			th:nth-child(4) {
+				display: none;
+			}
+
+			th:nth-child(5) {
+				display: none;
+			}
+
+			/*  td     */
+			td:nth-child(3) {
+				text-align: center;
+			}
+
+			td:nth-child(2) {
+				display: none;
+			}
+
+			td:nth-child(4) {
+				display: none;
+			}
+
+			td:nth-child(5) {
+				display: none;
+			}
+			
+			}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+
+	<div class="container text-center">
+
+		<div class="boardTable">
+			<h1>문의 하기</h1>
+			<div id="searchDiv">
+				<select id="type" onchange="getBoards()">
+					<option value="">상품목</option>
+				</select>
+				<input type="text" id="bqiTitle"><button id="searchButton" onclick="getBoards()">검색</button>
+			</div>
+			<table border="1">
+
+				<thead>
+					<th>번호</th>
+					<th>작성자</th>
+					<th>제목</th>
+					<th>품목</th>
+					<th>상품명</th>
+					<th>작성일</th>
+					<th>답변여부</th>
+				</thead>
+				<tbody id="tBody"></tbody>
+			</table>
+			<button class="addButton" onclick="location.href='/fbs/qna/add'">게시물 등록</button>
+			<div id="pageDiv"></div>
+
+		</div>
+	</div>
+	<script>
+		let total = 0;
+		let pageSize = 10;
+		const blockSize = 10;
+
+		//페이징 관련 로직 조회, 검색, 페이징 기능 까지
+		const getBoards = async function (evt, page) {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+			const CouponRes = await fetch('/coupon-infos');
+			const Couponobjs = await CouponRes.text();
+
+			if (Couponobjs != '') {
+				Couponjson = JSON.parse(Couponobjs);
+				let Couponhtml = Couponjson.length;
+				document.querySelector('#coupon').innerText = Couponhtml;
+			}
+
+			const Type = document.querySelector('#type');
+			const tiName = Type.options[Type.selectedIndex].value;
+			console.log(tiName);
+			if (!page) {
+				page = 1;
+			}
+			console.log(page);
+			let url = `/board-qna-infos/helper?page=${page}&pageSize=${pageSize}`;
+			url += `&bqiTitle=${document.querySelector('#bqiTitle').value}`;
+			url += `&tiName=${tiName}`
+			const res = await fetch(url);
+			const json = await res.json();
+			console.log('JSON Response:', json);
+			const totalCnt = json.total; //102
+			console.log(totalCnt);
+			const pageBlock = Math.ceil(totalCnt / pageSize); //21
+			console.log(pageBlock);
+			let pageHtml = '';
+			const startBlock = (Math.ceil(page / blockSize) - 1) * blockSize + 1; // 1
+			console.log(startBlock);
+			let endBlock = startBlock + blockSize - 1; // 10
+			if (endBlock > pageBlock) { // 10 > 21
+				endBlock = pageBlock;
+			}
+			if (startBlock != 1) {
+				pageHtml += `<a href="javascript:void(0)" onclick="getBoards(event,${startBlock - 1})">◀</a>`;
+			}
+			for (let i = startBlock; i <= endBlock; i++) {
+				pageHtml += `<a href="javascript:void(0)" onclick="getBoards(event,${i})"><b>[ ${i} ]</b></a>`;
+			}
+			if (endBlock < pageBlock) { // 10 <= 21
+				pageHtml += `<a href="javascript:void(0)" onclick="getBoards(event,${endBlock + 1})">▶</a>`;
+			}
+			document.querySelector('#pageDiv').innerHTML = pageHtml;
+			console.log(json.list);
+			let html = '';
+			for (const boardInfo of json.list) {
+				html += '<tr>';
+				html += `<td>${boardInfo.bqiNum}</td>`;
+				html += `<td class="cell">${boardInfo.uiName}</td>`;
+				html += `<td><a href='/fbs/qna/view?bqiNum=${boardInfo.bqiNum}' onclick="updatePostView(${boardInfo.bqiNum})">${boardInfo.bqiTitle}</a></td>`;
+				html += `<td class="cell">${boardInfo.tiName}</td>`
+				html += `<td class="cell">${boardInfo.piName}</td>`;
+				html += `<td>${boardInfo.credat}</td>`;
+				// 각각의 게시물에 대한 답변 여부 확인
+				html += '<td>';
+				if (boardInfo.rpiContent !== null && boardInfo.rpiContent !== '') {
+					html += '답변 완료';
+				} else {
+					html += '답변 대기';
+				}
+				html += '</td>';
+
+				html += '</tr>';
+			}
+			document.querySelector('#tBody').innerHTML = html;
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', '/type-infos');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						let html = '';
+						html += `<option value="">상품 타입</option>`
+						const objs = JSON.parse(xhr.responseText);
+						for (let obj of objs) {
+							if (obj.tiName === tiName) {
+								html += `<option value="${obj.tiName}" selected>${obj.tiName}</option>`;
+							} else {
+								html += `<option value="${obj.tiName}">${obj.tiName}</option>`;
+							}
+						}
+						document.querySelector('#type').innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+		}
+
+		window.addEventListener('load', getBoards);
+	</script>
+</body>
+
+</html>

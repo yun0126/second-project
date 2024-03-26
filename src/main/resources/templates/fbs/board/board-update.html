@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<script src="//cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
+	<style>
+		h3 {
+			text-align: center;
+			color: cornflowerblue;
+			
+		}
+
+		table {
+			margin: 20px auto;
+			border-collapse: collapse;
+			width: 80%;
+			background-color: white;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 12px;
+			text-align: center;
+		}
+
+		th {
+			background-color: cornflowerblue;
+			color: white;
+		}
+
+		select,
+		input[type="text"] {
+			width: 100%;
+			padding: 8px;
+			margin-top: 5px;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-sizing: border-box;
+		}
+
+		textarea {
+			width: 100%;
+			height: 200px;
+			padding: 10px;
+			margin: 8px 0;
+			display: inline-block;
+			border: 1px solid #ccc;
+			box-sizing: border-box;
+			border-radius: 5px;
+			resize: none;
+		}
+
+		table button {
+			background-color: cornflowerblue;
+			color: white;
+			padding: 10px 15px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #0066cc;
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	<h3 style="margin-top:30px;">[ 게시물 수정 ]</h3>
+	<table style="text-align: center;" border="1">
+		<tr>
+			<td>제목</td>
+			<td><input type="text" id="biTitle" placeholder="게시물 제목"></td>
+		</tr>
+		<tr>
+			<td>상품카테고리</td>
+			<td>
+				<select id="type" onchange="selectProductName()">
+
+				</select>
+			</td>
+		</tr>
+		<tr id="detail-name">
+			<td>상품명</td>
+			<td>
+				<select id="productName">
+					<option value="" selected>상품타입을 선택해 주세요</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<!-- ckEditor 불러오는 곳 테이블태그로 게시물올리는듯한 모양주면 그럴듯하겠지 ?-->
+			<td>
+				<textarea name="contents" id="contents"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td class="button-container">
+				<button onclick="updateBoard()">수정</button>
+				<button>취소</button>
+			</td>
+		</tr>
+	</table>
+	<script>
+		let boardFiles;
+		let uiNum;
+		window.addEventListener('load', async function () {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+
+			const res = await fetch('/board-infos/[[${param.biNum}]]');
+			const boardInfo = await res.json();
+			console.log(boardInfo);
+			boardFiles = boardInfo.boardFiles;
+			uiNum = boardInfo.uiNum;
+			document.querySelector('#biTitle').value = boardInfo.biTitle;
+
+			//CKEDITOR 시작하는곳
+			//{}는 옵션들임 추가하거나 삭제가능함	
+			CKEDITOR.replace('contents', {
+				filebrowserUploadUrl: '/upload-img',
+				font_names:
+					'맑은 고딕/Malgun Gothic;굴림/Gulim;돋움/Dotum;바탕/Batang;궁서/Gungsuh;Arial/Arial;Comic Sans MS/Comic Sans MS;Courier New/Courier New;Georgia/Georgia;Lucida Sans Unicode/Lucida Sans Unicode;Tahoma/Tahoma;Times New Roman/Times New Roman;MS Mincho/MS Mincho;Trebuchet MS/Trebuchet MS;Verdana/Verdana',
+				font_defaultLabel: '맑은 고딕/Malgun Gothic',
+				fontSize_defaultLabel: '12',
+				height: 500
+			});
+			//set사용하면 안에있는 내용을 집어넣을수있음 contents는 태그 id임 
+			CKEDITOR.instances.contents.setData(boardInfo.biContent);
+			//-----------------------타입가져오는곳 async써야지 밑에 길이를 구해올수가있어서..----------------------------------
+			const res2 = await fetch('/type-infos');
+			let html = '';
+			html += `<option value="" selected>상품 타입</option>`
+			const objs = await res2.json();
+			for (let obj of objs) {
+				html += `<option value="${obj.tiName}">${obj.tiName}</option>`;
+			}
+			//--------------------------------------------------------------------
+			document.querySelector('#type').innerHTML = html;
+
+			//수정시에 선택이되야하는것이기때문에 선택하기위한 로직
+			const Type = document.querySelector('#type');
+			//값이없는 첫번째는 빼야하므로 -1
+			const len = Type.options.length - 1;
+			console.log(len);
+			for (let i = 0; i < len; i++) {
+				if (Type.options[i].value == boardInfo.tiName) {
+					Type.options[i].selected = true;
+					selectProductName(boardInfo);
+				}
+			}
+
+		})
+
+
+
+		function updateBoard() {
+			const ProductName = document.querySelector('#productName');
+			const piNum = ProductName.options[ProductName.selectedIndex].value;
+
+
+			const data = {
+				biTitle: document.querySelector('#biTitle').value,
+				biContent: CKEDITOR.instances.contents.getData(),
+				piNum: piNum,
+				biNum: '[[${param.biNum}]]',
+				uiNum: uiNum,
+				boardFiles: boardFiles
+			}
+
+			console.log(data);
+			let json = JSON.stringify(data);
+			const xhr = new XMLHttpRequest();
+			xhr.open('PATCH', '/board-infos');
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						const res = xhr.responseText;
+						if (res > 0) {
+							alert('수정완료');
+							location.href = '/fbs/board/board-view?biNum=[[${param.biNum}]]';
+						}
+					}
+				}
+			}
+			xhr.send(json);
+
+		}
+
+		//상품카테고리를 선택했을때 어떤 상품인지 선택할수 있게 하는곳
+		async function selectProductName(boardInfo) {
+			const Type = document.querySelector('#type');
+			const tiName = Type.options[Type.selectedIndex].value;
+			console.log(tiName);
+
+			const res = await fetch(`/product-infos/helper?tiName=${tiName}`);
+
+			let html = '';
+			html += `<option value="" selected>상품명</option>`
+			const objs = await res.json();
+
+			for (let obj of objs.list) {
+				html += `<option value="${obj.piNum}">${obj.piName}</option>`;
+			}
+
+			document.querySelector('#productName').innerHTML = html;
+
+			//매개변수로 boardInfo가 들어왔을때
+			if (boardInfo) {
+				const productName = document.querySelector('#productName');
+				const len = productName.options.length - 1;
+				console.log(len);
+				console.log(boardInfo);
+				for (let i = 0; i < len; i++) {
+					if (productName.options[i].value == boardInfo.piNum) {
+						productName.options[i].selected = true;
+					}
+				}
+
+			}
+		}
+
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.qna.mapper.BoardAdminInfoMapper">
+
+<!-- 게시글 상세 보기-->
+<select id="selectBoardInfo" resultType="com.secu.team5.qna.vo.BoardAdminInfoVO">
+    SELECT * FROM BOARD_QNA_INFO BQI
+    INNER JOIN USER_INFO UI ON UI.UI_NUM = BQI.UI_NUM
+    LEFT JOIN PRODUCT_INFO PI ON PI.PI_NUM = BQI.PI_NUM 
+    LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM 
+    LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM
+    LEFT JOIN REPLY_INFO RPI ON RPI.BQI_NUM = BQI.BQI_NUM
+    WHERE 
+        BQI.BQI_NUM = #{bqiNum};
+</select>
+
+<!-- 답변이 달려있는지 없는지 체크하는 부분(답변이 없는데 수정은 불가능 하기때문)-->
+<select id="replyCountByBqiNum" resultType="int" parameterType="com.secu.team5.qna.vo.BoardQnAInfoVO">
+        SELECT COUNT(*) FROM REPLY_INFO WHERE BQI_NUM = #{bqiNum}
+</select>
+
+<!-- 답글 등록하는 부분-->
+<insert id="insertBoardInfo" useGeneratedKeys="true" keyColumn="RPI_NUM" keyProperty="rpiNum">
+	INSERT INTO REPLY_INFO(UI_NUM,PI_NUM,BQI_NUM, RPI_CONTENT)
+	VALUES(#{uiNum},#{piNum},#{bqiNum},#{rpiContent})	
+</insert>
+	
+	<!--답글 수정하는 부분-->
+<update id="updateBoardInfo" parameterType="com.secu.team5.qna.vo.BoardAdminInfoVO">
+	UPDATE REPLY_INFO
+	SET RPI_CONTENT = #{rpiContent}
+	WHERE RPI_NUM = #{rpiNum}
+</update>
+
+<!-- 답글 삭제하는 부분-->
+<delete id="deleteBoardInfo" parameterType="com.secu.team5.qna.vo.BoardQnAInfoVO">
+	DELETE FROM REPLY_INFO WHERE RPI_NUM=#{rpiNum}
+</delete>
+
+<!-- 모든 유저가 올린 게시글들을 조회하는 부분 및 페이징 처리-->
+<select id="selectBoardInfosWithHelper" resultType="com.secu.team5.qna.vo.BoardQnAInfoVO">
+	SELECT BQI.BQI_NUM, BQI.BQI_TITLE, BQI.BQI_CONTENT, BQI.UI_NUM, UI.UI_NAME, PI.PI_NAME, PI.PI_NUM, TI.TI_NAME, TI.TI_NUM,
+    DATE_FORMAT(BQI.BQI_CREDAT, '%Y-%m-%d') CREDAT, DATE_FORMAT(STR_TO_DATE(BQI.BQI_CRETIM, '%h%i%s'), '%h:%i:%s') CRETIM, RPI_CONTENT
+    FROM BOARD_QNA_INFO BQI
+    INNER JOIN USER_INFO UI ON BQI.UI_NUM = UI.UI_NUM
+    LEFT JOIN PRODUCT_INFO PI ON PI.PI_NUM = BQI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM
+	LEFT JOIN REPLY_INFO RPI ON RPI.BQI_NUM = BQI.BQI_NUM
+	<where>
+		<if test='bqiTitle != null and bqiTitle != ""'>
+        	AND BQI_TITLE LIKE CONCAT('%',#{bqiTitle},'%')
+    	</if>
+    	<if test='piName != null and piName != ""'>
+        	AND PI_NAME LIKE CONCAT('%',#{piName},'%')
+    	</if>
+    	<if test='tiName != null and tiName != ""'>
+			AND TI_NAME LIKE CONCAT('%',#{tiName},'%')
+    	</if>
+	</where>
+    	ORDER BY BQI_NUM DESC
+</select>
+
+<!--미답변 게시물 전체 조회 페이징-->
+<select id="selectBoardInfosWithHelperList" resultType="com.secu.team5.qna.vo.BoardQnAInfoVO">
+	SELECT BQI.BQI_NUM, BQI.BQI_TITLE, BQI.BQI_CONTENT, BQI.UI_NUM, UI.UI_NAME, PI.PI_NAME, PI.PI_NUM, TI.TI_NAME, TI.TI_NUM,
+    DATE_FORMAT(BQI.BQI_CREDAT, '%Y-%m-%d') CREDAT, DATE_FORMAT(STR_TO_DATE(BQI.BQI_CRETIM, '%h%i%s'), '%h:%i:%s') CRETIM, RPI_CONTENT
+    FROM BOARD_QNA_INFO BQI
+    INNER JOIN USER_INFO UI ON BQI.UI_NUM = UI.UI_NUM
+    LEFT JOIN PRODUCT_INFO PI ON PI.PI_NUM = BQI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM
+	LEFT JOIN REPLY_INFO RPI ON RPI.BQI_NUM = BQI.BQI_NUM
+	<where>
+		<if test='bqiTitle != null and bqiTitle != ""'>
+        	AND BQI_TITLE LIKE CONCAT('%',#{bqiTitle},'%')
+    	</if>
+    	<if test='piName != null and piName != ""'>
+        	AND PI_NAME LIKE CONCAT('%',#{piName},'%')
+    	</if>
+    	<if test='tiName != null and tiName != ""'>
+			AND TI_NAME LIKE CONCAT('%',#{tiName},'%')
+    	</if>
+		<if test='rpiContent == null or rpiContent == ""'>
+            AND RPI.RPI_CONTENT IS NULL
+        </if>
+	</where>
+    	ORDER BY BQI_NUM DESC
+</select>
+
+</mapper>

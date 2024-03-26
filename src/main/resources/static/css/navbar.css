@@ -1,0 +1,332 @@
+* {
+	padding: 0;
+	margin: 0;
+	}
+/* 리스트랑 링크에 파란색 지우기*/
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+}
+#login-admin {
+	width: 70%;
+}
+#login-user {
+	width: 100%;
+}
+.contaner {
+	overflow-x: hidden;
+}
+
+.logo-search-container {
+    display: flex;
+    align-items: center;
+    margin-top: 1%;
+}
+
+#userInfo {
+	text-align: right;
+	margin-top: 1%;
+}
+
+#userInfo a {
+	text-decoration: none;
+	color: #9B9B9B;
+	font-size: 15px;
+	cursor: pointer;
+}
+
+.logo-container {
+	margin-left: 30%;
+	margin-right: 0%;
+}
+
+.logo {
+	cursor: pointer;
+}
+
+.search-bar {
+	display: flex;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+#searchInput {
+	padding: 10px;
+	width: 200px;
+	margin-right: 10px;
+}
+
+#searchButton {
+	padding: 10px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+.search {
+	margin-left: 10px;
+	margin-top: 20px;
+}
+
+.search form {
+	display: flex;
+	align-items: center;
+}
+
+.search input {
+	padding: 10px;
+	width: 250px;
+	border: 3px solid cornflowerblue;
+	/* Add a border for better visibility */
+	border-radius: 5px;
+	/* Add rounded corners */
+}
+
+.search button {
+	background-color: white;
+	color: rgb(255, 255, 255);
+	cursor: pointer;
+	border-width: initial;
+	border-style: none;
+	border-color: initial;
+	border-image: initial;
+	border-radius: 5px;
+}
+
+
+.search>form>button>img {
+	width: 20px;
+	margin-left: -35px;
+}
+
+/* 헤더 */
+.header {
+	width: 70%;
+	background-color: white;
+	height: 144px;
+	font-weight: bold;
+	margin-bottom: 45px;
+
+
+}
+
+.header-admin {
+	background-color: lightsteelblue;
+	width: 70%;
+	height: 144px;
+	font-weight: bold;
+}
+
+
+
+.menu {
+	overflow: hidden;
+	margin-top: 7px;
+}
+
+
+.menu>li {
+	float: left;
+	width: 25%;
+	text-align: center;
+	line-height: 40px;
+
+}
+
+/* 상단바 리스트 한칸 */
+.menu a {
+	line-height: 75px;
+	color: black;
+	display: block;
+}
+
+/* 리스트에 마우스 올렸을때 효과 */
+li a:hover {
+	background-color: ghostwhite;
+
+	color: cornflowerblue;
+}
+
+.submenu {
+	height: 0;
+	overflow: hidden;
+	border-top: none;
+}
+
+.submenu>li {
+	line-height: 40px;
+	background-color: white;
+	border-bottom: 1px solid #ccc;
+
+}
+
+.menu>li:hover {
+	color: cornflowerblue;
+	transition-duration: 0.5s;
+	position: relative;
+	z-index: 1;
+}
+
+.menu>li:hover .submenu {
+	height: 225px;
+	transition-duration: 1s;
+}
+
+/* 푸터*/
+.footer {
+	width: 100%;
+	height: 100px;
+	background-color: cornflowerblue;
+}
+
+/* 푸터 텍스트*/
+.footer p {
+	color: white;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100%;
+
+}
+
+/* 하단 마우스클릭시 상품 보여주는 부분 */
+.rollwrap {
+	width: 100%;
+	height: 300px;
+	position: relative;
+	margin-bottom: 25px;
+}
+
+/* 좌우 방향버튼 */
+.rollwrap>button {
+	display: block;
+	position: absolute;
+	width: 20px;
+	height: 115%;
+	top: 0;
+	border: 0;
+	cursor: pointer;
+}
+
+/* 왼쪽 버튼 */
+.rollwrap>button.roll_left {
+	background: url(../imgs/btn_left.png) no-repeat center center;
+	background-size: 20px;
+	margin-left: 6%;
+	cursor: pointer;
+	margin-top: 1%;
+
+}
+
+/* 오른쪽 버튼 */
+.rollwrap>button.roll_right {
+	background: url(../imgs/btn_right.png) no-repeat center center;
+	background-size: 20px;
+	margin-left: 91%;
+	cursor: pointer;
+	margin-top: 1%;
+}
+
+.rollwrap .roll {
+	width: 70%;
+	height: 100%;
+	margin-left: 180px;
+	overflow: hidden;
+}
+
+.rollwrap .roll ul {
+	width: 1000%;
+}
+
+.rollwrap .roll ul li {
+	float: left;
+	width: 210px;
+	height: 300px;
+	text-align: center;
+
+}
+
+.rollwrap .roll ul li img {
+	width: 150px;
+	height: 250px;
+	object-fit: cover;
+}
+
+/* 화면 너비 768px 미만일 때 스타일 */
+/* 클래스 명 같고 비율만 변경 */
+@media screen and (min-width: 769px) and (max-width:1059px) {}
+
+.slide {
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+
+}
+
+.slide_wrap {
+	display: flex;
+	transition: transform 0.5s ease;
+
+}
+
+.slide_item {
+
+	padding: 0;
+	width: flex;
+
+}
+
+.slide_item img {
+	width: 70%;
+	height: 400px;
+}
+
+/*왼쪽 버튼*/
+.button-list .left {
+	background: url(../imgs/previous.png) no-repeat center center;
+	background-size: contain;
+	width: 80px;
+	height: 80px;
+	border: none;
+	cursor: pointer;
+}
+
+/*오른쪽 버튼*/
+.button-list .right {
+	background: url(../imgs/next.png) no-repeat center center;
+	background-size: contain;
+	width: 50px;
+	height: 50px;
+	border: none;
+	cursor: pointer;
+}
+
+/* 스크롤바 없애기 */
+.slide::-webkit-scrollbar {
+	display: none;
+}
+
+.content_type {
+	text-align: left;
+	font-size: 25px;
+	font-weight: bold;
+	margin-left: 40px;
+	margin-bottom: 30px;
+	margin-top: 1%;
+	color: #333;
+}
+
+.content {
+	width: 70%;
+}
+
+
+.admin-text {
+	font-weight: bold;
+}

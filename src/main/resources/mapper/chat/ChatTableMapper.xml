@@ -1,0 +1,17 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.chat.mapper.ChatMapper">
+	
+	<!-- 여기는 채팅을 넣고 조회만 하는곳으로 생각했습니다. -->
+	<insert id="insertChat">
+		INSERT INTO CHAT_TABLE(UI_NUM, CT_CONTENT, CT_CREDAT, CT_ROOMNUM)
+		VALUES(#{uiNum}, #{ctContent}, DATE_FORMAT(NOW(), '%Y%m%d'),#{ctRoomnum})
+	</insert>
+	
+	<select id="selectChat">
+		SELECT CT.CT_CONTENT, UI.UI_ID FROM CHAT_TABLE CT INNER JOIN USER_INFO UI ON CT.UI_NUM = UI.UI_NUM ORDER BY CT.CT_NUM DESC LIMIT 5
+	</select>
+
+</mapper>

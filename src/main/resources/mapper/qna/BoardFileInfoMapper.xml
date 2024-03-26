@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.qna.mapper.BoardQnAFileInfoMapper">
+	<select id="selectBoardFileInfos" resultType="com.secu.team5.qna.vo.BoardQnAFileInfoVO">
+		SELECT BFI_NUM, BFI_NAME, BFI_FILE_PATH, BFI_SORT
+		FROM BOARD_FILE_INFO
+		WHERE BFI_NUM = #{bfiNum}
+	</select>
+	
+	<select id="selectBoardFileWithBiNum">
+		SELECT * FROM BOARD_FILE_INFO WHERE BQI_NUM= #{bqiNum}
+	</select>
+	<insert id="insertBoardFileInfo" parameterType="com.secu.team5.qna.vo.BoardQnAFileInfoVO">
+		INSERT BOARD_FILE_INFO(BFI_FILE_PATH, BFI_NAME, BQI_NUM, BFI_SORT)
+		VALUES(#{bfiFilePath},#{bfiName},#{bqiNum},#{bfiSort})
+	</insert>
+
+	<update id="updateBoardFileInfo">
+		UPDATE BOARD_FILE_INFO
+		<set>
+			<if test='bfiFilePath != null and bfiFilePath != ""'>
+				BFI_FILE_PATH = #{bfiFilePath},
+			</if>
+			<if test='bfiName != null and bfiName != ""'>
+				BFI_NAME = #{bfiName},
+			</if>
+			<if test='bfiSort != null and bfiSort != ""'>
+				BFI_SORT = #{bfiSort}
+			</if>
+		</set>
+		WHERE BFI_NUM = #{bfiNum}
+	</update>
+	
+	<delete id="deleteBoardFileInfo">
+		DELETE FROM BOARD_FILE_INFO WHERE BQI_NUM = #{bqiNum}
+	</delete>
+</mapper>

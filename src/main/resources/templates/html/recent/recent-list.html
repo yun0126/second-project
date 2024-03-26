@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-admin :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment-admin :: header-admin-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<h3>최근 본 상품</h3>
+	<table border="1">
+		<thead>
+			<th>번호</th>
+			<th>상품 이름</th>
+			<th>상품 가격</th>
+			<th>
+				<상세보기>
+			</th>
+		</thead>
+		<tbody id="tBody"></tbody>
+	</table>
+
+	<script>
+		window.addEventListener('load', function () {
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', '/recent-infos');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == xhr.DONE) {
+					if (xhr.status == 200) {
+						console.log(xhr.responseText);
+						const recents = JSON.parse(xhr.responseText);
+						let html = '';
+						let i = 1;
+						for (const recent of recents) {
+							html += '<tr>';
+							html += `<td>${i++}</td>`;
+							html += `<td>${recent.piName}</td>`;
+							html += `<td>${recent.piPrice}</td>`;
+							html += `<td><a href='/html/product/product-view?piNum=${recent.piNum}' onclick='addRecentInfo(${recent.piNum},23)'>[ 상세보기 ]</a></td>`;
+							html += '</tr>';
+						}
+						document.querySelector('#tBody').innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+		})
+
+		function addRecentInfo(piNum, uiNum) {
+			fetch('/add-recent', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					piNum: piNum,
+					uiNum: uiNum
+				}),
+			})
+		}
+		
+
+	</script>
+</body>
+
+</html>

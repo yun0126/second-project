@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<script src="//cdn.ckeditor.com/4.19.0/full/ckeditor.js"></script>
+	<style>
+		h3 {
+			text-align: center;
+			color: #667380;
+			;
+		}
+
+		table {
+			margin: 20px auto;
+			border-collapse: collapse;
+			width: 80%;
+			background-color: white;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		td {
+			border: 1px solid #ddd;
+			padding: 12px;
+			text-align: center;
+		}
+
+		input,
+		select,
+		textarea {
+			width: 100%;
+			padding: 8px;
+			margin-top: 5px;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			box-sizing: border-box;
+		}
+
+		.qnaAddBtn {
+			padding: 10px;
+			background-color: #667380;
+			;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	<h3 style="margin-top:30px;">게시물 작성하기</h3>
+	<table style="text-align: center;" border="1">
+		<tr>
+			<td>제목</td>
+			<td><input type="text" id="bqiTitle" placeholder="게시물 제목"></td>
+		</tr>
+		<tr>
+			<td>상품카테고리</td>
+			<td>
+				<select id="type" onchange="selectProductName()">
+
+				</select>
+			</td>
+		</tr>
+		<tr id="detail-name">
+			<td>상품명</td>
+			<td>
+				<select id="productName">
+					<option value="" selected>상품타입을 선택해 주세요</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>내용</td>
+			<!-- ckEditor 불러오는 곳 테이블태그로 게시물올리는듯한 모양주면 그럴듯하겠지 ?-->
+			<td>
+				<textarea name="contents" id="contents"></textarea>
+			</td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button onclick="addBoard()" class="qnaAddBtn">게시물 등록</button> <button onclick="history.back()"
+					class="qnaAddBtn">취소</button></td>
+		</tr>
+	</table>
+	<script>
+		//컨트롤러에 경로설정으로 서비스에 파일업로드까지 가능하도록설정하기
+		window.addEventListener('load', function () {
+			cartlength();
+			//CKEDITOR 시작하는곳
+			//{}는 옵션들임 추가하거나 삭제가능함	
+			CKEDITOR.replace('contents', {
+				filebrowserUploadUrl: '/upload-ck-img',
+				font_names:
+					'맑은 고딕/Malgun Gothic;굴림/Gulim;돋움/Dotum;바탕/Batang;궁서/Gungsuh;Arial/Arial;Comic Sans MS/Comic Sans MS;Courier New/Courier New;Georgia/Georgia;Lucida Sans Unicode/Lucida Sans Unicode;Tahoma/Tahoma;Times New Roman/Times New Roman;MS Mincho/MS Mincho;Trebuchet MS/Trebuchet MS;Verdana/Verdana',
+				font_defaultLabel: '맑은 고딕/Malgun Gothic',
+				fontSize_defaultLabel: '12',
+			});
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', '/type-infos');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						let html = '';
+						html += `<option value="" selected>상품 타입</option>`
+						const objs = JSON.parse(xhr.responseText);
+						for (let obj of objs) {
+							html += `<option value="${obj.tiName}">${obj.tiName}</option>`;
+						}
+						document.querySelector('#type').innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+		});
+
+		//게시물올리기
+		function addBoard() {
+			//내용확인용
+			console.log(CKEDITOR.instances.contents.getData());
+			const productName = document.querySelector('#productName');
+			if (productName.options[productName.selectedIndex].value == "") {
+				alert('상품카테고리 또는 상품명을 선택해주세요');
+				return;
+			}
+			if (document.querySelector('#bqiTitle').value == "") {
+				alert('상품 제목을 써주세요');
+				return;
+			}
+
+			const piNum = productName.options[productName.selectedIndex].value;
+
+			//유저의 uiNum은 spring Sercurity의 세션에서 가져오므로 서비스에서 처리함
+			const data = {
+				piNum: piNum,
+				bqiTitle: document.querySelector('#bqiTitle').value,
+				bqiContent: CKEDITOR.instances.contents.getData()
+			}
+			const json = JSON.stringify(data);
+			//xhr로 보드 객체 보내기
+			const xhr = new XMLHttpRequest();
+			xhr.open('POST', '/board-qna-infos');	///insert-board-qna 이게 원래
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState === 4) {
+					if (xhr.status === 200) {
+						if (xhr.responseText > 0) {
+							alert('등록완료');
+							location.href = '/fbs/qna/list';
+						}
+					}
+				}
+			}
+			xhr.send(json);
+
+			//이걸로 게시물 수정하면될듯
+			//CKEDITOR.instances.contents.setData('1');
+		}
+
+		//상품카테고리를 선택했을때 어떤 상품인지 선택할수 있게 하는곳
+		function selectProductName() {
+			const Type = document.querySelector('#type');
+			const tiName = Type.options[Type.selectedIndex].value;
+			console.log(tiName);
+
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', `/product-infos/helper?tiName=${tiName}`);
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						let html = '';
+						html += `<option value="" selected>상품명</option>`
+						const objs = JSON.parse(xhr.responseText).list;
+						for (let obj of objs) {
+							html += `<option value="${obj.piNum}">${obj.piName}</option>`;
+						}
+
+						document.querySelector('#productName').innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+		}
+
+		async function cartlength() {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+		}
+
+	</script>
+</body>
+
+</html>

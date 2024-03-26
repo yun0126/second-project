@@ -1,0 +1,53 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.comment.mapper.CommentInfoMapper">
+	<select id="selectCommentInfosbypiNum" resultType="com.secu.team5.comment.vo.CommentInfoVO">
+		SELECT * FROM COMMENT_INFO CI INNER JOIN USER_INFO UI ON CI.UI_NUM = UI.UI_NUM
+		LEFT JOIN ORDER_DETAIL_INFO ODI ON CI.ODI_NUM = ODI.ODI_NUM
+		WHERE PI_NUM = #{piNum}
+	</select>
+	
+	<select id="selectCommentInfosbypiNumWithHelper" resultType="com.secu.team5.comment.vo.CommentInfoVO">
+		SELECT UI.UI_NAME,CI.CI_NUM, CI.CI_CONTENT, CI.CI_SCORE, DATE_FORMAT(CI.CI_CREDAT, '%Y.%m.%d') CREDAT 
+		FROM COMMENT_INFO CI INNER JOIN USER_INFO UI ON CI.UI_NUM = UI.UI_NUM
+		LEFT JOIN ORDER_DETAIL_INFO ODI ON CI.ODI_NUM = ODI.ODI_NUM
+		WHERE PI_NUM = #{piNum}
+		ORDER BY CI.CI_CREDAT DESC
+	</select>
+	
+	<select id="selectCommentInfoswithCiNum" resultType="com.secu.team5.comment.vo.CommentInfoVO">
+		SELECT * FROM COMMENT_INFO 
+		WHERE CI_NUM = #{ciNum}
+	</select>
+	
+    <insert id="insertCommentInfo" parameterType="com.secu.team5.comment.vo.CommentInfoVO">
+        INSERT INTO COMMENT_INFO(UI_NUM, ODI_NUM, CI_CONTENT,CI_SCORE)
+		VALUES(#{uiNum},#{odiNum},#{ciContent},#{ciScore})
+    </insert>
+
+    <delete id="deleteCommentInfo">
+        DELETE FROM COMMENT_INFO WHERE CI_NUM = #{ciNum}
+    </delete>
+
+	<select id="selectMyCommentsWithHelper" resultType="com.secu.team5.comment.vo.CommentInfoVO">
+		SELECT * FROM COMMENT_INFO CI INNER JOIN USER_INFO UI ON CI.UI_NUM = UI.UI_NUM
+		WHERE CI.UI_NUM = #{uiNum} ORDER BY CI_NUM DESC
+	</select>
+	
+	<update id="updateMyComment" parameterType="com.secu.team5.comment.vo.CommentInfoVO">
+		UPDATE COMMENT_INFO
+		SET CI_CONTENT = #{ciContent},
+		CI_SCORE = #{ciScore}
+		WHERE CI_NUM = #{ciNum}
+	</update>
+	
+	<select id="checkInsertComment" parameterType="com.secu.team5.comment.vo.CommentInfoVO">
+		SELECT COUNT(*) &lt; 1 AS 'count'
+		FROM COMMENT_INFO CI 
+		INNER JOIN ORDER_DETAIL_INFO ODI ON CI.ODI_NUM = ODI.ODI_NUM
+		WHERE CI.ODI_NUM = #{odiNum}
+		AND ODI.PI_NUM = #{piNum}
+	</select>
+	
+</mapper>

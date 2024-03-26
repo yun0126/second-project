@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		h3 {
+			text-align: center;
+			color: #667380;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 70%;
+			margin: 20px auto;
+			background-color: #fff;
+			border: 1px solid #ddd;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #667380;
+			color: #fff;
+			border-bottom: 2px solid #ddd;
+			/* 헤더와 셀 구분선 */
+		}
+
+		td button {
+			padding: 10px;
+			margin: 5px;
+			background-color: #667380;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		td button:hover {
+			background-color: #485769;
+			/* 호버 시 더 어두운 색상으로 변경 */
+		}
+
+		#bqiNum {
+			padding: 15px;
+			color: #667380;
+			border-bottom: 2px solid #ddd;
+		}
+
+		#uiNum {
+			color: #888;
+		}
+
+		#bqiContent {
+
+		}
+
+
+
+		@media (max-width: 1000px) {
+			.container {
+				width: 100%;
+				padding: 0 15px;
+				/* 컨테이너에 대한 패딩 조정 */
+				box-sizing: border-box;
+			}
+
+			td:nth-child(4) {
+				display: none;
+			}
+
+			th:nth-child(4) {
+				display: none;
+			}
+
+			table {
+				width: 100%;
+				min-width: 300px;
+				margin: 20px auto;
+				/* 상단과 하단 마진 */
+				box-sizing: border-box;
+			}
+
+			#bqiContent img {
+				max-width: 100%;
+				height: auto;
+			}
+
+			th,
+			td {
+				padding: 3px;
+				white-space:  normal;
+				word-wrap: break-word;
+				
+			}
+			.bqiTitle{
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+			
+
+			#tiName {
+				/* ID를 가지고 직접 선택 */
+				display: none;
+			}
+			
+			th:nth-child(1){
+				width: 30%;
+			}
+			th:nth-child(2){
+				width: 30%;
+			}
+			th:nth-child(3){
+				width: 40%;
+			}
+
+			th:nth-child(4),
+			td:nth-child(4) {
+				/* 테이블의 네 번째 열을(카테고리) 숨김 */
+				display: none;
+			}
+
+
+			/* 버튼 스타일을 모바일 환경에 맞게 조정 (옵션) */
+			td button {
+				padding: 6px 10px;
+				margin: 5px;
+				font-size: 0.875rem;
+			}
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<h3 style="margin-top:30px;">[ 게시물 상세보기 ]</h3>
+	<div id="container">
+		<table border="1" style="text-align: center;">
+			<tr>
+				<td colspan="6" id="bqiNum"><input type="text" readonly></td>
+			</tr>
+			<tr>
+				<td id="uiNum"> </td>
+				<td id="bqiTitle"></td>
+				<td id="proName"></td> <!-- 왠진 모르겠는데 piName 하면 안됨-->
+				<td id="tiName"></td>
+			</tr>
+
+			<tr>
+				<td colspan="6" id="bqiContent"></td>
+			</tr>
+			<tr>
+				<td colspan="6" id="rpiContent"></td>
+			</tr>
+			<tr>
+				<td colspan="6"><button onclick="goUpdate()">수정</button><button
+						onclick="deleteBoard()">삭제</button><button
+						onclick="location.href='/fbs/qna/list'">게시판목록</button></td>
+			</tr>
+		</table>
+	</div>
+	<br>
+	<script>
+		let boardFiles;
+		// 게시물 상세 정보 불러옴
+		window.addEventListener('load', async function () {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+			const res = await fetch('/board-admin-infos/[[${param.bqiNum}]]');
+			console.log(res);
+			const boardInfo = await res.json();
+			console.log(boardInfo);
+			boardFiles = boardInfo.boardFiles;
+			console.log(boardFiles);
+			console.log(boardInfo.boardFiles);
+			document.querySelector('#bqiNum').innerHTML = `게시물 번호 : ${boardInfo.bqiNum}`;
+			document.querySelector('#uiNum').innerHTML = `작성자 : ${boardInfo.uiName}`;
+			document.querySelector('#bqiTitle').innerHTML = `제목 : ${boardInfo.bqiTitle}`;
+			document.querySelector('#bqiContent').innerHTML = boardInfo.bqiContent;
+			document.querySelector('#proName').innerHTML = `상품명 : ${boardInfo.piName}`;
+			document.querySelector('#tiName').innerHTML = `타입 : ${boardInfo.tiName}`;
+
+			//답변이 없으면 답변 대기중입니다. 라고 뜸
+			const rpiContent = document.querySelector('#rpiContent');
+			if (boardInfo.rpiContent) {
+				rpiContent.innerHTML = `답변 : ${boardInfo.rpiContent}`;
+			} else {
+				rpiContent.innerHTML = '답변 대기중입니다.';
+			}
+
+		})
+
+		// 업데이트 버튼 누르면 페이지 이동
+		function goUpdate() {
+			const bqiNum = '[[${param.bqiNum}]]';
+			location.href = `/fbs/qna/update?bqiNum=${bqiNum}`;
+		}
+
+		// 삭제 누르면 삭제
+		async function deleteBoard() {
+			const res = await fetch('/board-qna-infos/[[${param.bqiNum}]]', {
+				method: 'DELETE',
+			});
+			if (res.ok) {
+				alert('게시글 삭제 완료');
+				location.href = '/fbs/qna/list';
+			} else {
+				alert('삭제 도중 오류');
+			}
+		}
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+<!-- Start Top Nav -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block" id="templatemo_nav_top"
+	th:fragment="nav-Fragment">
+	<div class="container text-light">
+		<div class="w-100 d-flex justify-content-between">
+			<div>
+				<i class="fa fa-envelope mx-2"></i>
+				<a class="navbar-sm-brand text-light text-decoration-none"
+					href="mailto:info@company.com">song7692@naver.com</a>
+				<i class="fa fa-phone mx-2"></i>
+				<a class="navbar-sm-brand text-light text-decoration-none" href="#">010-020-0340</a>
+			</div>
+			<div sec:authorize="hasRole('ROLE_USER')">
+				<a href="/" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_ROOT')" style="text-decoration: none; color: white;"> 유저 페이지</a> | <span
+					th:text="${#authentication.principal.uiName}"></span> <span class="admin-text">관리자님</span>
+				| <a href="/fbs/user/mypage" style="text-decoration: none; color: white;">마이페이지</a> | <a href="/logout" style="text-decoration: none; color: white;">로그아웃</a>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- Close Top Nav -->

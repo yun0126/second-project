@@ -1,0 +1,244 @@
+.productView {
+	margin-top: 100px;
+	margin-bottom: 50px;
+	text-align: center;
+	width: 70%;
+	border: 1px solid #000;
+	padding: 20px;
+}
+
+.productView #ProductImgBox {
+	width: 500px;
+	margin-top: 50px;
+	overflow: hidden;
+}
+
+.productView #ProductImgBox img {
+	height: 500px;
+	;
+	margin-bottom: 20px;
+}
+
+.productView input {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: larger;
+	font-weight: bold;
+	margin: 30px;
+}
+
+.productView button img {
+	width: 100px;
+}
+
+.productView #pay img {
+	width: 200px;
+}
+
+.productView button {
+	border: none;
+	width: auto;
+	height: 100px;
+	cursor: pointer;
+	background-color: #ffffff;
+
+}
+
+.productView #prodBtn button {
+	height: auto;
+	margin-bottom: 10px;
+	padding: 20px;
+	font-size: larger;
+	font-weight: bold;
+	border: none;
+	box-sizing: border-box;
+}
+
+.productView #prodBtn #cart {
+	border: solid 2px dodgerblue;
+	color: skyblue;
+}
+
+.productView #prodBtn #pay {
+	background-color: dodgerblue;
+	border: solid 2px black;
+	color: white;
+}
+
+#prod {
+	display: flex;
+}
+
+#productDetail {
+	padding: 50px;
+	margin: 50px;
+	text-align: left;
+}
+
+
+#prodBtn {
+	margin-top: 20px;
+	display: flex;
+
+}
+
+#productDetail #logo {
+	width: 100px;
+	height: 50px;
+}
+
+#piNum {
+	font-weight: bold;
+	border: none;
+
+}
+
+#piDesc {
+	width: 100%;
+	height: 500px;
+	background-color: #e6e6e6;
+}
+
+#amount {
+	width: 30px;
+
+}
+
+#piPrice {
+	font-size: 30px;
+	color: blue;
+	border: none
+}
+
+#piNames {
+	font-size: 30px;
+	border: none;
+	border-bottom: solid 5px black;
+	text-align: center;
+}
+
+.sizeSelect {
+	width: 100%;
+	padding: 10px;
+	font-size: larger;
+	font-weight: bold;
+	background-color: whitesmoke;
+	border: none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+}
+
+textarea {
+	width: 100%;
+	padding: 10px;
+	font-size: larger;
+	font-weight: bold;
+	background-color: #e6e6e6;
+	border: none;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	resize: vertical;
+	/* 사용자가 세로로 크기를 조절할 수 있게 함 */
+}
+
+label {
+	display: block;
+	font-weight: bold;
+	margin-top: 10px;
+
+
+}
+
+.tabButton {
+	display: inline-block;
+	padding: 10px;
+	cursor: pointer;
+	background-color: antiquewhite;
+	border: 1px solid #ccc;
+	border-radius: 5px 5px 0 0;
+}
+
+.tabButton:hover {
+	background-color: #ddd;
+}
+
+/* 탭 내용 스타일 */
+.tabContent {
+	display: none;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 0 0 5px 5px;
+
+}
+
+/* 초기 탭 내용 스타일 */
+#descriptionTab {
+	display: block;
+}
+
+
+#thumbnailContainer {
+	display: flex;
+	flex-direction: column;
+	margin-top: 10px;
+}
+
+#thumbnailContainer img {
+	width: 50px;
+	/* 썸네일 이미지의 너비 조절 */
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+#btn {
+	text-align: center;
+}
+
+#updateBtn,
+#deleteBtn {
+	margin: 20px;
+	color: black;
+	font-weight: bold;
+	background-color: white;
+	border: solid 2px skyblue;
+	width: 100px;
+	height: 50px;
+}
+
+.comments {
+	border: 1px solid #ccc;
+	padding: 10px;
+	margin-top: 20px;
+	border-radius: 5px;
+}
+
+.comment-block {
+	border-bottom: 1px solid #ddd;
+	padding-bottom: 10px;
+}
+
+.comment-header {
+	font-size: 14px;
+	color: #333;
+}
+
+.user {
+	font-weight: bold;
+}
+
+.date {
+	color: #888;
+	margin-left: 10px;
+}
+
+.comment-content {
+	margin-top: 10px;
+	font-size: 16px;
+	color: #555;
+}
+
+#review {
+	margin-top: 10px;
+}

@@ -1,0 +1,67 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.board.mapper.BoardInfoMapper">
+	<select id="selectBoardInfos" resultType="com.secu.team5.board.vo.BoardInfoVO">
+		SELECT * FROM BOARD_INFO
+	</select>
+	
+	<!-- 게시물 수정시에 필요한정보값을 뽑아내려고 유저, 상품, 타입, 서브타입을 조인하여 값을뽑아냈음 -->
+	<select id="selectBoardInfo" resultType="com.secu.team5.board.vo.BoardInfoVO">
+		SELECT * FROM BOARD_INFO BI INNER JOIN USER_INFO UI ON UI.UI_NUM=BI.UI_NUM  LEFT JOIN PRODUCT_INFO PI ON PI.PI_NUM = BI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM WHERE BI.BI_NUM= ${biNum}
+	</select>
+	
+	<insert id="insertBoardInfo" useGeneratedKeys="true" keyColumn="BI_NUM" keyProperty="biNum">
+		INSERT INTO BOARD_INFO(UI_NUM,PI_NUM,BI_TITLE, BI_CONTENT)
+		VALUES(#{uiNum},#{piNum},#{biTitle},#{biContent})	
+	</insert>
+	
+	<update id="updateBoardInfo" parameterType="com.secu.team5.board.vo.BoardInfoVO">
+		UPDATE BOARD_INFO
+		SET BI_TITLE = #{biTitle},
+		BI_CONTENT = #{biContent},
+		PI_NUM = #{piNum}
+		WHERE BI_NUM = #{biNum}
+	</update>
+	
+	<update id="updateViewsCnt" parameterType="com.secu.team5.board.vo.BoardInfoVO">
+		UPDATE BOARD_INFO SET BI_VIEWS = BI_VIEWS + 1 WHERE BI_NUM = #{biNum}
+	</update>
+	
+	<delete id="deleteBoardInfo" parameterType="com.secu.team5.board.vo.BoardInfoVO">
+		DELETE FROM BOARD_INFO WHERE BI_NUM=#{biNum}
+	</delete>
+	
+	<select id="selectBoardInfoCnt" resultType="int">
+		SELECT count(*)
+		FROM BOARD_INFO BI
+		INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+		<where>
+			<if test='biTitle != null and biTitle != ""'>
+				BI_TITLE LIKE CONCAT('%',#{biTitle},'%')
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectBoardInfosWithHelper" resultType="com.secu.team5.board.vo.BoardInfoVO">
+    	SELECT BI.BI_NUM, BI.BI_TITLE, BI.BI_CONTENT, BI.UI_NUM, UI.UI_NAME, BI.BI_VIEWS, PI.PI_NAME, PI.PI_NUM, TI.TI_NAME, TI.TI_NUM,
+        DATE_FORMAT(BI.BI_CREDAT, '%Y-%m-%d') CREDAT, TIME_FORMAT(BI.BI_CRETIM, '%h%i%s') CRETIM
+    	FROM BOARD_INFO BI
+    	INNER JOIN USER_INFO UI ON BI.UI_NUM = UI.UI_NUM
+    	LEFT JOIN PRODUCT_INFO PI ON PI.PI_NUM = BI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM
+    <where>
+        <if test='biTitle != null and biTitle != ""'>
+            BI_TITLE LIKE CONCAT('%',#{biTitle},'%')
+        </if>
+        <if test='piName != null and piName != ""'>
+            PI_NAME LIKE CONCAT('%',#{piName},'%')
+        </if>
+        <if test='tiName != null and tiName != ""'>
+            TI_NAME LIKE CONCAT('%',#{tiName},'%')
+        </if>
+    </where>
+    	ORDER BY BI_NUM DESC
+	</select>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.board.mapper.BoardMapper">
+		<select id="selectBoard">
+		SELECT * FROM PRODUCT_INFO PI INNER JOIN PRODUCT_FILE_INFO PFI ON
+		PI.PI_NUM = PFI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM =
+		PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM WHERE
+		PFI.PFI_SORT = 1
+		<if test='piName != null and piName != ""'>
+			AND PI.PI_NAME LIKE CONCAT('%',#{piName},'%')
+		</if>
+		<if test='stiName != null and stiName != ""'>
+			AND STI.STI_NAME LIKE CONCAT('%',#{stiName},'%')
+		</if>
+		<if test='tiName != null and tiName != ""'>
+			AND TI.TI_NAME LIKE CONCAT('%',#{tiName},'%')
+		</if>
+	</select>
+
+	<select id="selectBoardsCount">
+		SELECT COUNT(*) FROM PRODUCT_INFO PI INNER JOIN PRODUCT_FILE_INFO PFI
+		ON
+		PI.PI_NUM = PFI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM =
+		PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM WHERE
+		PFI.PFI_SORT = 1
+		<if test='piName != null and piName != ""'>
+			AND PI.PI_NAME LIKE CONCAT('%',#{piName},'%')
+		</if>
+		<if test='stiName != null and stiName != ""'>
+			AND STI.STI_NAME LIKE CONCAT('%',#{stiName},'%')
+		</if>
+		<if test='tiName != null and tiName != ""'>
+			AND TI.TI_NAME LIKE CONCAT('%',#{tiName},'%')
+		</if>
+	</select>
+	
+	<select id="selectBoardWithHelper">
+		SELECT * FROM PRODUCT_INFO PI INNER JOIN PRODUCT_FILE_INFO PFI ON
+		PI.PI_NUM = PFI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM =
+		PI.STI_NUM LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM WHERE
+		PFI.PFI_SORT = 1
+		<if test='piName != null and piName != ""'>
+			AND PI.PI_NAME LIKE CONCAT('%',#{piName},'%')
+		</if>
+		<if test='stiName != null and stiName != ""'>
+			AND STI.STI_NAME LIKE CONCAT('%',#{stiName},'%')
+		</if>
+		<if test='tiName != null and tiName != ""'>
+			AND TI.TI_NAME LIKE CONCAT('%',#{tiName},'%')
+		</if>
+		ORDER BY PI.PI_NUM DESC
+	</select>
+</mapper>

@@ -1,0 +1,37 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.role.mapper.RoleInfoMapper">
+	<!-- UI_NUM을 통해 권한 조회 -->
+	<select id="selectRolesByuiNum"
+		resultType="com.secu.team5.role.vo.RoleInfoVO">
+		SELECT * FROM ROLE_MAP RM
+		INNER JOIN ROLE_INFO RI ON
+		RI.RI_NUM = RM.RI_NUM LEFT JOIN USER_INFO UI ON UI.UI_NUM = RM.UI_NUM
+		WHERE UI.UI_NUM =#{uiNum}
+	</select>
+	<!-- 여러가지 정보 -->
+	<select id="selectRoles">
+		SELECT * FROM USER_INFO UI INNER JOIN ROLE_MAP RM ON RM.UI_NUM= UI.UI_NUM
+		LEFT JOIN ROLE_INFO RI ON RI.RI_NUM = RM.RI_NUM
+	</select>
+	<!-- 어떤 권한들이 있나 -->
+	<select id="selectRoleInfos">
+		SELECT * FROM ROLE_INFO
+	</select>
+
+	<insert id="insertRolesByuiNum">
+		INSERT INTO ROLE_MAP (UI_NUM, RI_NUM)
+		VALUES(#{uiNum}, #{riNum})
+	</insert>
+
+	<delete id="deleteRoleMapWithDeleteUser">
+		DELETE FROM ROLE_MAP WHERE UI_NUM=${uiNum} AND RI_NUM
+		= ${riNum}
+	</delete>
+
+	<delete id="deleteRoleMapWithDeleteUser2">
+		DELETE FROM ROLE_MAP WHERE UI_NUM=${uiNum}
+	</delete>
+</mapper>

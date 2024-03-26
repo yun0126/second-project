@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.shoppingcart.mapper.ShoppingCartMapper">
+	
+	<!-- 개발하면서 개발순서대로 만든후에 셀렉트 인서트 업데이트 딜리트 순으로 정리하겠습니다. 아 물론 다른것들도 마찬가지로요 -->
+	<insert id="insertCart">
+		INSERT INTO SHOPING_CART(UI_NUM, PI_NUM, SC_AMOUNT)
+		VALUES(#{uiNum},#{piNum},#{scAmount})
+	</insert>
+	
+	<select id="selectCartWithUiNum">
+		SELECT SC.SC_NUM, SC.UI_NUM, SC.PI_NUM, SC.SC_AMOUNT, SC.SC_CREDAT, PI.PI_NAME, PI.PI_PRICE, PI.PI_DESC, STI.STI_NAME FROM SHOPING_CART SC INNER JOIN PRODUCT_INFO PI ON SC.PI_NUM = PI.PI_NUM LEFT JOIN SUB_TYPE_INFO STI ON STI.STI_NUM = PI.STI_NUM WHERE SC.UI_NUM = #{uiNum}
+	</select>
+	
+	<!-- 사용자가 특정 물품을빼고싶어할때 사용 -->
+	<delete id="deleteCart">
+		DELETE FROM SHOPING_CART WHERE PI_NUM = #{piNum}
+	</delete>
+	
+	<!-- 구매하러 가기를 눌럿을때 장바구니페이지에있는 내용을 가져오기위해 먼저 유저의 장바구니를 먼저 초기화시킨다 -->
+	<delete id="deleteCartForBuy">
+		DELETE FROM SHOPING_CART WHERE UI_NUM = #{uiNum}
+	</delete>
+	
+</mapper>

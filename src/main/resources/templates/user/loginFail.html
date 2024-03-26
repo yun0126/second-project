@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<link th:href="@{/css/navbar.css}" rel="stylesheet" />
+	
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+	<title>Login Page</title>
+	<style>
+		.denined {
+			color: red;
+			font-size: 0.9em;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- nav header modal(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+
+
+	<div id="login">
+		<img th:src="@{/imgs/logo2.png}" alt="logo" width="200px" class="logo" onclick="location.href='/'" />
+		<div class="login-content">
+			<form method="post" action="/login">
+				<div>
+					<h5 class="desc">아이디</h5>
+					<input type="text" class="in" id="uiId" name="uiId" />
+					<h5 class="desc">비밀번호</h5>
+					<input type="password" class="in" id="uiPwd" name="uiPwd" />
+				</div>
+				<a href="#">아이디/비밀번호 찾기 ></a>
+				<h5 class="denined">아이디 비밀번호가 없거나 틀렸습니다.</h5>
+				<h5 class="denined">다시 로그인 해주세요</h5>
+				<div class="btn-area">
+					<input type="submit" class="loginBtn" value="로그인" />
+					<input type="button" class="joinBtn" value="회원가입" onclick="location.href='/fbs/user/join'" />
+				</div>
+			</form>
+
+		</div>
+	</div>
+	<!-- footer-fragment / script-fragment -->
+
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+</body>
+
+</html>

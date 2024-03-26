@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	<link th:href="@{/css/navbar.css}" rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+	<title>쇼핑몰</title>
+	<style>
+
+	</style>
+</head>
+
+<body>
+	<th:block th:replace="fragments/header :: headerFragment"></th:block>
+
+
+	<div class="slide">
+		<div class="slide_wrap">
+			<div class="slide_item"><img th:src="@{/imgs/newEvent.png}" /></div>
+			<div class="slide_item"><img th:src="@{/imgs/event5.jpeg}" /></div>
+			<div class="slide_item"><img th:src="@{/imgs/event3.jpeg}" /></div>
+			<div class="slide_item"><img th:src="@{/imgs/event8.jpeg}" /></div>
+			<div class="slide_item"><img th:src="@{/imgs/event7.png}" /></div>
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="content_type">최근 등록된 상품</div>
+		<table id="product-list">
+		</table>
+
+	</div>
+
+	<div class="right"></div>
+
+	<div class="rollwrap">
+		<button class="roll_left"></button>
+		<button class="roll_right"></button>
+		<div class="roll">
+			<div class="content_type">추천 상품</div>
+			<ul id="roll-img"></ul>
+		</div>
+	</div>
+
+	<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+
+	<script th:src="@{/js/jquery-3.2.1.min.js}"></script>
+	<script th:src="@{/js/main.js}"></script>
+	<script th:src="@{/js/slide.js}"></script>
+
+</body>
+
+</html>

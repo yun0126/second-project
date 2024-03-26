@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<title>FBSports 쇼핑몰</title>
+	<style>
+		#order-table,
+		#order-detail-table,
+		#passwordCheck-table,
+		#qna-table {
+			width: 100%;
+			border-collapse: collapse;
+
+		}
+
+		#order-table td,
+		#order-detail-table td,
+		#passwordCheck-table td,
+		#qna-table td {
+			padding: 10px;
+			border: 1px solid #ddd;
+		}
+
+		#order-table input,
+		#order-detail-table input,
+		#passwordCheck-table input,
+		#qna-table input {
+			width: 100%;
+			padding: 8px;
+			box-sizing: border-box;
+			margin-top: 5px;
+		}
+
+
+		#order-table tr:hover,
+		#order-detail-table tr:hover,
+		#passwordCheck-table tr:hover,
+		#qna-table tr:hover {
+			background-color: #f5f5f5;
+		}
+
+		a {
+			text-decoration: none;
+			color: black;
+		}
+
+		h2 {
+			font-size: 30px;
+		}
+
+		.container {
+			display: flex;
+			margin: 0;
+			justify-content: center;
+			align-items: center;
+			width: 80%;
+		}
+
+		.everyTable {
+			margin-top: 15px;
+			display: flex;
+			width: 90%;
+
+		}
+
+		.leftTable {
+			flex: 0.2;
+		}
+
+		.rightTable {
+			flex: 0.8;
+		}
+
+		.leftTable table,
+		.rightTable table {
+			width: 100%;
+			margin: 0;
+			border-spacing: 0
+		}
+
+		.myPage {
+			border: 1px solid #dddddd;
+			padding: 20px;
+			text-align: left;
+			height: 100px;
+		}
+
+		#topBarTable th.myPage {
+			width: 25%;
+			text-align: left;
+			background-color: cornflowerblue;
+			height: 75px;
+			color: white;
+		}
+
+
+
+		.rightTable button {
+			color: white;
+		}
+
+		.leftTable th:first-child {
+			background-color: #4169E1;
+			color: white;
+			width: auto;
+			height: 120px;
+			text-align: center;
+		}
+
+		.leftTable td {
+			background-color: #F8F8FF;
+		}
+
+		button {
+			border: none;
+			background: none;
+			padding: 0;
+			font: inherit;
+			cursor: pointer;
+			outline: inherit;
+			color: black;
+
+
+		}
+
+		.leftTable button {
+
+			margin-top: 5px;
+		}
+
+		.leftTable button:hover {
+			color: #1E90FF;
+		}
+
+		.delivery-count,
+		.coupon-count,
+		.shoppingcart-count,
+		.recent-list-count {
+			font-size: 50px;
+			font-weight: normal;
+			color: white;
+			display: inline-block;
+			margin-top: 20px;
+			margin-right: 5px;
+			vertical-align: text-bottom;
+			line-height: 0.6;
+		}
+
+		#list th,
+		td {
+			border: 1px solid #dddddd;
+			text-align: left;
+			height: 0px;
+		}
+
+		.user-info {
+			width: 50%;
+			padding: 5px;
+			font-weight: bold;
+		}
+
+		.inputbtn {
+			display: block;
+			margin: 20px auto;
+			height: 40px;
+			width: 150px;
+			font-size: 16px;
+			text-align: center;
+			background-color: white;
+			color: cornflowerblue;
+			border-radius: 5px;
+			border: 2px solid cornflowerblue;
+		}
+
+		.inputbtn:hover {
+			margin-top: 20px;
+			height: 40px;
+			width: 150px;
+			font-size: 16px;
+			text-align: center;
+			background-color: cornflowerblue;
+			color: white;
+			border-radius: 5px;
+			border: 2px solid white;
+		}
+
+		#modifyBtn {
+			margin: 5px;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		#deleteBtn {
+			margin: 5px;
+			cursor: pointer;
+		}
+
+		.center-container {
+			text-align: center;
+		}
+
+		.comment-content {
+			margin: 10px;
+			font-weight: bold;
+		}
+
+		@media (max-width: 990px) {
+
+			thead {
+				display: none;
+			}
+
+			td:nth-child(1) {
+				width: 40%;
+			}
+
+			h3 {
+				font-size: 18px;
+			}
+
+			.container {
+				max-width: 100% !important;
+			}
+
+
+
+			*/ td:nth-child(3) {
+				display: none;
+			}
+
+			.container {
+				display: block;
+			}
+
+			.everyTable {
+				display: block;
+			}
+
+			.user-info {
+				width: 100%;
+				padding: 5px;
+				font-weight: bold;
+			}
+
+			.cell {
+				display: none;
+			}
+
+			body,
+			ul,
+			li,
+			p,
+			a,
+			label,
+			input,
+			div {
+				font-size: 8px;
+			}
+
+
+		}
+	</style>
+
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<div class="container">
+		<div class="everyTable">
+			<div class="leftTable">
+				<table class="menu">
+					<thead>
+						<tr>
+							<th class="myPage">
+								<h2>마이페이지</h2>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td colspan="1" class="myPage">
+								<h3 class="list-unstyled templatemo-accordion">나의 주문</h3>
+								<button class="leftTableButton" onclick="orderList()">주문목록/배송조회</button><br>
+								<button class="leftTableButton" onclick="orderDetailListHelper()">리뷰작성</button><br>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1" class="myPage">
+								<h3>나의 혜택</h3>
+								<button class="leftTableButton" onclick="CouponList()">할인쿠폰</button>
+							</td>
+						</tr>
+						<tr>
+							<td class="myPage">
+								<h3>나의 활동</h3>
+								<button class="leftTableButton" onclick="goQnA()">문의하기</button><br>
+								<button class="leftTableButton" onclick="qnaList()">문의내역 확인</button><br>
+								<button class="leftTableButton" onclick="myComments()">리뷰 관리</button><br>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="1" class="myPage">
+								<h3>나의 정보</h3>
+								<button class="leftTableButton" onclick="addrView()">배송지 관리</button><br>
+								<button class="leftTableButton" onclick="userView()">개인정보확인/수정</button><br>
+								<button class="leftTableButton" onclick="userDelete()">회원 탈퇴</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="rightTable">
+				<table id="topBarTable">
+					<thead>
+						<tr>
+							<th class="myPage">배송중<br><span class="delivery-count"><button class="rightTableButton"
+										id="resOrder">3</button></span>개</th>
+							<th class="myPage">쿠폰<br><span class="coupon-count"><button class="rightTableButton"
+										id="resCoupon">5</button></span>장</th>
+							<th class="myPage">장바구니<br><span class="shoppingcart-count"><button class="rightTableButton"
+										id="resCart">2</button></span>개</th>
+							<th class="myPage">최근 본 상품<br><span class="recent-list-count"><button
+										class="rightTableButton" id="resRecent">20</button></span>개</th>
+						</tr>
+					</thead>
+					<tbody>
+						<td colspan="4">
+							<div id="content">
+
+							</div>
+						</td>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<script>
+		// 내가 요청완료한 주문에서 구매완료한 상품들의 리뷰 작성을 위한 팝업팡 호출 함수
+		function showPopup(odiNum) {window.open(`/fbs/comment/order-comment?odiNum=${odiNum}`, "a", "width=500, height=700, left=100, top=50, resizable=no");}
+		// 내가 작성한 리뷰의 수정을 위한 팝업팡 호출 함수
+		function showUpdatePopup(ciNum) {window.open(`/fbs/comment/update-comment?ciNum=${ciNum}`, "a", "width=500, height=700, left=100, top=50, resizable=no");}
+
+		let total = 0;
+		let pageSize = 10; // pageHelper 사용시 몇개 씩 출력될껀지 정하는 변수
+		const blockSize = 10; // 페이징할 때 기준으로 삼는 변수
+		let addressData = {
+			type: '', //주소 타입
+			apartment: '', // 아파트인지 유무
+			jibunAddress: '', // 지번 주소
+			jibunAddressEnglish: '', // 지번 영여 주소
+			roadAddress: '', // 도로명 주소
+			roadAddressEnglish: '', // 도로명 영어 주소
+			buildingName: '' // 건물 번호
+		};
+		// 유저의 주문정보 목록을 조회(mypage의 디폴트 화면)
+		window.addEventListener('load', async function () {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const shoppingRes = await fetch('/shopping-carts');
+
+			const shoppingObjs = await shoppingRes.text();
+
+			if (shoppingObjs != '') {
+				shoppingJson = JSON.parse(shoppingObjs);
+				let html = shoppingJson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+			const CouponCRes = await fetch('/coupon-infos');
+			const Couponobjs = await CouponCRes.text();
+
+			if (Couponobjs != '') {
+				Couponjson = JSON.parse(Couponobjs);
+				let Couponhtml = Couponjson.length;
+				document.querySelector('#coupon').innerText = Couponhtml;
+			}
+			// ---------------------- 주문 ----------------------------------------------------------------
+			const orderRes = await fetch('/order-infos');
+			const orderObjs = await orderRes.json();
+
+			document.querySelector('#resOrder').innerText = orderObjs.length;
+			document.querySelector('#resOrder').addEventListener('click', function () {
+				orderList();
+			});
+
+			let html = `	<table border="1" id="order-table">
+								<tr>
+									<td>주문번호</td>
+									<td class="cell">결제일</td>
+									<td class="cell">결제시간</td>
+									<td>주문 총 가격</td>
+									<td>배송상태</td>
+								</tr>
+								<tbody id="list">
+						
+								</tbody>
+							</table>`
+			document.querySelector('#content').innerHTML = html;
+			html = '';
+
+			for (let obj of orderObjs) {
+				html += `<tr>`;
+				html += `<td><a href="/fbs/order/order-complete?oiMerchantUid=${obj.oiMerchantUid}">${obj.oiMerchantUid}</a></td>`; // 주문 상세목록 이동 링크
+				html += `<td class="cell">${obj.oiCredat}</td>`;
+				html += `<td class="cell">${obj.oiCretim}</td>`;
+				html += `<td>${obj.oiTotalPrice}원</td>`;
+				html += `<td>배송중</td>`;
+				html += `</tr>`;
+			}
+			document.querySelector('#list').innerHTML = html;
+
+			// ---------------------- 쿠폰 ----------------------------------------------------------------
+			const CouponRes = await fetch('/coupon-infos');
+			const CouponObjs = await CouponRes.json();
+			console.log(CouponObjs);
+
+			document.querySelector('#resCoupon').innerText = CouponObjs.length;
+			document.querySelector('#resCoupon').addEventListener('click', async function () {
+				CouponList();
+			})
+
+			// ---------------------- 장바구니 ----------------------------------------------------------------
+			const CartRes = await fetch('/shopping-carts')
+			const CartObjs = await CartRes.json();
+
+			document.querySelector('#resCart').innerText = CartObjs.length;
+			document.querySelector('#resCart').addEventListener('click', function () {
+				window.open('/fbs/shoppingcart/cart-list', '_blank');
+			})
+
+			// ---------------------- 최근 본상품 ----------------------------------------------------------------
+			const RecentRes = await fetch('/recent-infos')
+			const RecentObjs = await RecentRes.json();
+
+			document.querySelector('#resRecent').innerText = RecentObjs.length;
+			document.querySelector('#resRecent').addEventListener('click', function () {
+				window.open('/fbs/recent/recent-list', '_blank');
+			})
+			//-----------------------------주소가 있는 사람은 미리 조회 -----------------------------------------------
+			const addrRes = await fetch(`/addr-infos`);
+			const userAddr = await addrRes.json();
+
+
+			addressData.type = userAddr.aiType;
+			addressData.apartment = userAddr.aiApartment;
+			addressData.jibunAddress = userAddr.aiJibunAddress;
+			addressData.roadAddress = userAddr.aiRoadAddress;
+			addressData.roadAddressEnglish = userAddr.aiRoadAddressEnglish;
+			addressData.buildingName = userAddr.aiBuildingName;
+			addressData.jibunAddressEnglish = userAddr.aiJibunAddressEnglish;
+		});
+		//주문목록 배송조회
+		async function orderList() {
+			document.querySelector('#content').innerHTML = '';
+
+			const orderRes = await fetch('/order-infos');
+			const orderObjs = await orderRes.json();
+
+
+			let html = `	<table border="1" id="order-table">
+								<tr>
+									<td>주문번호</td>
+									<td class="cell">결제일</td>
+									<td class="cell">결제시간</td>
+									<td>주문 총 가격</td>
+									<td>배송상태</td>
+								</tr>
+								<tbody id="list">
+						
+								</tbody>
+							</table>`
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			html = '';
+			for (let obj of orderObjs) {
+				html += `<tr>`;
+				html += `<td><a href="/fbs/order/order-complete?oiMerchantUid=${obj.oiMerchantUid}">${obj.oiMerchantUid}</a></td>`;
+				html += `<td class="cell">${obj.oiCredat}</td>`;
+				html += `<td class="cell">${obj.oiCretim}</td>`;
+				html += `<td>${obj.oiTotalPrice}원</td>`;
+				html += `<td>배송중</td>`;
+				html += `</tr>`;
+			}
+			document.querySelector('#list').innerHTML = html;
+
+		}
+
+		// 리뷰 작성을 위한 페이지
+		const orderDetailListHelper = async function (evt, page) {
+			document.querySelector('#content').innerHTML = '';
+			if (!page) {
+				page = 1;
+			}
+			console.log(page);
+			let url = `/order-details/helper?page=${page}&pageSize=${pageSize}`;
+			const orderDetailRes = await fetch(url);
+			const orderDetialObjs = await orderDetailRes.json();
+			const totalCnt = orderDetialObjs.total;
+			const pageBlock = Math.ceil(totalCnt / pageSize);
+			let pageHtml = '';
+			const startBlock = (Math.ceil(page / blockSize) - 1) * blockSize + 1; // 시작 페이지 변수
+			let endBlock = startBlock + blockSize - 1; // 끝 페이지 변수
+			if (endBlock > pageBlock) {
+				endBlock = pageBlock;
+			}
+
+			if (startBlock != 1) {
+				pageHtml += `<a href="javascript:void(0)" onclick="orderDetailListHelper(event,${startBlock - 1})">◀</a>`;
+			}
+			for (let i = startBlock; i <= endBlock; i++) {
+				pageHtml += `<a href="javascript:void(0)" onclick="orderDetailListHelper(event,${i})"><b>[ ${i} ]</b></a>`;
+			}
+			if (endBlock < pageBlock) { // 10 <= 21
+				pageHtml += `<a href="javascript:void(0)" onclick="orderDetailListHelper(event,${endBlock + 1})">▶</a>`;
+			}
+			let html = `<table border="1" id="order-detail-table">
+							
+									<tr>
+										<td>상품 이름</td>
+										<td class="cell">구매수량</td>
+										<td class="cell">구매가격</td>
+										<td>리뷰 작성</td>
+									<tr>
+							
+								<tbody id="list">
+			
+								</tbody>
+							</table>`;
+
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			html = '';
+			for (let orderDetail of orderDetialObjs.list) {
+				html += '<tr>';
+				html += `<td><a href="/fbs/product/product-view?piNum=${orderDetail.piNum}">${orderDetail.piName}</a></td>`; // 클릭시 해당 상품 view로 이동
+				html += `<td class="cell">${orderDetail.odiAmount}개</td>`; // 해당 주문에서 구매한 특정 상품의 개수
+				html += `<td class="cell">${orderDetail.odiPrice}원</td>`; // 해당 주문에서 구매한 특정 상품의 가격
+				// 함수 return값이 1이면 [리뷰 작성하기] 추가
+				if (await checkInsertComment(`${orderDetail.odiNum}`, `${orderDetail.piNum}`) == 1) {
+					html += `<td><a href="javascript:void(0);" onclick="showPopup(${orderDetail.odiNum});"'>[리뷰 작성하기]</a></td>`; // 리뷰 작성하기 눌렀을 때 리뷰 작성 팝업창 호출
+				} else {
+					html += '<td></td>';
+				}
+				html += '</tr>';
+			}
+			document.querySelector('#list').innerHTML = html;
+			document.querySelector('#list').insertAdjacentHTML("beforeend", pageHtml);
+
+		}
+
+		// const나 let으로 생성한 함수나 변수는 opener로 가져오지 못하기 때문에 window에 함수나 변수 등록
+		window.orderDetailListHelper = orderDetailListHelper;
+
+		//나의 혜택 할인쿠폰
+		async function CouponList() {
+			const CouponRes = await fetch('/coupon-infos');
+			const CouponObjs = await CouponRes.json();
+
+			document.querySelector('#content').innerHTML = '';
+			let html = `	<table border="1" id="order-table">
+								<tr>
+									<td>쿠폰 이름</td>
+									<td>쿠폰 설명</td>
+									<td class="cell">할인 가격</td>
+									<td>사용 조건</td>
+									<td class="cell">유효 기간</td>
+								</tr>
+								<tbody id="list">
+						
+								</tbody>
+							</table>`
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+			html = '';
+
+			for (let obj of CouponObjs) {
+				html += `<tr>`;
+				html += `<td>${obj.cptiName}</a></td>`;
+				html += `<td style="font-size: 12px;">${obj.cptiDesc}</td>`;
+				if (obj.cptiDiscount == 0) {
+					html += `<td class="cell">${obj.cptiDiscountRate}%</td>`;
+				} else {
+					html += `<td class="cell">${obj.cptiDiscount}원</td>`;
+				}
+				html += `<td>${obj.cptiCondition}원</td>`;
+				html += `<td style="font-size: 12px;"class="cell">${obj.cpiExpire}</td>`;
+				html += `</tr>`;
+			}
+			document.querySelector('#list').innerHTML = html;
+		}
+
+		//개인정보 확인 수정
+		async function userView() {
+			const res = await fetch(`/user-info`);
+			const user = await res.json();
+			console.log(user);
+			document.querySelector('#content').innerHTML = '';
+
+			let html = `<h3 class="container text-center">회원 상세 정보</h3>		<table border="1" id="order-table">	
+									<tr>
+										<td>회원 번호</td>
+										<td><input type="text" id="uiNum" class="user-info" disabled></td>
+									</tr>
+									<tr>
+										<td>회원 이름</td>
+										<td><input type="text" id="uiName" class="user-info"></td>
+									</tr>
+									<tr>
+										<td>회원 아이디</td>
+										<td><input type="text" id="uiId" class="user-info"></td>
+									</tr>
+									<tr>
+										<td>회원 전화번호</td>
+										<td><input type="text" id="uiPhone" class="user-info" maxlength='11'></td>
+									</tr>
+									<tr>	
+										<td>회원 생년월일</td>
+										<td><input type="text" id="uiBirth" class="user-info" disabled></td>
+									</tr>
+									<tr>
+										<td>회원 성별</td>
+										<td><input type="text" id="uiGender" class="user-info" disabled></td>
+									</tr>
+									<tr>
+										<td>회원 이메일</td>
+										<td><input type="text" id="uiEmail" class="user-info"></td>
+									</tr>
+									<tr>
+										<td>회원 등급</td>
+										<td><input type="text" id="uiGrade" class="user-info" disabled></td>
+									</tr>
+								</table>
+								<div  class="container text-center">
+								<input type="button" class="btn btn-outline-primary" onclick="userUpdate()" value="회원정보 수정완료">
+								<div>`
+
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			for (let obj in user) {
+				console.log(obj);
+				if (document.querySelector(`#${obj}`)) {
+					document.querySelector(`#${obj}`).value = user[obj];
+				}
+			}
+		}
+
+		// 회원 정보 수정 버튼
+		async function userUpdate() {
+			// 데이터값들을 input에서 받은 값으로 정의
+			const data = {
+				uiNum: document.querySelector('#uiNum').value,
+				uiName: document.querySelector('#uiName').value,
+				uiPhone: document.querySelector('#uiPhone').value,
+				uiEmail: document.querySelector('#uiEmail').value
+			};
+
+			// 서버에 업데이트 요청 보냄
+			const res = await fetch(`/user-infos`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				},
+				body: JSON.stringify(data)
+			});
+			if (res.status === 200) {
+				alert('수정 완료');
+			} else {
+				alert('에러');
+			}
+			userView();
+		}
+
+		//배송지 관리
+		async function addrView() {
+			const addrRes = await fetch(`/addr-infos`);
+			const userAddr = await addrRes.json();
+
+			console.log(userAddr);
+
+			document.querySelector('#content').innerHTML = '';
+			let html = `<h3 class="container text-center">회원 상세 정보</h3>		<table border="1" id="order-table">	
+									<tr>
+										<td>우편 번호</td>
+										<td><input type="text" id="aiZoneCode" classs="addr-info" placeholder="우편번호" disabled></td>
+									</tr>
+									<tr>
+										<td>주소</td>
+										<td><input type="text" id="aiAddress" classs="addr-info" placeholder="주소" disabled></td>
+									</tr>
+									<tr>
+										<td>참고 항목</td>
+										<td><input type="text" id="aiExtraAddress" classs="addr-info" placeholder="참고항목" disabled></td>
+									</tr>
+									<tr>
+										<td>상세주소</td>
+										<td><input type="text" id="aiDetailAddress" classs="addr-info" placeholder="상세주소"></td>
+									</tr>
+								</table>
+								<input type="button" onclick="userPost()" class="inputbtn" value="우편번호 찾기">
+								<input type="button" onclick="addrRegister()" class="inputbtn" value="저장">`;
+
+
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			for (let obj in userAddr) {
+				if (document.querySelector(`#${obj}`)) {
+					document.querySelector(`#${obj}`).value = userAddr[obj];
+				}
+			}
+		}
+
+		// 회원 탈퇴 폼
+		async function userDelete() {
+			document.querySelector('#content').innerHTML = '';
+
+			let html = `<h3>비밀번호 확인</h3>
+					<div class="center-container">
+						<input type="password" id= "password" placeholder= "비밀번호 확인" style="text-align:center; top:50%; right:50%">
+						<input type="button" class="inputbtn" onclick="deleteUserInfo()" value="회원 탈퇴">
+					<div>`;
+
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+		}
+
+		// 현재 로그인 중인 사용자의 uiNum을 얻는 함수
+		async function getUserNum() {
+			const res = await fetch("/user-info", {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+
+			const data = await res.json();
+			return data.uiNum;
+		}
+
+		// 비밀번호 확인 후 회원 탈퇴
+		async function deleteUserInfo() {
+			const uiNum = await getUserNum();
+			const password = document.querySelector('#password').value;
+			if (password != "") {
+				if (confirm("정말로 회원 탈퇴를 진행하시겠습니까?") == true) {
+					// 컨트롤러로 password값을 직접 전송
+					const res = await fetch(`/user-infos/remove/${uiNum}?password=${password}`, {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					});
+					// 서버에서의 응답에 따라 메시지 표시
+					if (res.ok) {
+						const data = await res.json();
+						if (data == 1) {
+							// 성공적으로 탈퇴한 경우
+							alert('회원 탈퇴를 완료했습니다.');
+							location.href = '/logout';
+						} else if (data == -1) {
+							// 비번 틀린 경우
+							alert('비밀번호를 다시 확인해주세요.');
+						}
+					} else {
+						// 탈퇴중 오류
+						alert('탈퇴 중 오류');
+					}
+				}
+			} else {
+				alert('비밀번호를 입력해주세요');
+			}
+		}
+
+
+		//문의내역확인 리스트
+		async function qnaList() {
+			document.querySelector('#content').innerHTML = '';
+
+			const boardRes = await fetch('/board-qna-infos');
+			const boardInfos = await boardRes.json();
+
+			let html = `<table border="1" id="qna-table">
+								<tr>
+									<td>문의번호</td>
+									<td>제목</td>
+									<td>작성일</td>
+									<td>작성시간</td>
+									<td>답변여부</td>
+								</tr>
+								<tbody id="list">
+						
+								</tbody>
+							</table>`;
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			html = '';
+			for (let boardInfo of boardInfos) {
+				html += `<tr>`;
+				html += `<td>${boardInfo.bqiNum}</td>`;
+				html += `<td><a href="/fbs/qna/view?bqiNum=${boardInfo.bqiNum}">${boardInfo.bqiTitle}</a></td>`;
+				html += `<td>${boardInfo.credat}</td>`;
+				html += `<td>${boardInfo.cretim}</td>`;
+				html += '<td>'
+				if (boardInfo.rpiContent !== null && boardInfo.rpiContent !== '') {
+					html += '답변 완료';
+				} else {
+					html += '답변 대기';
+				}
+				html += '</td>';
+
+				html += '</tr>';
+			}
+			document.querySelector('#list').innerHTML = html;
+
+		}
+
+		// 1대1 문의 새창으로 염
+		function goQnA() {
+			window.open('/fbs/qna/list', '_blank');
+		}
+
+		//주소 api
+		// 주소 등록할때 주소 찾아서 화면에 보여주는 부분
+		function userPost() {
+			new daum.Postcode({
+				oncomplete: function (data) {
+					console.log(data);
+					addressData.type = data.addressType;
+					addressData.apartment = data.apartment;
+					addressData.jibunAddress = data.jibunAddress;
+					addressData.roadAddress = data.roadAddress;
+					addressData.roadAddressEnglish = data.roadAddressEnglish;
+					addressData.buildingName = data.buildingName;
+					addressData.jibunAddressEnglish = data.jibunAddressEnglish;
+					// 팝업에서 검색결과 항목을 클릭했을때 실행하는 부분.
+					// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+					let addr = ''; // 주소 변수
+					let extraAddr = ''; // 참고항목 변수
+
+					//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+					if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+						addr = data.roadAddress;
+					} else { // 사용자가 지번 주소를 선택했을 경우(J)
+						addr = data.jibunAddress;
+					}
+
+					// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+					if (data.userSelectedType === 'R') {
+						// 법정동명이 있을 경우 추가한다. (법정리는 제외)
+						// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+						if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+							extraAddr += data.bname;
+						}
+						// 건물명이표시할 있고, 공동주택일 경우 추가한다.
+						if (data.buildingName !== '' && data.apartment === 'Y') {
+							extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+						}
+						// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+						if (extraAddr !== '') {
+							extraAddr = ' (' + extraAddr + ')';
+						}
+						// 조합된 참고항목을 해당 필드에 넣는다.
+						document.querySelector('#aiExtraAddress').value = extraAddr;
+
+					} else {
+						document.querySelector('#aiExtraAddress').value = '';
+					}
+
+					// 우편번호와 주소 정보를 해당 필드에 넣는다.
+					document.querySelector('#aiZoneCode').value = data.zonecode;
+					document.querySelector('#aiAddress').value = addr;
+					// 커서를 상세주소 필드로 이동한다.
+					document.querySelector('#aiDetailAddress').focus();
+				}
+			}).open();
+		}
+
+		// 주소 등록하는 부분
+		async function addrRegister() {
+			// 데이터값들을 VO속성에 맞게 정의
+			const data = {
+				aiZoneCode: document.querySelector('#aiZoneCode').value,
+				aiAddress: document.querySelector('#aiAddress').value,
+				aiDetailAddress: document.querySelector('#aiDetailAddress').value,
+				aiExtraAddress: document.querySelector('#aiExtraAddress').value,
+				aiType: addressData.type,
+				aiApartment: addressData.apartment,
+				aiJibunAddress: addressData.jibunAddress,
+				aiJibunAddressEnglish: addressData.jibunAddressEnglish,
+				aiRoadAddress: addressData.roadAddress,
+				aiRoadAddressEnglish: addressData.roadAddressEnglish,
+				aiBuildingName: addressData.buildingName
+			};
+			// 서버에 업데이트 요청 보냄                         
+			const res = await fetch(`/addr-infos`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				},
+				body: JSON.stringify(data)
+			});
+			if (res.status === 200) {
+				alert('등록 완료');
+			} else {
+				alert('에러');
+			}
+		}
+
+		// 내가 작성 리뷰 목록
+		const myComments = async function (evt, page) {
+			document.querySelector('#content').innerHTML = '';
+			if (!page) {
+				page = 1;
+			}
+			let url = `/comment-infos/helper?page=${page}&pageSize=${pageSize}`;
+			const cmtsRes = await fetch(url);
+			const userCmts = await cmtsRes.json(); //해당 url로 가져온 리뷰 객체
+			const totalCnt = userCmts.total;
+			const pageBlock = Math.ceil(totalCnt / pageSize);
+			let pageHtml = '';
+			const startBlock = (Math.ceil(page / blockSize) - 1) * blockSize + 1;
+			let endBlock = startBlock + blockSize - 1;
+			if (endBlock > pageBlock) {
+				endBlock = pageBlock;
+			}
+			if (startBlock != 1) {
+				pageHtml += `<a href="javascript:void(0)" onclick="myComments(event,${startBlock - 1})">◀</a>`;
+			}
+			for (let i = startBlock; i <= endBlock; i++) {
+				pageHtml += `<a href="javascript:void(0)" onclick="myComments(event,${i})"><b>[ ${i} ]</b></a>`;
+			}
+			if (endBlock < pageBlock) { // 10 <= 21
+				pageHtml += `<a href="javascript:void(0)" onclick="myComments(event,${endBlock + 1})">▶</a>`;
+			}
+			let html = `<h3 class="container text-center">작성한 리뷰내역</h3>		
+								<div class="comments" id="comments" style="text-align:center;" >
+									<div id="comments-content">
+										<div id="comment">
+	
+										</div>
+									</div>
+								</div>`
+
+			document.querySelector('#content').insertAdjacentHTML("beforeend", html);
+
+			html = '';
+			// 리뷰 객체의 리스트에서 각 리뷰들 불러오기
+			for (let comment of userCmts.list) {
+				console.log(comment);
+				html += '<div class="comment-block" style="border-color:black; border-width: 1px; border-style: solid;  margin-bottom: 20px;">';
+				html += '<div class="comment-header">';
+				html += '<table class="table">';
+				html += '<tr>';
+				html += `<td>리뷰 번호 : ${comment.ciNum}</td>`;
+				html += `<td>작성자 : ${comment.uiName}</td>`;
+				html += `<td><span class="date">작성일 : ${comment.ciCredat}</span></td>`;
+				html += '</tr>';
+				html += '<tr>';
+				html += `<td colspan="3"><p class="comment-content">내용 : ${comment.ciContent}</p></td>`;
+				html += '</tr>';
+				html += '<tr>';
+				html += `<td colspan="3"><input type="button" value="수정" id="modifyBtn" onclick="showUpdatePopup(${comment.ciNum});" class="btn btn-outline-primary">
+				<input type="button" value="삭제" id="deleteBtn" onclick="deleteMyComment(${comment.ciNum});" class="btn btn-outline-danger"></td>`;
+				html += '</tr>';
+				html += '</table>';
+				html += '</div>';
+				html += '</div>';
+			}
+			document.querySelector('#comment').innerHTML = html;
+			document.querySelector('#comment').insertAdjacentHTML("beforeend", pageHtml);
+		}
+		// const나 let으로 생성한 함수나 변수는 opener로 가져오지 못하기 때문에 window에 함수나 변수 등록
+		window.myComments = myComments;
+
+		// 내가 작성한 리뷰 삭제
+		async function deleteMyComment(ciNum) {
+			const data = {
+				ciNum: ciNum
+			}
+			const res = await fetch('/comment-info', {
+				method: 'DELETE',
+				body: JSON.stringify(data),
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				}
+			})
+			console.log(res);
+			if (res.ok) {
+				alert('리뷰 삭제완료');
+			} else {
+				alert('리뷰 삭제실패');
+			}
+			myComments();
+		}
+
+		// alias로 선언한 count값으로 내가 리뷰를 작성했는지 안했는지 확인
+		async function checkInsertComment(odiNum, piNum) {
+			const res = await fetch(`/comment-info/check?odiNum=${odiNum}&piNum=${piNum}`);
+			const checks = await res.json();
+			return checks.count;
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var button = document.querySelector(".leftTableButton");
+			if (button) {
+				button.click();
+			}
+		});
+
+		window.flutter_inappwebview = {
+			webViews: {},
+			createFlutterInAppWebView: function (viewId, iframeId) {
+				var webView = {
+					viewId: viewId,
+					iframeId: iframeId,
+					iframe: null,
+					iframeContainer: null,
+					windowAutoincrementId: 0,
+					windows: {},
+					isFullscreen: false,
+					documentTitle: null,
+					functionMap: {},
+					settings: {},
+					disableContextMenuHandler: function (event) {
+						event.preventDefault();
+						event.stopPropagation();
+						return false;
+					},
+					prepare: function (settings) {
+						webView.settings = settings;
+						var iframe = document.getElementById(iframeId);
+						var iframeContainer = document.getElementById(iframeId + '-container');
+
+						document.addEventListener('fullscreenchange', function (event) {
+							// document.fullscreenElement will point to the element that
+							// is in fullscreen mode if there is one. If there isn't one,
+							// the value of the property is null.
+							if (document.fullscreenElement && document.fullscreenElement.id == iframeId) {
+								webView.isFullscreen = true;
+								window.flutter_inappwebview.nativeCommunication('onEnterFullscreen', viewId);
+							} else if (!document.fullscreenElement && webView.isFullscreen) {
+								webView.isFullscreen = false;
+								window.flutter_inappwebview.nativeCommunication('onExitFullscreen', viewId);
+							} else {
+								webView.isFullscreen = false;
+							}
+						});
+
+						if (iframe != null) {
+							webView.iframe = iframe;
+							webView.iframeContainer = iframeContainer;
+							iframe.addEventListener('load', function (event) {
+								webView.windowAutoincrementId = 0;
+								webView.windows = {};
+
+								var url = iframe.src;
+								try {
+									url = iframe.contentWindow.location.href;
+								} catch (e) {
+									console.log(e);
+								}
+								window.flutter_inappwebview.nativeCommunication('onLoadStart', viewId, [url]);
+
+								try {
+									var oldLogs = {
+										'log': iframe.contentWindow.console.log,
+										'debug': iframe.contentWindow.console.debug,
+										'error': iframe.contentWindow.console.error,
+										'info': iframe.contentWindow.console.info,
+										'warn': iframe.contentWindow.console.warn
+									};
+									for (var k in oldLogs) {
+										(function (oldLog) {
+											iframe.contentWindow.console[oldLog] = function () {
+												var message = '';
+												for (var i in arguments) {
+													if (message == '') {
+														message += arguments[i];
+													} else {
+														message += ' ' + arguments[i];
+													}
+												}
+												oldLogs[oldLog].call(iframe.contentWindow.console, ...arguments);
+												window.flutter_inappwebview.nativeCommunication('onConsoleMessage', viewId, [oldLog, message]);
+											}
+										})(k);
+									}
+								} catch (e) {
+									console.log(e);
+								}
+
+								try {
+									var originalPushState = iframe.contentWindow.history.pushState;
+									iframe.contentWindow.history.pushState = function (state, unused, url) {
+										originalPushState.call(iframe.contentWindow.history, state, unused, url);
+										var iframeUrl = iframe.src;
+										try {
+											iframeUrl = iframe.contentWindow.location.href;
+										} catch (e) {
+											console.log(e);
+										}
+										window.flutter_inappwebview.nativeCommunication('onUpdateVisitedHistory', viewId, [iframeUrl]);
+									};
+
+									var originalReplaceState = iframe.contentWindow.history.replaceState;
+									iframe.contentWindow.history.replaceState = function (state, unused, url) {
+										originalReplaceState.call(iframe.contentWindow.history, state, unused, url);
+										var iframeUrl = iframe.src;
+										try {
+											iframeUrl = iframe.contentWindow.location.href;
+										} catch (e) {
+											console.log(e);
+										}
+										window.flutter_inappwebview.nativeCommunication('onUpdateVisitedHistory', viewId, [iframeUrl]);
+									};
+
+									var originalOpen = iframe.contentWindow.open;
+									iframe.contentWindow.open = function (url, target, windowFeatures) {
+										var newWindow = originalOpen.call(iframe.contentWindow, ...arguments);
+										var windowId = webView.windowAutoincrementId;
+										webView.windowAutoincrementId++;
+										webView.windows[windowId] = newWindow;
+										window.flutter_inappwebview.nativeCommunication('onCreateWindow', viewId, [windowId, url, target, windowFeatures]).then(function () { }, function (handledByClient) {
+											if (handledByClient) {
+												newWindow.close();
+											}
+										});
+										return newWindow;
+									};
+
+									var originalPrint = iframe.contentWindow.print;
+									iframe.contentWindow.print = function () {
+										var iframeUrl = iframe.src;
+										try {
+											iframeUrl = iframe.contentWindow.location.href;
+										} catch (e) {
+											console.log(e);
+										}
+										window.flutter_inappwebview.nativeCommunication('onPrintRequest', viewId, [iframeUrl]);
+										originalPrint.call(iframe.contentWindow);
+									};
+
+									webView.functionMap = {
+										"window.open": iframe.contentWindow.open,
+										"window.print": iframe.contentWindow.print,
+										"window.history.pushState": iframe.contentWindow.history.pushState,
+										"window.history.replaceState": iframe.contentWindow.history.replaceState,
+									}
+
+									var initialTitle = iframe.contentDocument.title;
+									var titleEl = iframe.contentDocument.querySelector('title');
+									webView.documentTitle = initialTitle;
+									window.flutter_inappwebview.nativeCommunication('onTitleChanged', viewId, [initialTitle]);
+									if (titleEl != null) {
+										new MutationObserver(function (mutations) {
+											var title = mutations[0].target.innerText;
+											if (title != webView.documentTitle) {
+												webView.documentTitle = title;
+												window.flutter_inappwebview.nativeCommunication('onTitleChanged', viewId, [title]);
+											}
+										}).observe(
+											titleEl,
+											{subtree: true, characterData: true, childList: true}
+										);
+									}
+
+									var oldPixelRatio = iframe.contentWindow.devicePixelRatio;
+									iframe.contentWindow.addEventListener('resize', function (e) {
+										var newPixelRatio = iframe.contentWindow.devicePixelRatio;
+										if (newPixelRatio !== oldPixelRatio) {
+											window.flutter_inappwebview.nativeCommunication('onZoomScaleChanged', viewId, [oldPixelRatio, newPixelRatio]);
+											oldPixelRatio = newPixelRatio;
+										}
+									});
+
+									iframe.contentWindow.addEventListener('popstate', function (event) {
+										var iframeUrl = iframe.src;
+										try {
+											iframeUrl = iframe.contentWindow.location.href;
+										} catch (e) {
+											console.log(e);
+										}
+										window.flutter_inappwebview.nativeCommunication('onUpdateVisitedHistory', viewId, [iframeUrl]);
+									});
+
+									iframe.contentWindow.addEventListener('scroll', function (event) {
+										var x = 0;
+										var y = 0;
+										try {
+											x = iframe.contentWindow.scrollX;
+											y = iframe.contentWindow.scrollY;
+										} catch (e) {
+											console.log(e);
+										}
+										window.flutter_inappwebview.nativeCommunication('onScrollChanged', viewId, [x, y]);
+									});
+
+									iframe.contentWindow.addEventListener('focus', function (event) {
+										window.flutter_inappwebview.nativeCommunication('onWindowFocus', viewId);
+									});
+
+									iframe.contentWindow.addEventListener('blur', function (event) {
+										window.flutter_inappwebview.nativeCommunication('onWindowBlur', viewId);
+									});
+								} catch (e) {
+									console.log(e);
+								}
+
+								try {
+
+									if (!webView.settings.javaScriptCanOpenWindowsAutomatically) {
+										iframe.contentWindow.open = function () {
+											throw new Error('JavaScript cannot open windows automatically');
+										};
+									}
+
+									if (!webView.settings.verticalScrollBarEnabled && !webView.settings.horizontalScrollBarEnabled) {
+										var style = iframe.contentDocument.createElement('style');
+										style.id = "settings.verticalScrollBarEnabled-settings.horizontalScrollBarEnabled";
+										style.innerHTML = "body::-webkit-scrollbar { width: 0px; height: 0px; }";
+										iframe.contentDocument.head.append(style);
+									}
+
+									if (webView.settings.disableVerticalScroll) {
+										var style = iframe.contentDocument.createElement('style');
+										style.id = "settings.disableVerticalScroll";
+										style.innerHTML = "body { overflow-y: hidden; }";
+										iframe.contentDocument.head.append(style);
+									}
+
+									if (webView.settings.disableHorizontalScroll) {
+										var style = iframe.contentDocument.createElement('style');
+										style.id = "settings.disableHorizontalScroll";
+										style.innerHTML = "body { overflow-x: hidden; }";
+										iframe.contentDocument.head.append(style);
+									}
+
+									if (webView.settings.disableContextMenu) {
+										iframe.contentWindow.addEventListener('contextmenu', webView.disableContextMenuHandler);
+									}
+								} catch (e) {
+									console.log(e);
+								}
+
+								window.flutter_inappwebview.nativeCommunication('onLoadStop', viewId, [url]);
+							});
+						}
+					},
+					setSettings: function (newSettings) {
+						var iframe = webView.iframe;
+						try {
+							if (webView.settings.javaScriptCanOpenWindowsAutomatically != newSettings.javaScriptCanOpenWindowsAutomatically) {
+								if (!newSettings.javaScriptCanOpenWindowsAutomatically) {
+									iframe.contentWindow.open = function () {
+										throw new Error('JavaScript cannot open windows automatically');
+									};
+								} else {
+									iframe.contentWindow.open = webView.functionMap["window.open"];
+								}
+							}
+
+							if (webView.settings.verticalScrollBarEnabled != newSettings.verticalScrollBarEnabled &&
+								webView.settings.horizontalScrollBarEnabled != newSettings.horizontalScrollBarEnabled) {
+								if (!newSettings.verticalScrollBarEnabled && !newSettings.horizontalScrollBarEnabled) {
+									var style = iframe.contentDocument.createElement('style');
+									style.id = "settings.verticalScrollBarEnabled-settings.horizontalScrollBarEnabled";
+									style.innerHTML = "body::-webkit-scrollbar { width: 0px; height: 0px; }";
+									iframe.contentDocument.head.append(style);
+								} else {
+									var styleElement = iframe.contentDocument.getElementById("settings.verticalScrollBarEnabled-settings.horizontalScrollBarEnabled");
+									if (styleElement) {styleElement.remove()}
+								}
+							}
+
+							if (webView.settings.disableVerticalScroll != newSettings.disableVerticalScroll) {
+								if (newSettings.disableVerticalScroll) {
+									var style = iframe.contentDocument.createElement('style');
+									style.id = "settings.disableVerticalScroll";
+									style.innerHTML = "body { overflow-y: hidden; }";
+									iframe.contentDocument.head.append(style);
+								} else {
+									var styleElement = iframe.contentDocument.getElementById("settings.disableVerticalScroll");
+									if (styleElement) {styleElement.remove()}
+								}
+							}
+
+							if (webView.settings.disableHorizontalScroll != newSettings.disableHorizontalScroll) {
+								if (newSettings.disableHorizontalScroll) {
+									var style = iframe.contentDocument.createElement('style');
+									style.id = "settings.disableHorizontalScroll";
+									style.innerHTML = "body { overflow-x: hidden; }";
+									iframe.contentDocument.head.append(style);
+								} else {
+									var styleElement = iframe.contentDocument.getElementById("settings.disableHorizontalScroll");
+									if (styleElement) {styleElement.remove()}
+								}
+							}
+
+							if (webView.settings.disableContextMenu != newSettings.disableContextMenu) {
+								if (newSettings.disableContextMenu) {
+									iframe.contentWindow.addEventListener('contextmenu', webView.disableContextMenuHandler);
+								} else {
+									iframe.contentWindow.removeEventListener('contextmenu', webView.disableContextMenuHandler);
+								}
+							}
+						} catch (e) {
+							console.log(e);
+						}
+
+						webView.settings = newSettings;
+					},
+					reload: function () {
+						var iframe = webView.iframe;
+						if (iframe != null && iframe.contentWindow != null) {
+							try {
+								iframe.contentWindow.location.reload();
+							} catch (e) {
+								console.log(e);
+								iframe.contentWindow.location.href = iframe.src;
+							}
+						}
+					},
+					goBack: function () {
+						var iframe = webView.iframe;
+						if (iframe != null) {
+							try {
+								iframe.contentWindow.history.back();
+							} catch (e) {
+								console.log(e);
+							}
+						}
+					},
+					goForward: function () {
+						var iframe = webView.iframe;
+						if (iframe != null) {
+							try {
+								iframe.contentWindow.history.forward();
+							} catch (e) {
+								console.log(e);
+							}
+						}
+					},
+					goBackOrForward: function (steps) {
+						var iframe = webView.iframe;
+						if (iframe != null) {
+							try {
+								iframe.contentWindow.history.go(steps);
+							} catch (e) {
+								console.log(e);
+							}
+						}
+					},
+					evaluateJavascript: function (source) {
+						var iframe = webView.iframe;
+						var result = null;
+						if (iframe != null) {
+							try {
+								result = JSON.stringify(iframe.contentWindow.eval(source));
+							} catch (e) { }
+						}
+						return result;
+					},
+					stopLoading: function (steps) {
+						var iframe = webView.iframe;
+						if (iframe != null) {
+							try {
+								iframe.contentWindow.stop();
+							} catch (e) {
+								console.log(e);
+							}
+						}
+					},
+					getUrl: function () {
+						var iframe = webView.iframe;
+						var url = iframe.src;
+						try {
+							url = iframe.contentWindow.location.href;
+						} catch (e) {
+							console.log(e);
+						}
+						return url;
+					},
+					getTitle: function () {
+						var iframe = webView.iframe;
+						var title = null;
+						try {
+							title = iframe.contentDocument.title;
+						} catch (e) {
+							console.log(e);
+						}
+						return title;
+					},
+					injectJavascriptFileFromUrl: function (urlFile, scriptHtmlTagAttributes) {
+						var iframe = webView.iframe;
+						try {
+							var d = iframe.contentDocument;
+							var script = d.createElement('script');
+							for (var key of Object.keys(scriptHtmlTagAttributes)) {
+								if (scriptHtmlTagAttributes[key] != null) {
+									script[key] = scriptHtmlTagAttributes[key];
+								}
+							}
+							if (script.id != null) {
+								script.onload = function () {
+									window.flutter_inappwebview.nativeCommunication('onInjectedScriptLoaded', webView.viewId, [script.id]);
+								}
+								script.onerror = function () {
+									window.flutter_inappwebview.nativeCommunication('onInjectedScriptError', webView.viewId, [script.id]);
+								}
+							}
+							script.src = urlFile;
+							if (d.body != null) {
+								d.body.appendChild(script);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					injectCSSCode: function (source) {
+						var iframe = webView.iframe;
+						try {
+							var d = iframe.contentDocument;
+							var style = d.createElement('style');
+							style.innerHTML = source;
+							if (d.head != null) {
+								d.head.appendChild(style);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					injectCSSFileFromUrl: function (urlFile, cssLinkHtmlTagAttributes) {
+						var iframe = webView.iframe;
+						try {
+							var d = iframe.contentDocument;
+							var link = d.createElement('link');
+							for (var key of Object.keys(cssLinkHtmlTagAttributes)) {
+								if (cssLinkHtmlTagAttributes[key] != null) {
+									link[key] = cssLinkHtmlTagAttributes[key];
+								}
+							}
+							link.type = 'text/css';
+							var alternateStylesheet = "";
+							if (cssLinkHtmlTagAttributes.alternateStylesheet) {
+								alternateStylesheet = "alternate ";
+							}
+							link.rel = alternateStylesheet + "stylesheet";
+							link.href = urlFile;
+							if (d.head != null) {
+								d.head.appendChild(link);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					scrollTo: function (x, y, animated) {
+						var iframe = webView.iframe;
+						try {
+							if (animated) {
+								iframe.contentWindow.scrollTo({top: y, left: x, behavior: 'smooth'});
+							} else {
+								iframe.contentWindow.scrollTo(x, y);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					scrollBy: function (x, y, animated) {
+						var iframe = webView.iframe;
+						try {
+							if (animated) {
+								iframe.contentWindow.scrollBy({top: y, left: x, behavior: 'smooth'});
+							} else {
+								iframe.contentWindow.scrollBy(x, y);
+							}
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					printCurrentPage: function () {
+						var iframe = webView.iframe;
+						try {
+							iframe.contentWindow.print();
+						} catch (e) {
+							console.log(e);
+						}
+					},
+					getContentHeight: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentDocument.documentElement.scrollHeight;
+						} catch (e) {
+							console.log(e);
+						}
+						return null;
+					},
+					getContentWidth: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentDocument.documentElement.scrollWidth;
+						} catch (e) {
+							console.log(e);
+						}
+						return null;
+					},
+					getSelectedText: function () {
+						var iframe = webView.iframe;
+						try {
+							var txt;
+							var w = iframe.contentWindow;
+							if (w.getSelection) {
+								txt = w.getSelection().toString();
+							} else if (w.document.getSelection) {
+								txt = w.document.getSelection().toString();
+							} else if (w.document.selection) {
+								txt = w.document.selection.createRange().text;
+							}
+							return txt;
+						} catch (e) {
+							console.log(e);
+						}
+						return null;
+					},
+					getScrollX: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentWindow.scrollX;
+						} catch (e) {
+							console.log(e);
+						}
+						return null;
+					},
+					getScrollY: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentWindow.scrollY;
+						} catch (e) {
+							console.log(e);
+						}
+						return null;
+					},
+					isSecureContext: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentWindow.isSecureContext;
+						} catch (e) {
+							console.log(e);
+						}
+						return false;
+					},
+					canScrollVertically: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentDocument.body.scrollHeight > iframe.contentWindow.innerHeight;
+						} catch (e) {
+							console.log(e);
+						}
+						return false;
+					},
+					canScrollHorizontally: function () {
+						var iframe = webView.iframe;
+						try {
+							return iframe.contentDocument.body.scrollWidth > iframe.contentWindow.innerWidth;
+						} catch (e) {
+							console.log(e);
+						}
+						return false;
+					},
+					getSize: function () {
+						var iframeContainer = webView.iframeContainer;
+						var width = 0.0;
+						var height = 0.0;
+						if (iframeContainer.style.width != null && iframeContainer.style.width != '' && iframeContainer.style.width.indexOf('px') > 0) {
+							width = parseFloat(iframeContainer.style.width);
+						}
+						if (width == null || width == 0.0) {
+							width = iframeContainer.getBoundingClientRect().width;
+						}
+						if (iframeContainer.style.height != null && iframeContainer.style.height != '' && iframeContainer.style.height.indexOf('px') > 0) {
+							height = parseFloat(iframeContainer.style.height);
+						}
+						if (height == null || height == 0.0) {
+							height = iframeContainer.getBoundingClientRect().height;
+						}
+
+						return {
+							width: width,
+							height: height
+						};
+					}
+				};
+
+				return webView;
+			},
+			getCookieExpirationDate: function (timestamp) {
+				return (new Date(timestamp)).toUTCString();
+			}
+		};
+
+	</script>
+</body>
+
+</html>

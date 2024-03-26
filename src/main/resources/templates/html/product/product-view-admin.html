@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+	<style>
+		body {
+			font-family: 'Arial', sans-serif;
+			margin: 0;
+			padding: 0;
+			background-color: #f8f8f8;
+		}
+
+		.productView {
+			max-width: 800px;
+			margin: 20px auto;
+			background-color: #fff;
+			padding: 20px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		#prod {
+			display: flex;
+			justify-content: space-between;
+		}
+
+		#ProductImgBox img {
+			max-width: 100%;
+			height: auto;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+			margin-bottom: 10px;
+		}
+
+		#thumbnailContainer img {
+			width: 60px;
+			height: auto;
+			margin-right: 5px;
+			cursor: pointer;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+		}
+
+		#productDetail {
+			flex: 1;
+			padding-left: 20px;
+		}
+
+		#option {
+			margin-top: 10px;
+		}
+
+		.tabButton {
+			cursor: pointer;
+			margin: 10px;
+			padding: 10px;
+			background-color: #f1f1f1;
+			color: black;
+			border: none;
+			border-radius: 4px;
+		}
+
+		.tabContent {
+			display: none;
+			padding: 20px;
+			background-color: #f1f1f1;
+			border-radius: 8px;
+			margin-top: 10px;
+		}
+
+		#btn {
+			margin-top: 20px;
+		}
+
+		button {
+			cursor: pointer;
+			padding: 10px;
+			background-color: #f1f1f1;
+			color: black;
+			border: none;
+			border-radius: 4px;
+			margin-right: 10px;
+		}
+
+		#updateBtn {
+			background-color: #4CAF50;
+			color: white;
+			border-radius: 5px;
+
+		}
+
+		#deleteBtn {
+			background-color: red;
+			color: white;
+			border-radius: 5px;
+		}
+
+		.product-wap.card.rounded-0 {
+			height: 500px;
+		}
+	</style>
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-admin :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment-admin :: header-admin-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+
+	<div class="productView">
+		<div id="prod">
+			<div id="ProductImgBox">
+
+			</div>
+			<div id="thumbnailContainer">
+
+			</div>
+			<div id="productDetail">
+				<input type="text" id="piNames" placeholder="상품 이름"> <br>
+				번호 <input type="text" id="piNum" readonly><br>
+				상품 가격 <input type="number" id="piPrice" placeholder="상품 가격"> <br>
+				<!-- + - 버튼 추가하기-->
+				<!-- 사이즈 옵션 (일단 한번 넣어봤어요)-->
+				<div id="option">
+					<label for="sizeSelect">사이즈 선택: </label>
+					<select id="sizeSelect" class="sizeSelect">
+						<option value="small">Small</option>
+						<option value="medium">Medium</option>
+						<option value="large">Large</option>
+					</select>
+				</div>
+				<!-- 장바구니랑 결제 추가되면 추가 -->
+
+
+			</div>
+		</div>
+		<div class="tabButton" onclick="showTab('descriptionTab')">상품 설명</div>
+		<div class="tabButton" onclick="showTab('reviewTab')">상품 리뷰</div>
+
+		<!-- 탭 내용 추가 -->
+		<div class="tabContent" id="descriptionTab">
+			<label for="piDesc">상품 상세 설명</label>
+			<div id="piDesc" placeholder="상품 상세 설명"></div> <br>
+		</div>
+		<div class="tabContent" id="reviewTab">
+			<!-- 리뷰 내용 추가 -->
+			<h3>상품 리뷰</h3>
+			<p>리뷰 내용을 여기에 추가하세요.</p>
+		</div>
+		<div id="btn">
+			<button onclick="updateProduct()" id="updateBtn">수정하기</button>
+			<button onclick="deleteProduct()" id="deleteBtn">삭제하기</button>
+		</div>
+
+	</div>
+
+
+
+	<script>
+		//유저가봤을때는 상품내역만보이게해놨음
+		// 탭을 변경하는 함수
+		function showTab(tabName) {
+			// 모든 탭 숨기기
+			var tabs = document.querySelectorAll('.tabContent');
+			tabs.forEach(function (tab) {
+				tab.style.display = 'none';
+			});
+
+			// 선택한 탭 보이기
+			document.getElementById(tabName).style.display = 'block';
+		}
+
+		let prodInfo;
+
+		let currentImageIndex = 0;
+
+		function showImage(index) {
+			const images = document.querySelectorAll('[id^="ProductImgBox"] img');
+			currentImageIndex = (index + images.length) % images.length;
+
+			images.forEach((image, i) => {
+				image.style.display = i === currentImageIndex ? 'block' : 'none';
+			});
+
+			updateThumbnails(); // 메인 이미지 변경 시 썸네일도 업데이트
+		}
+
+		function updateThumbnails() {
+			const thumbnailsContainer = document.getElementById('thumbnailContainer');
+			thumbnailsContainer.innerHTML = ''; // 기존 썸네일 지우기
+
+			for (let i = 0; i < prodInfo.productFiles.length; i++) {
+				const thumbnailSrc = prodInfo.productFiles[i].pfiImgPath;
+				const thumbnail = document.createElement('img');
+				thumbnail.src = thumbnailSrc;
+				thumbnail.style.width = '80px'; // 썸네일의 너비를 필요에 맞게 조절
+
+
+				// 클릭 시 메인 이미지 변경
+				thumbnail.onclick = () => showImage(i);
+
+				thumbnailsContainer.appendChild(thumbnail);
+			}
+		}
+
+		//이미지가 2장일 경우 슬라이드 형태로 설정
+		function nextImage() {
+			showImage(currentImageIndex + 1);
+		}
+
+		function prevImage() {
+			showImage(currentImageIndex - 1);
+		}
+
+		window.addEventListener('load', async function () {
+
+			const res = await fetch('/product-infos/[[${param.piNum}]]');
+			const productInfo = await res.json();
+			console.log(productInfo);
+			prodInfo = productInfo;
+			document.querySelector('#piNum').value = productInfo.piNum;
+			document.querySelector('#piNames').value = productInfo.piName;
+			document.querySelector('#piDesc').innerHTML = productInfo.piDesc;
+			document.querySelector('#piPrice').value = productInfo.piPrice;
+			for (let i = 0; i < productInfo.productFiles.length; i++) {
+				const productFile = productInfo.productFiles[i];
+				console.log(productFile);
+				let html = `<div id="ProductImgBox${i + 1}">`
+					+ `<br><img src="${productFile.pfiImgPath}" id="img${i + 1}" style="width:100%;">`
+					+ `<input type="hidden" id="sort${i + 1}" value="${productFile.pfiSort}" readonly>`;
+
+				document.querySelector('#ProductImgBox').insertAdjacentHTML('beforeend', html);
+			}
+
+			// 이미지가 2장이상일 경우 슬라이드 설정
+			document.querySelector('#ProductImgBox').innerHTML += `
+            <button onclick="prevImage()">◀</button>
+            <button onclick="nextImage()">▶</button>
+        `;
+
+			updateThumbnails();
+			showImage(0); // 처음 이미지를 초기에 표시
+
+
+		})
+
+
+		function preview(input, imgId, pfiNum) {
+			console.log(productFiles);
+			document.querySelector(`#${imgId}`).src = URL.createObjectURL(input.files[0]);
+		}
+
+
+		async function deleteProduct() {
+			const res = await fetch('/product-infos/[[${param.piNum}]]', {
+				method: 'DELETE'
+			})
+				.then(response => {
+					if (response.ok) {
+						alert('상품 삭제 완료');
+						location.href = '/html/product/product-list';
+					} else {
+						alert('삭제 도중 오류');
+					}
+				})
+
+		}
+
+		function updateProduct() {
+			location.href = '/html/product/product-update?piNum=[[${param.piNum}]]';
+		}
+	</script>
+</body>
+
+</html>

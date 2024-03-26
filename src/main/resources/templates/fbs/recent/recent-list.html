@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>FBSports 쇼핑몰</title>
+	<style>
+		/* 게시판 테이블에 대한 스타일 정의 */
+
+		body {
+			text-align: center;
+		}
+
+		.recent-table {
+			margin: auto;
+			width: 60%;
+			border-collapse: collapse;
+
+		}
+
+		th,
+		td {
+			border: 1px;
+			background-color: #f2f2f2;
+			text-align: center;
+			padding: 10px;
+		}
+
+		th {
+			background-color: #58ac6e;
+			text-align: center;
+			color: white;
+		}
+
+		td:nth-child(3) {
+			text-align: left;
+		}
+
+		td:nth-child(1) {
+			width: 70px;
+		}
+
+		h1 {
+			text-align: center;
+			margin-bottom: 1%;
+		}
+
+		@media (max-width: 990px) {
+			.recent-table {
+				margin: auto;
+				width: 80%;
+				border-collapse: collapse;
+				text-align: center;
+			}
+
+			td:nth-child(1) {
+				display: none;
+
+			}
+			
+			th:nth-child(1) {
+				display: none;
+
+			}
+
+
+
+			td:nth-child(4) {
+				display: none;
+
+			}
+
+			th:nth-child(4) {
+				display: none;
+
+			}
+
+			th:nth-child(4) {
+				text-align: center;
+
+			}
+
+
+			th,
+			td {
+
+				text-align: center;
+
+			}
+			
+
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<h1 style="margin-top: 30px;">최근 본 상품</h1>
+	<table class="recent-table
+	" border="1">
+		<thead>
+			<th style="text-align: center;">번호</th>
+			<th style="text-align: center;">상품 이미지</th>
+			<th style="text-align: center;">상품 이름</th>
+			<th>상품 가격</th>
+		</thead>
+		<tbody id="tBody"></tbody>
+	</table>
+
+	<script>
+
+		// 최근 본 상품(10개 중복 불가) 불러오기
+		window.addEventListener('load', function () {
+
+			cartlength();
+			couponlength();
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', '/recent-infos');
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == xhr.DONE) {
+					if (xhr.status == 200) {
+						console.log(xhr.responseText);
+						const recents = JSON.parse(xhr.responseText);
+						let html = '';
+						let i = 1;
+						for (const recent of recents) {
+							html += '<tr>';
+							html += `<td>${i++}</td>`;
+							html += `<td><img src="${recent.productFiles[0].pfiImgPath}" width="100" height="100"></td>`;
+							html += `<td><a href='/fbs/product/product-view?piNum=${recent.piNum}' onclick='addRecentInfo(${recent.piNum},23)'>${recent.piName}</a></td>`;
+							html += `<td>${recent.piPrice}원</td>`;
+							html += '</tr>';
+						}
+						document.querySelector('#tBody').innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+		})
+
+		// 최근 본 상품 페이지에서 해당 상품 view로 이동시 추가
+		function addRecentInfo(piNum, uiNum) {
+			fetch('/recent-infos', {
+				method: 'POST',
+				headers: {
+					'Content-Type' : 'application/json',
+				},
+				body: JSON.stringify({
+					piNum: piNum,
+					uiNum: uiNum
+				}),
+			})
+		}
+
+		async function cartlength() {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+		}
+
+		async function couponlength() {
+			// 유저가 보유한 쿠폰 개수 계산해서 몇개있는지 표시
+			const CouponRes = await fetch('/coupon-infos');
+			const Couponobjs = await CouponRes.text();
+
+			if (Couponobjs != '') {
+				Couponjson = JSON.parse(Couponobjs);
+				let Couponhtml = Couponjson.length;
+				document.querySelector('#coupon').innerText = Couponhtml;
+			}
+
+		}
+
+	</script>
+</body>
+
+</html>

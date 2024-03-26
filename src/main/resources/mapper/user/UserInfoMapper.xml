@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.user.mapper.UserInfoMapper">
+	<select id="selectUserInfos"
+		resultType="com.secu.team5.user.vo.UserInfoVO">
+		SELECT UI_NUM, UI_NAME, UI_ID, UI_PHONE, UI_BIRTH, UI_GENDER, UI_EMAIL, UI_CREDAT, UI_CRETIM, UI_LMODAT, UI_LMOTIM, UI_GRADE,UI_IMG_PATH
+		FROM USER_INFO
+	</select>
+
+	<select id="selectUserInfosForChat" resultType="com.secu.team5.user.vo.UserInfoVO">
+		SELECT 
+		UI_NUM, UI_NAME, UI_ID, UI_PHONE, 
+		UI_BIRTH, UI_GENDER, UI_EMAIL, UI_CREDAT, 
+		UI_CRETIM, UI_LMODAT, UI_LMOTIM, UI_GRADE,
+		UI_IMG_PATH, 
+		(SELECT COUNT(1) FROM CHAT_MESSAGE_INFO CMI
+		WHERE CMI_SENDER_UI_NUM=UI.UI_NUM
+		AND CMI_RECEIVE_UI_NUM=#{uiNum}
+		AND CMI_RECEIVED_TIME IS NULL) UNREAD_CNT
+		FROM USER_INFO UI
+		WHERE UI_NUM!=#{uiNum}
+	</select>
+	
+	<select id="selectUserInfo" resultType="com.secu.team5.user.vo.UserInfoVO">
+		SELECT UI_NUM, UI_NAME, UI_ID, UI_PHONE, UI_BIRTH,
+		UI_GENDER, UI_EMAIL, UI_GRADE, UI_IMG_PATH FROM USER_INFO WHERE UI_NUM = #{uiNum}
+	</select>
+
+	<select id="selectUserInfoById"
+		resultType="com.secu.team5.user.vo.UserInfoVO">
+		SELECT * FROM USER_INFO WHERE UI_ID=#{uiId}
+	</select>
+
+	<insert id="insertUserInfo" useGeneratedKeys="true"
+		keyColumn="UI_NUM" keyProperty="uiNum">
+		INSERT INTO USER_INFO(UI_NAME, UI_ID,
+		UI_PWD, UI_PHONE, UI_EMAIL, UI_BIRTH, UI_GENDER)
+		VALUES(#{uiName},
+		#{uiId}, #{uiPwd}, #{uiPhone}, #{uiEmail}, #{uiBirth}, #{uiGender})
+	</insert>
+
+	<update id="updateUserInfo">
+		UPDATE USER_INFO
+		<set>
+			<if test='uiPwd != null and uiPwd != ""'>
+				UI_PWD = #{uiPwd},
+			</if>
+			<if test='uiName != null and uiName != ""'>
+				UI_NAME = #{uiName},
+			</if>
+			<if test='uiEmail != null and uiEmail != ""'>
+				UI_EMAIL = #{uiEmail},
+			</if>
+			<if test='uiPhone != null and uiPhone != ""'>
+				UI_PHONE = #{uiPhone}
+			</if>
+		</set>
+		WHERE UI_NUM= #{uiNum}
+	</update>
+
+	<delete id="deleteUserInfo">
+		DELETE FROM USER_INFO
+		WHERE UI_NUM = #{uiNum}
+	</delete>
+
+	<update id="updateuiGrade"
+		parameterType="com.secu.team5.user.vo.UserInfoVO">
+		UPDATE USER_INFO
+		SET
+		UI_GRADE = FN_GET_GRADE(#{uiNum})
+		WHERE UI_NUM = #{uiNum}
+	</update>
+
+</mapper>

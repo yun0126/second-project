@@ -1,0 +1,24 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.order.mapper.OrderInfoMapper">
+
+	<!-- 만든순서대로 정렬했어요 나중에 한꺼번에 수정할게요 -->
+	<insert id="insertOrderInfo" useGeneratedKeys="true"
+		keyColumn="OI_NUM" keyProperty="oiNum">
+		INSERT INTO ORDER_INFO(UI_NUM,
+		OI_TOTAL_PRICE, OI_ADDRESS, OI_MEMO, OI_MERCHANT_UID, OI_PAY,
+		OI_COUPON)
+		VALUES(#{uiNum},#{oiTotalPrice},#{oiAddress},#{oiMemo},#{oiMerchantUid},#{oiPay},#{oiCoupon});
+	</insert>
+
+	<select id="selectOrderInfoWithUUID">
+		SELECT * FROM ORDER_INFO OI LEFT JOIN USER_INFO UI ON
+		UI.UI_NUM=OI.UI_NUM WHERE OI_MERCHANT_UID = #{oiMerchantUid}
+	</select>
+	
+	<select id="selectOrderInfoWithUINUM"> 
+		SELECT * FROM ORDER_INFO WHERE UI_NUM = #{uiNum} ORDER BY OI_NUM DESC
+	</select>
+</mapper>

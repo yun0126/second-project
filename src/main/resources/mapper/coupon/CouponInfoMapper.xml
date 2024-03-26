@@ -1,0 +1,44 @@
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.coupon.mapper.CouponInfoMapper">
+	<insert id="insertJoinCoupon" parameterType="com.secu.team5.coupon.vo.CouponInfoVO">
+		INSERT INTO COUPON_INFO(CPTI_NUM, UI_NUM, CPI_EXPIRE, ACTIVE)
+		VALUES(#{cptiNum},#{uiNum},#{cpiExpire}, #{active})
+	</insert>
+	
+	<insert id="insertGradeCoupon" parameterType="com.secu.team5.coupon.vo.CouponInfoVO">
+		INSERT INTO COUPON_INFO(CPTI_NUM, UI_NUM, CPI_EXPIRE, ACTIVE)
+		VALUES(#{cptiNum},#{uiNum},#{cpiExpire}, #{active})
+	</insert>
+	
+	<select id="couponDoubleCheckForMonth" resultType="boolean" parameterType="com.secu.team5.coupon.vo.CouponInfoVO">
+		SELECT COUNT(*) > 0
+		FROM COUPON_INFO CI
+		INNER JOIN USER_INFO UI ON CI.UI_NUM = UI.UI_NUM
+		WHERE CI.CPTI_NUM = #{cptiNum}
+		AND CI.UI_NUM = #{uiNum}
+		AND MONTH(CI.CPI_EXPIRE - INTERVAL 1 MONTH) = MONTH(CURDATE())
+    </select>
+	
+	<!-- 주문전 쿠폰정보 확인을 위한 셀렉트문 -경석- -->
+	<select id="selectCouponByuiNum" resultType="com.secu.team5.coupon.vo.CouponInfoVO">
+		SELECT * FROM COUPON_INFO CI INNER JOIN COUPON_TYPE_INFO CTI ON CI.CPTI_NUM = CTI.CPTI_NUM 
+		WHERE CI.UI_NUM = #{uiNum} AND CI.ACTIVE = 1
+	</select>
+	
+	<update id="updateUsedCoupon" parameterType="com.secu.team5.coupon.vo.CouponInfoVO">
+		UPDATE COUPON_INFO
+		SET ACTIVE = 2
+		WHERE UI_NUM = #{uiNum} 
+		AND CPI_NUM = #{cpiNum}
+	</update>
+	
+	<update id="updateExpireCoupon" parameterType="com.secu.team5.coupon.vo.CouponInfoVO">
+		UPDATE COUPON_INFO
+		SET ACTIVE = 3
+		WHERE CPI_EXPIRE &lt; CURRENT_DATE
+	</update>
+	
+</mapper>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+	<!--그래프 그리는것 -->
+	<script th:src="@{/js/echarts.min.js}"></script>
+
+	<!-- 엑셀파일로 만들기 -->
+	<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+	<!-- 엑셀파일로 만들기 -->
+	<script src="http://cdn.jsdelivr.net/g/filesaver.js"></script>
+
+	<!--jQuery dependency, any stable version of jQuery-->
+	<script src="https://unpkg.com/jquery@2.2.4/dist/jquery.js"></script>
+
+	<!--jQueryUI version 1.11.4 -->
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+	<!--ParamQuery Grid css files-->
+	<link rel="stylesheet" th:href="@{/js/pq-grid/pqgrid.min.css}" />
+
+	<!--add pqgrid.ui.css for jQueryUI theme support-->
+	<link rel="stylesheet" th:href="@{/js/pq-grid/pqgrid.ui.min.css}" />
+
+	<!--ParamQuery Grid custom theme e.g., office, bootstrap, rosy, chocolate, etc (optional)-->
+	<link rel="stylesheet" th:href="@{/js/pq-grid/themes/office/pqgrid.css}" />
+
+	<!--Include jsZip file (v2.5.0) before pqgrid js file to support xlsx and zip export (optional)-->
+	<script type="text/javascript" th:src="@{/js/pq-grid/jsZip-2.5.0/jszip.min.js}"></script>
+
+	<!--ParamQuery Grid js files-->
+	<script type="text/javascript" th:src="@{/js/pq-grid/pqgrid.min.js}"></script>
+
+	<!--ParamQuery Grid localization file-->
+	<script th:src="@{/js/pq-grid/localize/pq-localize-kr.js}"></script>
+
+	<!--Include pqTouch file to provide support for touch devices (optional)-->
+	<script type="text/javascript" th:src="@{/js/pq-grid/pqTouch/pqtouch.js}"></script>
+
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+	<style>
+		button{
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-admin :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment-admin :: header-admin-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<h1 style="text-align: center; margin-top: 30px;">상품 판매 정보</h1>
+	<div  class="container text-center">
+		<div class="container-sales" style="margin: 0 auto;">
+			<div id="salesInfo" style="width: 100%;height:65vh;"></div>
+		</div>
+
+		<div class="row" id="saveBtn" style="padding-left: 5%; padding-right: 5%; margin:20px">
+
+		</div>
+
+		<div style="margin: 20px auto; padding-left: 5%; padding-right: 5%;">
+			<button onclick="viewChart()" class="btn btn-danger">카테고리별 판매량 보기</button>
+			<button onclick="viewPie()" class="btn btn-info">큰 카테고리로 보기</button>
+			<button onclick="viewSales()" class="btn btn-success">상세 매출 보기</button>
+		</div>
+	</div>
+
+
+
+
+
+	<script>
+		//그래프는 2가지방식 마지막은 전체 상세 명세서로 보여주는형식이다 
+		$(document).ready(function () {
+			viewPie();
+		});
+
+		async function viewChart() {
+
+			//-----------------------------------차트가 올바르게 작동할려면 html 요소를 제거하고 다시 넣어줘야한다 api특성때문이라고 하던데 ...-----------------------------------------------------------------------
+			const div = document.querySelector('#salesInfo');
+			div.remove();
+			let html = '<div id="salesInfo" style="width: 100%;height:65vh; margin: 0 auto;"></div>';
+			document.querySelector('.container-sales').insertAdjacentHTML("beforeend", html);
+			//----------------------------------------------------------------------------------------------------------
+			//모든카데고리를 들고오기 위해서 했음
+			const res = await fetch('/order-infos/order-details');
+			const objs = await res.json();
+
+			//서브타입 카테고리만 들고오기
+			const stiRes = await fetch('/subtype-infos');
+			const stiObjs = await stiRes.json();
+
+
+
+			let myChart = echarts.init(document.querySelector('#salesInfo'));
+			let option = '';
+			// Specify the configuration items and data for the chart
+			option = {
+				legend: {},
+				tooltip: {},
+				dataset: {
+					source: [
+						['product'],
+						['야구'],
+						['축구'],
+						['헬스'],
+					]
+				},
+				xAxis: {type: 'category'},
+				yAxis: {},
+				// Declare several bar series, each will be mapped
+				// to a column of dataset.source by default.
+				series: []
+			};
+
+			//이름하고 바 그려넣기
+			for (let obj of stiObjs) {
+				option.dataset.source[0].push(obj.stiName);
+				option.dataset.source[1].push(0);
+				option.dataset.source[2].push(0);
+				option.dataset.source[3].push(0);
+				option.series.push({type: 'bar'})
+			}
+
+			//
+			for (let obj of stiObjs) {
+				let data = 0;
+				for (let object of objs) {
+					if (obj.stiName == object.stiName) {
+						data += object.odiPrice;
+					}
+				}
+				if (obj.tiName == '야구') {
+					let index = option.dataset.source[0].indexOf(obj.stiName);
+					option.dataset.source[1][index] = data;
+				}
+				if (obj.tiName == '축구') {
+					let index = option.dataset.source[0].indexOf(obj.stiName);
+					option.dataset.source[2][index] = data;
+				}
+				if (obj.tiName == '헬스') {
+					let index = option.dataset.source[0].indexOf(obj.stiName);
+					option.dataset.source[3][index] = data;
+				}
+
+			}
+
+
+			option && myChart.setOption(option);
+		}
+
+		async function viewPie() {
+			//-----------------------------------차트가 올바르게 작동할려면 html 요소를 제거하고 다시 넣어줘야한다 api특성때문이라고 하던데 ...-----------------------------------------------------------------------
+			const div = document.querySelector('#salesInfo');
+			div.remove();
+			let html = '<div id="salesInfo" style="width: 100%;height:65vh; margin: 0 auto;"></div>';
+			document.querySelector('.container-sales').insertAdjacentHTML("beforeend", html);
+
+
+			const res = await fetch('/order-infos/order-details');
+			const objs = await res.json();
+
+
+			const stiRes = await fetch('/subtype-infos');
+			const stiObjs = await stiRes.json();
+
+
+
+
+			let chartDom = document.querySelector('#salesInfo');
+			let myChart = echarts.init(chartDom);
+			let option;
+
+			option = {
+				title: {
+					text: '카테고리별 상품 금액',
+					subtext: '야구 축구 헬스',
+					left: 'center'
+				},
+				tooltip: {
+					trigger: 'item'
+				},
+				legend: {
+					orient: 'vertical',
+					left: 'left'
+				},
+				series: [
+					{
+						name: '카테고리명',
+						type: 'pie',
+						radius: '50%',
+						data: [
+							{value: 1048, name: '야구'},
+							{value: 735, name: '축구'},
+							{value: 580, name: '헬스'},
+						],
+						emphasis: {
+							itemStyle: {
+								shadowBlur: 10,
+								shadowOffsetX: 0,
+								shadowColor: 'rgba(0, 0, 0, 0.5)'
+							}
+						}
+					}
+				]
+			};
+
+			let totalprice = [0, 0, 0];
+			for (let obj of objs) {
+				if (obj.tiName == '야구') {
+					totalprice[0] += obj.odiPrice;
+				}
+				if (obj.tiName == '축구') {
+					totalprice[1] += obj.odiPrice;
+				}
+				if (obj.tiName == '헬스') {
+					totalprice[2] += obj.odiPrice;
+				}
+			}
+			for (let i = 0; i < totalprice.length; i++) {
+				option.series[0].data[i].value = totalprice[i];
+			}
+
+			option && myChart.setOption(option);
+
+
+		}
+
+		function viewSales() {
+			const div = document.querySelector('#salesInfo');
+			div.remove();
+			let html = '<div id="salesInfo" style="width: 100%;height:65vh; margin: 0 auto;"></div>';
+			document.querySelector('.container-sales').insertAdjacentHTML("beforeend", html);
+
+			getSales()
+				.then(data => {
+					console.log(data);
+					const colModel = [{
+						title: '매출 번호',
+						width: 100,
+						dataType: 'integer',
+						dataIndx: 'oiNum'
+					},
+					{
+						title: '상품명',
+						width: 100,
+						dataType: 'string',
+						dataIndx: 'piName'
+					},
+					{
+						title: '상품 가격',
+						width: 100,
+						dataType: 'integer',
+						dataIndx: 'piPrice'
+					},
+					{
+						title: '상품 구매 수량',
+						width: 150,
+						dataType: 'integer',
+						dataIndx: 'odiAmount'
+					},
+					{
+						title: '상품 메인 카테고리',
+						width: 200,
+						dataType: 'string',
+						dataIndx: 'tiName'
+					},
+					{
+						title: '상품 서브 카테고리',
+						width: 200,
+						dataType: 'string',
+						dataIndx: 'stiName'
+					},
+					{
+						title: '상품 구매 날짜',
+						width: 150,
+						dataType: 'string',
+						dataIndx: 'odiCredat'
+					},
+					{
+						title: '상품 구매 시간',
+						width: 150,
+						dataType: 'string',
+						dataIndx: 'odiCretim'
+					},
+					{
+						title: '상품 구매한 총가격',
+						width: 200,
+						dataType: 'integer',
+						dataIndx: 'odiPrice'
+					}];
+
+					const gridObj = {
+						width: 1400,
+						height: 500,
+						colModel: colModel,
+						dataModel: {data: data}
+
+					}
+
+					$('#salesInfo').pqGrid(gridObj);
+					if (document.querySelector("#save")) {
+						document.querySelector("#save").remove();
+					}
+
+					let html = `<button onclick="download()"  id="save"  class="btn btn-dark">엑셀파일로저장하기</button>`;
+					document.querySelector('#saveBtn').insertAdjacentHTML("beforeend", html);
+				});
+		}
+
+		async function getSales() {
+			const res = await fetch('/order-infos/order-details');
+			const objs = await res.json();
+			return objs;
+		}
+
+		async function download() {
+			const json = $('#salesInfo').pqGrid('option', 'dataModel.data');
+			//데이터 키값제거
+			for (let obj of json) {
+				delete obj.start;
+				delete obj.end;
+				delete obj.pageSize;
+				delete obj.page;
+				delete obj.productFiles;
+				delete obj.pq_ri;
+				delete obj.pq_ht;
+			}
+			console.log(json);
+
+			//워크시트 생성 api
+			const worksheet = XLSX.utils.json_to_sheet(json);
+			const workbook = XLSX.utils.book_new();
+
+			//워크시트 이름생성			
+			XLSX.utils.book_append_sheet(workbook, worksheet, "orders");
+			//엑셀파일로 내보내기
+			XLSX.writeFile(workbook, "OrderList.xlsx", {compression: true});
+		}
+
+
+	</script>
+</body>
+
+</html>

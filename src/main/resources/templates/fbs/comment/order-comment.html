@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<link th:href="@{/css/star.css}" rel="stylesheet" />
+	<link th:href="@{/css/button.css}" rel="stylesheet" />
+	<style>
+		* {
+			margin: 10px auto;
+		}
+
+		#review {
+			text-align: center;
+		}
+
+		#reviewBtn {
+			font-size: 16px;
+			padding: 10px 20px;
+			background-color: #4CAF50;
+			margin-top: 20px;
+			color: white;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		button {
+			display: block;
+			margin: 20px auto;
+			height: 40px;
+			width: 150px;
+			font-size: 16px;
+			text-align: center;
+			background-color: white;
+			color: cornflowerblue;
+			border-radius: 5px;
+			border: 2px solid cornflowerblue;
+		}
+
+		button:hover {
+			margin-top: 20px;
+			height: 40px;
+			width: 150px;
+			font-size: 16px;
+			text-align: center;
+			background-color: cornflowerblue;
+			color: white;
+			border-radius: 5px;
+			border: 2px solid white;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="review">
+		<h1>리뷰 작성하기</h1>
+		<h3 id="productName"></h3>
+		<div id="imgs">상품 이미지</div>
+		<fieldset>
+			<span class="text-bold">별점을 선택해주세요</span>
+			<input type="radio" name="reviewStar" value="5" id="rate1"><label for="rate1">★</label>
+			<input type="radio" name="reviewStar" value="4" id="rate2"><label for="rate2">★</label>
+			<input type="radio" name="reviewStar" value="3" id="rate3"><label for="rate3">★</label>
+			<input type="radio" name="reviewStar" value="2" id="rate4"><label for="rate4">★</label>
+			<input type="radio" name="reviewStar" value="1" id="rate5"><label for="rate5">★</label>
+		</fieldset>
+		<textarea id="ciContent" class="col-auto form-control" placeholder="좋은 리뷰 많이 남겨주세요!"></textarea>
+		<button onclick="insertComment()">리뷰 작성</button>
+	</div>
+
+
+	<script>
+		// 리뷰 작성할 상품명, 이미지 가져오기
+		window.addEventListener('load', async function () {
+			console.log('[[${param.odiNum}]]');
+			const orderRes = await fetch('/order-infos/order-details/[[${param.odiNum}]]');
+			const orderObjs = await orderRes.json();
+			console.log(orderObjs);
+			document.querySelector('#productName').innerText = '상품명 : ' + orderObjs.piName;
+			let imgHtml = `<img width="200px" height="200px" src="${orderObjs.productFiles[0].pfiImgPath}">`;
+			document.querySelector('#imgs').innerHTML = imgHtml;
+
+
+		})
+		//리뷰 작성
+		async function insertComment() {
+			if (document.querySelector('#ciContent').value === '') {
+				alert('리뷰 내용을 써주세요');
+				return;
+			}
+
+
+			//선택된 별점 객체 가져오기
+			const selectedRating = document.querySelector('input[name="reviewStar"]:checked');
+			const data = {
+				odiNum: `[[${param.odiNum}]]`,
+				ciContent: document.querySelector('#ciContent').value,
+				ciScore: selectedRating ? selectedRating.value : document.querySelector('#ciScore').value // 별점 개수에 따른 ciScore값 
+			};
+
+			const res = await fetch(`/comment-infos`, {
+				method: 'POST',
+				body: JSON.stringify(data),
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				}
+			})
+			console.log(res);
+			alert('등록 완료!');
+			// myPage.html(부모창) 함수 사용
+			window.opener.orderDetailListHelper();
+			self.close();
+
+		}
+
+
+	</script>
+</body>
+
+</html>

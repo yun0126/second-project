@@ -1,0 +1,45 @@
+.adminView {
+	font-size: small;
+	margin-top: 100px;
+	margin-bottom: 50px;
+	text-align: center;
+	width: 70%;
+	background-color: #f4f4f4;
+	/* 배경색 설정 */
+	border: 1px solid #ddd;
+	
+	border-radius: 15px;
+	
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+
+}
+
+textarea {
+	width: 50%;
+	padding: 10px;
+	font-size: larger;
+	font-weight: bold;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	box-sizing: border-box;
+	resize: vertical;
+	/* 사용자가 세로로 크기를 조절할 수 있게 함 */
+}
+
+.adminView button {
+	background-color: gainsboro;
+	border: solid 1px black;
+	padding: 10px;
+}
+
+.adminView input {
+	margin: 20px;
+}
+
+#addBtn {
+	width: 150px;
+	height: 50px;
+	background-color: royalblue;
+	color: white;
+}

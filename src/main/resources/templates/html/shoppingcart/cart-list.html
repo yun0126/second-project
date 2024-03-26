@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<style>
+		.container {
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.buyBtn {
+			height: 40px;
+			width: 30%;
+			font-size: 16px;
+			text-align: center;
+			background-color: #58ac6e;
+			color: white;
+			border-radius: 5px;
+			border: none;
+
+		}
+
+		.buyBtn:hover {
+			background-color: rgb(55, 111, 69);
+		}
+
+		.moreBtn {
+			height: 40px;
+			width: 30%;
+			font-size: 16px;
+			text-align: center;
+			background-color: white;
+			color: #58ac6e;
+			border-radius: 5px;
+			border: 2px solid #58ac6e;
+
+		}
+
+
+		.moreBtn:hover {
+			background-color: rgb(249, 249, 249);
+		}
+
+		.buyBtn,
+		.moreBtn {
+			display: block;
+			margin: 0 auto;
+			margin-top: 10px;
+		}
+
+		a {
+			text-decoration: none;
+		}
+
+		h1 {
+			margin-top: 30px;
+			margin-bottom: 30px;
+			text-align: center;
+			color: black;
+		}
+
+		/* 게시판 테이블에 대한 스타일 정의 */
+		table {
+			margin-top: 20px;
+			border-spacing: 5px;
+			border: none;
+		}
+
+		table thead {
+			margin-left: 10%;
+			background-color: #58ac6e;
+
+
+		}
+
+		th,
+		td {
+			border: 1px;
+			background-color: #f2f2f2;
+			text-align: center;
+			font-weight: bolder;
+
+		}
+
+
+
+		th {
+			background-color: #58ac6e;
+			text-align: center;
+			color: white;
+		}
+
+		/* 분리한 라벨 세부 값. 모바일 화면 따로 조정 가능 */
+		td:nth-child(1) {
+			width: 25%;
+		}
+
+		td:nth-child(4) {
+			width: 100%;
+		}
+
+		td:nth-child(7) {
+			width: 25%
+		}
+
+		.plusBtn,
+		.minusBtn {
+			width: 80%;
+			height: 30px;
+			border: none;
+		}
+
+		.plusBtn:active,
+		.minusBtn:active {
+			top: 1px;
+			border-color: rgba(0, 0, 0, 0.34) rgba(0, 0, 0, 0.21) rgba(0, 0, 0, 0.21);
+			box-shadow: 0 1px 0 rgba(255, 255, 255, 0.89), 0 1px rgba(0, 0, 0, 0.05) inset;
+			position: relative;
+		}
+
+
+
+		/* 일반 데스크탑 테이블 스타일 */
+		table {
+			table-layout: fixed;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			padding: 20px;
+			text-align: center;
+			width: 100%;
+		}
+
+		/* 모바일에서 카드 스타일로 레이아웃 되도록 변경*/
+		@media screen and (max-width: 1080px) {
+
+			/*테이블을 살리고 thead로 라벨을 분리해서 숨김*/
+			thead td {
+				display: none;
+			}
+
+			td:nth-child(1) {
+				width: 100%;
+			}
+
+			td:nth-child(7) {
+				width: 100%;
+			}
+
+
+			/* 테이블 셀에 라벨을 보여주기 위한 스타일 */
+			tbody td::before {
+				content: attr(data-th);
+				font-weight: bold;
+				float: left;
+				/* 라벨 너비 설정 */
+				margin-right: 10px;
+				/* 후에 올 콘텐츠와의 간격 설정 */
+			}
+
+			/* 테이블 셀 스타일 */
+			tbody td {
+				/* 체크박스와 이미지가 같은 셀 내에 위치하므로, 전체 셀에 대한 배경색과 여백 설정 */
+				background: #f2f2f2;
+				padding: 1em;
+				/* 셀의 내용 주변 여백 증가 */
+				vertical-align: midcdle;
+				/* 세로 중앙 정렬 */
+				text-align: center;
+				/* 텍스트 좌측 정렬 */
+				display: block;
+				/* 모바일에서 블록 요소로 표시 */
+				clear: both;
+				/* 이미지와 체크박스를 가로로 정렬하기 위해 필요한 경우 float 스타일 사용할 수 있음 */
+				width: 100%;
+				/* 셀 너비를 100%로 설정 */
+			}
+
+			/* 테이블 행 간격 조정 */
+			tbody tr {
+				border-bottom: 3px solid #ddd;
+				padding-bottom: 0.5em;
+				margin-bottom: 0.5em;
+			}
+
+			/* 체크박스를 이미지 옆에 표시하기 위한 추가 스타일 */
+			.checkbox-cell {}
+
+			/* 체크박스 셀 */
+			[type="checkbox"] {
+				background: #f2f2f2;
+				width: 100%;
+				block-size: 30px;
+				margin-top: 10%;
+			}
+
+
+			.delete-cell {
+				width: 100%;
+			}
+
+
+		}
+	</style>
+</head>
+
+<body>
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	<div id="container">
+		<div class="row" style="padding-left: 10%; padding-right: 10%;">
+			<h1 style="margin-top:30px">장바구니</h1>
+			<table border="1">
+				<thead id="thead">
+					<tr>
+						<td>선택</td>
+						<td>상품 사진</td>
+						<td>상품 이름</td>
+						<td>상품 수량</td>
+						<td>상품 가격</td>
+						<td>상품 총가격</td>
+						<td>삭제</td>
+					</tr>
+				</thead>
+				<tbody id="cart-list">
+				</tbody>
+			</table>
+			</div>
+	</table>
+	</div>
+	<h3 id="result"></h3>
+	<button onclick="order()">구매하기</button>
+	<button onclick="location.href='/html/product/product-list'">상품 더보기</button>
+	<button onclick="history.back()">취소</button>
+	<script>
+		let productName = new Array();
+		let piNumArray = new Array();
+		window.addEventListener('load', getCart);
+		async function getCart() {
+			const cartList = document.querySelector('#cart-list');
+			let result = 0;
+
+			//셀렉트용 GET요청
+			const res = await fetch('/shopping-cart');
+			const objs = await res.json();
+			console.log(objs);
+			let html = '';
+			/*
+				상품이름 중복검사후 중복이있을시 화면에 표시해주는건 하나로하고 
+				삭제할때는 한꺼번에 삭제하도록하는거
+				
+				배열에 담은후 배열을 통해서 수량과 가격표시를 해준다
+				db랑 관련된 상품들의 번호들은 따로 배열에 저장하고 삭제할때 배열에 포함되있는경우에 한꺼번에 삭제요청하도록 함
+			*/
+			for (obj of objs) {
+				//중복검사
+				if (productName.includes(`${obj.piName}`)) {
+					result += obj.scAmount * obj.piPrice;
+
+				} else {
+					productName.push(`${obj.piName}`);
+					piNumArray.push(`${obj.piNum}`);
+
+
+					html += `<tr>`;
+					html += `<td><button onclick="deleteCart(${obj.piNum})">X</button></td>`
+					html += `<td><img src="${obj.productFiles[0].pfiImgPath}" alt="${obj.piName}" width="150px" height="150px"></td>`;
+					html += `<td>${obj.piName}</td>`;
+					html += `<td>${obj.piDesc}</td>`;
+					html += `<td><button onclick="minus('${obj.piName}')">-</button><input id=a${obj.piName} type="number" onchange="changePrice(${obj.piPrice}, '${obj.piName}')" disabled><button onclick="plus('${obj.piName}')">+</button></td>`;
+					html += `<td>${obj.piPrice}</td>`;
+					html += `<td id=p${obj.piName}>${obj.scAmount * obj.piPrice}</td>`; // 이게표시해주는건 의미없음
+					html += `<tr>`;
+					result += obj.scAmount * obj.piPrice;
+
+				}
+			}
+			cartList.innerHTML = html;
+
+			//반복문을통해서 수량과 가격표시
+			//배열에 담은 상품들만 추려내서 가격과 수량 합산
+			for (let i = 0; i < productName.length; i++) {
+				let amount = 0;
+				let price = 0;
+				for (obj of objs) {
+					if (productName[i] == obj.piName) {
+						amount += obj.scAmount;
+						price += obj.scAmount * obj.piPrice;
+					}
+				}
+
+				document.querySelector(`#a${productName[i]}`).value = amount;
+				document.querySelector(`#p${productName[i]}`).innerText = price;
+			}
+			//console.log(result);
+			//수량변경시 총가격을 어떻게 할건가에 대한 고민
+			//document.querySelector('#result').innerHTML = `총 가격 : ${result}`;
+		}
+
+		//장바구니 내의 상품의 수량이 바뀌면 화면에 표시되는 내용이 바뀐다
+		function changePrice(price, inputName) {
+
+			let result = document.querySelector(`#a${inputName}`).value * price;
+			document.querySelector(`#p${inputName}`).innerText = result;
+
+		}
+		//하기
+		function plus(piName) {
+			document.querySelector(`#a${piName}`).value = Number(document.querySelector(`#a${piName}`).value) + 1;
+		}
+		function minus(piName) {
+			if (Number(document.querySelector(`#a${piName}`).value) <= 1) {
+				alert('최소수량은 1개입니다')
+				return;
+			}
+			document.querySelector(`#a${piName}`).value = Number(document.querySelector(`#a${piName}`).value) - 1;
+		}
+
+		async function deleteCart(piNum) {
+			const prodInfo = {
+				piNum: piNum
+			}
+			const res = await fetch('/shopping-cart', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json;'
+				},
+				body: JSON.stringify(prodInfo)
+			});
+			location.reload();
+		}
+
+		async function order() {
+			console.log(piNumArray);
+			const res2 = await fetch('/shop-cart',{
+				method: 'DELETE'	
+			});
+			
+			const amounts = document.querySelectorAll(`input[id^=a]`);
+			
+			for (let i = 0; i < piNumArray.length; i++) {
+				const cart = {
+					piNum: piNumArray[i],
+					scAmount: amounts[i].value
+				}
+				const res = await fetch('/shopping-cart', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(cart)
+				});
+			}
+			alert('구매페이지로 이동합니다');
+			location.href = '/html/order/order';
+			
+
+		}
+	</script>
+</body>
+
+</html>

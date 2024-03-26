@@ -1,0 +1,47 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.order.mapper.OrderDetailInfoMapper">
+	<!-- 만든순서대로 정렬했어요 나중에 한꺼번에 수정할게요 -->
+	<insert id="insertOrderDetailInfo"> 
+		INSERT INTO ORDER_DETAIL_INFO(UI_NUM, OI_NUM, PI_NUM, ODI_AMOUNT, ODI_PRICE)
+		VALUES(#{uiNum}, #{oiNum}, #{piNum}, #{odiAmount}, #{odiPrice})
+	</insert>
+	
+	<select id="selectOrderDetailInfo"> 
+		SELECT ODI.ODI_NUM, ODI.ODI_AMOUNT ,ODI.UI_NUM, ODI.OI_NUM, ODI.PI_NUM, ODI.ODI_CREDAT, ODI.ODI_CRETIM, ODI.ODI_PRICE, PI.PI_NAME, PI.PI_PRICE FROM ORDER_DETAIL_INFO ODI INNER JOIN PRODUCT_INFO PI ON PI.PI_NUM = ODI.PI_NUM  WHERE OI_NUM = #{oiNum}
+	</select>
+	
+	<select id="selectOdi">
+		SELECT * FROM ORDER_DETAIL_INFO ODI INNER JOIN PRODUCT_INFO PI ON ODI.PI_NUM = PI.PI_NUM WHERE ODI_NUM = ${odiNum}
+	</select>
+	
+	<select id="seledOrderDetailALL">  
+		SELECT * FROM ORDER_DETAIL_INFO ODI
+		INNER JOIN PRODUCT_INFO PI ON ODI.PI_NUM = PI.PI_NUM
+		LEFT JOIN SUB_TYPE_INFO STI ON PI.STI_NUM = STI.STI_NUM
+		LEFT JOIN TYPE_INFO TI ON TI.TI_NUM = STI.TI_NUM
+		<where>
+			<if test='tiName != "" and tiName != null'>
+				TI.TI_NAME = #{tiName}
+			</if>
+			<if test='stiName != "" and stiName != null'>
+				STI.STI_NAME = #{stiName}
+			</if>
+		</where>
+		ORDER BY TI.TI_NUM ASC, STI.STI_NUM ASC
+	</select>
+	
+	<select id="selectOrderDetailsbyUINUM">
+		SELECT * FROM ORDER_DETAIL_INFO ODI
+		INNER JOIN PRODUCT_INFO PI ON ODI.PI_NUM = PI.PI_NUM
+		WHERE ODI.UI_NUM = #{uiNum}
+	</select>
+	
+	<select id="selectOrderDetailsbyUINUMwithHelper" resultType="com.secu.team5.order.vo.OrderDetailInfoVO">
+		SELECT * FROM ORDER_DETAIL_INFO ODI
+		INNER JOIN PRODUCT_INFO PI ON ODI.PI_NUM = PI.PI_NUM
+		WHERE ODI.UI_NUM = #{uiNum} ORDER BY ODI_NUM DESC
+	</select>
+</mapper>

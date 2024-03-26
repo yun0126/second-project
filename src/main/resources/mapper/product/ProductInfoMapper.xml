@@ -1,0 +1,27 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.product.mapper.ProductInfoMapper">
+	
+	<select id="selectProductInfos">
+		SELECT PI_NUM, UI_NUM, STI_NUM, PI_NAME, PI_DESC, PI_PRICE FROM PRODUCT_INFO
+	</select>
+
+	<select id="selectProductInfo"> 
+		SELECT PI.PI_NUM, PI.UI_NUM, PI.STI_NUM, PI.PI_NAME, PI.PI_DESC, PI.PI_PRICE, STI.TI_NUM FROM PRODUCT_INFO PI INNER JOIN SUB_TYPE_INFO STI ON PI.STI_NUM = STI.STI_NUM WHERE PI_NUM = #{piNum}
+	</select>
+
+	<insert id="insertProductInfo" useGeneratedKeys="true" keyColumn="PI_NUM" keyProperty="piNum">
+		INSERT INTO PRODUCT_INFO(UI_NUM, STI_NUM, PI_NAME, PI_DESC, PI_PRICE)
+		VALUES(#{uiNum}, #{stiNum}, #{piName}, #{piDesc}, #{piPrice})
+	</insert>
+	
+	<update id="updateProductInfo">
+		UPDATE PRODUCT_INFO SET PI_NAME = #{piName}, PI_DESC=#{piDesc}, PI_PRICE=#{piPrice}, STI_NUM=#{stiNum} WHERE PI_NUM= #{piNum}
+	</update>
+
+	<delete id="deleteProductInfo">
+		DELETE FROM PRODUCT_INFO WHERE PI_NUM = #{piNum}
+	</delete>
+</mapper>

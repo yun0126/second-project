@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<style>
+		.order {
+			display: grid;
+			grid-template-columns: 1fr;
+			grid-gap: 10px;
+			grid-template-rows: min-content(200px, auto);
+			background-color: #fff;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			align-items: center;
+			margin: 20px;
+			border-radius: 10px;
+		}
+
+
+		.contents div {
+			margin-bottom: 20px;
+		}
+
+		.contents {
+			height: auto;
+			display: grid;
+			grid-template-columns: 1fr 2fr;
+			grid-gap: 10px;
+			padding: 20px;
+			align-items: center;
+			margin: 20px;
+			border-radius: 10px;
+		}
+
+		table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 8px;
+			text-align: left;
+			font-size: 14px;
+		}
+
+		td.col1 {
+			width: 100px;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		#mainBtn {
+			text-align: center;
+			width: 80%;
+			height: 50px;
+			background-color: #4CAF50;
+			color: white;
+			margin-bottom: 20px;
+			margin-top: 20px;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+			font-size: 16px;
+		}
+
+		#mainBtn:hover {
+			background-color: #45a049;
+		}
+
+		@media (max-width: 990px) {
+			.order {
+				padding: 0px;
+			}
+
+			.contents {
+				height: auto;
+				padding: 0px;
+				align-items: center;
+				margin: 0px;
+				border-radius: 10px;
+				display: block;
+			}
+
+			td#oiAddress {
+				max-width: none;
+				white-space: normal;
+			}
+
+			td.col1 {
+				width: 75px;
+			}
+
+			td {
+				max-width: 110px;
+				/* 원하는 최대 길이로 설정 */
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+
+			h3.divArea {
+				margin-top: 1.0rem;
+			}
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<div class="container text-center">
+
+		<div class="order">
+
+			<div class="orderDeatils">
+				<h1 class="divArea">주문완료</h1>
+				<div class="contents">
+					<div>
+						<h3 class="divArea">주문번호</h3>
+					</div>
+					<div>
+						<h3 class="divArea" id="oiMerchantUid"></h3>
+					</div>
+
+
+					<!-- -->
+					<div>
+						<h3 class="divArea">배송정보</h3>
+					</div>
+					<div>
+						<table style="width: 100%; font-weight: bolder;">
+							<tr>
+								<td>주문자명</td>
+								<td id="uiName"></td>
+							</tr>
+							<tr>
+								<td>주소</td>
+								<td id="oiAddress" style="font-size: 0.7em;"></td>
+							</tr>
+							<tr>
+								<td>결제방법</td>
+								<td id="oiPay"></td>
+							</tr>
+							<tr>
+								<td>배송 방법</td>
+								<td>배달</td>
+							</tr>
+							<tr>
+								<td>쿠폰 사용유무</td>
+								<td id="oiCoupon"></td>
+							</tr>
+						</table>
+					</div>
+
+					<div>
+						<h3 class="divArea">구매상품</h3>
+					</div>
+					<div>
+						<table style="width: 100%;">
+							<tr>
+								<td class="product">상품명</td>
+								<td>수량</td>
+								<td class="col1">상품 가격</td>
+								<td class="col1">상품 총 가격</td>
+							</tr>
+							<tbody id="product-list">
+
+							</tbody>
+						</table>
+					</div>
+
+					<!-- -->
+					<div>
+						<h3 class="divArea">결제 금액</h3>
+					</div>
+					<div>
+						<h3 class="divArea" id="oiTotalPrice" style="color: red;"></h3>
+					</div>
+				</div>
+				<button style="width: 80%;" onclick="location.href='/'" id="mainBtn">메인페이지로 가기</button>
+			</div>
+		</div>
+	</div>
+	<script>
+		//결제가 완료된 주문의 상세정보 가져오기
+		window.addEventListener('load', async function () {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+
+
+			const res = await fetch('/order-infos/[[${param.oiMerchantUid}]]');
+			const json = await res.json();
+			console.log(json);
+
+
+			for (let objs in json) {
+				console.log(objs);
+				if (document.querySelector(`#${objs}`)) {
+					if (objs === 'oiTotalPrice') {
+						document.querySelector(`#${objs}`).innerText = `${json[objs]} 원`;
+					} else {
+						document.querySelector(`#${objs}`).innerText = json[objs];
+					}
+				}
+			}
+
+			console.log(json.orderDetails);
+			const products = json.orderDetails;
+			let html = '';
+			for (let product of products) {
+				html += `<tr>`;
+				html += `<td>${product.piName}</td>`;
+				html += `<td>${product.odiAmount}</td>`;
+				html += `<td>${product.piPrice}</td>`;
+				html += `<td>${product.odiPrice}</td>`;
+				html += `</tr>`;
+			}
+			document.querySelector(`#product-list`).innerHTML = html;
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+</head>
+
+<body>
+	<button onclick="openWs()">시작</button>
+	<button onclick="closeWs()">종료</button>
+	<button onclick="sendMsg()">보내기</button> <br>
+	<h3>채팅입력</h3>
+	<textarea id="userMsg"></textarea> <br>
+	<h3>채팅창</h3>
+	<div id="chatMsg"></div>
+	<script>
+		let ws;
+
+
+		function openWs() {
+			if (!ws || ws.readyState >= 2) {
+				ws = new WebSocket('ws://localhost/msg');
+				ws.onmessage = function (msg) {
+					document.querySelector('#chatMsg').innerText += msg.data + '\r\n';
+					
+				}
+			}
+		}
+
+		function sendMsg() {
+			if (ws.readyState === 1) {
+				ws.send(document.querySelector('#userMsg').value);
+			}
+		}
+		function closeWs() {
+			if (ws && ws.readyState < 2) {
+				ws.close();
+			}
+		}
+	</script>
+</body>
+
+</html>

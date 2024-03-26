@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.secu.team5.recent.mapper.RecentInfoMapper">
+	<insert id="insertRecentInfo" parameterType="com.secu.team5.recent.vo.RecentInfoVO">
+		INSERT INTO RECENT_INFO(UI_NUM, PI_NUM)
+		VALUES(#{uiNum},#{piNum})
+	</insert>
+	
+	<select id="selectRecent10prods" resultType="com.secu.team5.recent.vo.RecentInfoVO">
+		SELECT RI.*, PI.*
+	    FROM RECENT_INFO RI
+	    INNER JOIN PRODUCT_INFO PI ON RI.PI_NUM = PI.PI_NUM
+	    WHERE RI.UI_NUM = #{uiNum}
+	    GROUP BY RI.PI_NUM
+	    ORDER BY MAX(RI.RI_NUM) DESC	
+	    LIMIT 10;
+	</select>
+	
+</mapper>

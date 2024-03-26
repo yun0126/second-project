@@ -1,0 +1,39 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.secu.team5.product.mapper.ProductFileInfoMapper">
+	<select id="selectProductFileInfo">
+		SELECT PFI_NUM, PI_NUM, PFI_NAME, PFI_IMG_PATH, PFI_SORT FROM
+		PRODUCT_FILE_INFO WHERE PI_NUM = #{piNum}
+	</select>
+	
+	<insert id="insertProductFileInfo">
+		INSERT INTO PRODUCT_FILE_INFO(PI_NUM, PFI_NAME,
+		PFI_IMG_PATH, PFI_SORT)
+		VALUES(#{piNum}, #{pfiName}, #{pfiImgPath},
+		#{pfiSort})
+	</insert>
+
+	<update id="updateProductFileInfo">
+		UPDATE PRODUCT_FILE_INFO
+		<set>
+			<if test='pfiImgPath != null and pfiImgPath != ""'>
+				PFI_IMG_PATH = #{pfiImgPath},
+			</if>
+			<if test='pfiName != null and pfiName != ""'>
+				PFI_NAME = #{pfiName},
+			</if>
+			<if test='pfiSort != null and pfiSort != ""'>
+				PFI_SORT = #{pfiSort}
+			</if>
+		</set>
+		WHERE PFI_NUM = #{pfiNum}
+	</update>
+
+
+	<delete id="deleteProductFileInfo">
+		DELETE FROM PRODUCT_FILE_INFO WHERE PFI_NUM = #{pfiNum}
+	</delete>
+</mapper>

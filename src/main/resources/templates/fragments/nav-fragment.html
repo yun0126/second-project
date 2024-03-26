@@ -1,0 +1,26 @@
+<!-- Start Top Nav -->
+<nav class="navbar navbar-expand-lg bg-dark navbar-light d-none d-lg-block"
+	th:fragment="nav-Fragment" id="templatemo_nav_top">
+	<div class="container text-light">
+		<div class="w-100 d-flex justify-content-between">
+			<div>
+				<i class="fa fa-envelope mx-2"></i>
+				<a class="navbar-sm-brand text-light text-decoration-none"
+					href="mailto:info@company.com">song7692@naver.com</a>
+				<i class="fa fa-phone mx-2"></i>
+				<a class="navbar-sm-brand text-light text-decoration-none" href="#">010-020-0340</a>
+			</div>
+			<div sec:authorize="isAnonymous()">
+				<a href="/user/login" style="text-decoration: none; color: white;">로그인</a> | <a href="/user/join"
+					style="text-decoration: none; color: white;">회원가입</a>
+			</div>
+			<div sec:authorize="hasRole('ROLE_USER')">
+				<a href="/html/index-admin" sec:authorize="hasRole('ROLE_ADMIN')" style="text-decoration: none; color: white;"> 관리자 페이지 </a> | <span
+					th:text="${#authentication.principal.uiName}" class="admin-text"></span><span>님</span> |
+				<a href="/fbs/shoppingcart/cart-list" style="text-decoration: none; color: white;">장바구니</a> | <a href="/fbs/user/mypage" style="text-decoration: none; color: white;">마이페이지</a> | <a
+					href="/logout" style="text-decoration: none; color: white;">로그아웃</a>
+			</div>
+		</div>
+	</div>
+</nav>
+<!-- Close Top Nav -->

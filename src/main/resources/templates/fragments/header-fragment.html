@@ -1,0 +1,79 @@
+<!-- Header bootstrap header임-->
+<div class="z-3">
+	<nav class="navbar navbar-expand-lg navbar-light shadow" th:fragment="header-bootstrap-Fragment" id="navbar">
+		<div class="container d-flex justify-content-between align-items-center">
+
+			<img th:src="@{/imgs/logo2.png}" onclick="location.href='/'" alt="logo" width="200px" class="logo"
+				style="margin-bottom: 5px; cursor: pointer;" />
+
+			<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+				data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between"
+				id="templatemo_main_nav">
+				<div class="flex-fill">
+					<ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="/">홈</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/fbs/product/product-list">상품 둘러보기</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/fbs/recent/recent-list">최근 본 상품</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/fbs/board/board-list">자유 게시판</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="/fbs/qna/list">문의 사항</a>
+						</li>
+					</ul>
+				</div>
+				<div class="align-self-center d-flex">
+					<div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+						<div class="input-group">
+							<form action="/fbs/product/product-list" method="get"
+								class="modal-content modal-body border-0 p-0">
+								<div class="input-group mb-2">
+									<input type="text" class="form-control" id="inputModalSearch" name="piName"
+										placeholder="상품 검색">
+									<button type="submit" class="input-group-text bg-success text-light">
+										<i class="fa fa-fw fa-search text-white"></i>
+									</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+						data-bs-target="#templatemo_search" style="padding: 0;">
+						<i class="fa fa-fw fa-search text-dark mr-2"></i>
+					</a>
+					<a class="nav-icon position-relative text-decoration-none" href="/fbs/shoppingcart/cart-list">
+						<i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+						<span
+							class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
+							id="cart"></span>
+					</a>
+					<a class="nav-icon position-relative text-decoration-none" href="/fbs/user/mypage">
+						<i class="fa fa-fw fa-user text-dark mr-3"></i>
+						<span
+							class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
+							id="coupon"></span>
+					</a>
+					<a class="nav-icon position-relative text-decoration-none text-dark" href="/user/login" id="mobileLogin" sec:authorize="isAnonymous()">
+						로그인
+					</a>
+					<a class="nav-icon position-relative text-decoration-none text-dark" href="/logout" id="mobileLogout" sec:authorize="hasRole('ROLE_USER')">
+						로그아웃
+					</a>
+				</div>
+			</div>
+
+		</div>
+	</nav>
+</div>
+<!-- Close Header -->

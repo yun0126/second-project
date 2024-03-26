@@ -1,0 +1,13 @@
+/* 공통 스타일 common으로 옮겨야 할지도*/
+* {
+    margin: 0 auto;
+}
+
+/* 리스트랑 링크에 파란색 지우기*/
+li {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}

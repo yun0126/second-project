@@ -1,0 +1,49 @@
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.secu.team5.type.mapper.TypeMapper">
+	<select id="selectType">
+		SELECT TI_NUM, TI_NAME, TI_CODE FROM TYPE_INFO
+	</select>
+
+	<select id="selectSubTypeWithType"> 
+		SELECT TI.TI_NUM, TI.TI_NAME, STI.STI_NUM, STI.STI_CODE, STI.STI_NAME FROM TYPE_INFO TI INNER JOIN SUB_TYPE_INFO STI ON TI.TI_NUM = STI.TI_NUM WHERE TI.TI_NUM = #{tiNum}
+	</select>
+	
+	<select id="selectSubType"> 
+		SELECT * FROM SUB_TYPE_INFO STI INNER JOIN TYPE_INFO TI ON STI.TI_NUM = TI.TI_NUM
+	</select>
+	
+	<!-- 서브타입 조회 -->
+	<select id="selectSubTypeinfo">
+		SELECT * FROM SUB_TYPE_INFO WHERE STI_NUM = ${stiNum}
+	</select>
+	
+	<!-- 서브타입 추가 -->
+	<insert id="insertSubTypeInfo">
+		INSERT INTO SUB_TYPE_INFO(TI_NUM, STI_CODE, STI_NAME)
+		VALUE(#{tiNum},#{stiCode},#{stiName})
+	</insert>
+	
+	<!-- 서브타입 업데이트 -->
+	<update id="updateSubTypeUpdate">
+		UPDATE SUB_TYPE_INFO SET STI_NAME = #{stiName} WHERE STI_NUM = #{stiNum}
+	</update>
+	
+	<!-- 서브타입 삭제 -->
+	<delete id="deleteSubType"> 
+		DELETE FROM SUB_TYPE_INFO WHERE STI_NUM = #{stiNum}
+	</delete>
+	
+	<!-- 모든 타입 조회 -->
+	<select id="selectAllTypeAndSubType"> 
+		SELECT * FROM TYPE_INFO TI INNER JOIN SUB_TYPE_INFO STI ON TI.TI_NUM = STI.TI_NUM
+	</select>
+	
+	<select id="selectProductTypeAndSubType">
+		SELECT * FROM SUB_TYPE_INFO STI INNER JOIN TYPE_INFO TI ON STI.TI_NUM = TI.TI_NUM
+		LEFT JOIN PRODUCT_INFO PI ON STI.STI_NUM = PI.STI_NUM
+		WHERE PI_NUM = #{piNum}
+	</select>
+</mapper>

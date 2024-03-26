@@ -1,0 +1,29 @@
+#review fieldset{
+    display: inline-block;
+    direction: rtl;
+    border:0;
+}
+#review fieldset legend{
+    text-align: right;
+}
+#review input[type=radio]{
+    display: none;
+}
+#review label{
+    font-size: 1em;
+    color: transparent;
+    text-shadow: 0 0 0 #f0f0f0;
+}
+#review label:hover{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#review label:hover ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+#review input[type=radio]:checked ~ label{
+    text-shadow: 0 0 0 rgba(250, 208, 0, 0.99);
+}
+
+.star {
+	display : inline-block;
+}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+</head>
+
+<body>
+	<div id="sDiv">
+		<input type="text" id="name"><button onclick="startChat()">확인</button>
+	</div>
+	<div id="chatDiv" style="display: none;">
+		<h3>채팅창</h3>
+		<div id="contentDiv"></div> <br>
+		<h3>입력창</h3>
+		<textarea id="input"></textarea><button onclick="sendText()">전송</button>
+	</div>
+	<script>
+		let ws;
+		let err;
+		function startChat() {
+			const name = document.querySelector('#name');
+
+			if (name.value.trim() === '') {
+				alert('닉네임을 정해주세요');
+				return;
+			}
+
+			ws = new WebSocket(`ws://${location.host}/chat/${name.value.trim()}`);
+
+			//원래는 연결된걸 확인하고 이벤트를 주어야함
+			ws.onmessage = function (res) {
+				console.log(res);
+				//누가 보냇는지 알야되기때문에 여러가지 데이터를 집어넣어줄수있도록 json 형태로보냄
+				const data = JSON.parse(res.data);
+				console.log(data);
+
+				if (data.errMsg) {
+					err = data.errMsg;
+					alert(data.errMsg);
+
+					return;
+				}
+				if (data.msg) {
+					document.querySelector('#contentDiv').innerText += data.name + ' : ' + data.msg + '\r\n'
+				}
+
+
+				if (ws.readyState === 1) {
+					document.querySelector('#sDiv').style.display = 'none';
+					document.querySelector('#chatDiv').style.display = '';
+				}
+			}
+		}
+
+		function sendText() {
+			const name = document.querySelector('#name');
+			console.log(name.value);
+			let chat = {
+				name: name.value,
+				msg: document.querySelector('#input').value
+			}
+
+			if (ws.readyState === 1) {
+				ws.send(JSON.stringify(chat));
+				document.querySelector('#input').value = '';
+			}
+		}
+
+
+	</script>
+</body>
+
+</html>

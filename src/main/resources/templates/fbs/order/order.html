@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰</title>
+	<!-- 다음 결제 API -->
+	<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+	<!-- 결제 API -->
+	<script src="https://cdn.iamport.kr/v1/iamport.js"></script>
+	<!-- jQuery -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<style>
+		.orderInfo {
+			grid-column: 1;
+			grid-row: 2;
+			padding: 40px;
+			background-color: rgb(248, 248, 248, 0.7);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+		}
+
+		.UserInfo {
+			grid-column: 1;
+			grid-row: 2;
+			grid-row-start: 2;
+			/* 선 번호를 지정해서 크기를 지정 */
+			grid-row-end: 4;
+			padding: 20px;
+			background-color: rgb(248, 248, 248, 0.7);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.payInfo.talble {
+			table-layout: fixed wid
+		}
+
+		.payInfo img {
+			border-radius: 100px;
+
+			padding: 10px;
+		}
+
+		#couponInfos {
+			width: 50%;
+			text-align: center;
+			padding: 8px;
+			margin-bottom: 10px;
+			background-color: rgb(255, 255, 255);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+		}
+
+		.CouponInfo {
+			grid-column: 2;
+			grid-row: 2;
+			padding: 20px;
+			background-color: rgb(248, 248, 248, 0.7);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+		}
+
+		.title {
+			text-align: left;
+			margin-left: 0%;
+			margin-bottom: 2%;
+			border-bottom: 2px solid rgb(127, 127, 127);
+			width: 220px;
+
+
+		}
+
+		.title2 {
+			margin-bottom: 20px;
+			width: 220px;
+			margin-left: 0px;
+
+		}
+
+		.payInfo {
+			grid-column: 2;
+			grid-row: 5;
+			padding: 20px;
+			background-color: rgb(243, 243, 243, 0.15);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+		}
+
+		.resultInfo {
+			grid-column: 3;
+			grid-row: 5;
+			grid-row-start: 1;
+			/* 선 번호를 지정해서 크기를 지정 */
+			grid-row-end: 4;
+			padding: 20px;
+			background-color: rgb(243, 243, 243, 0.15);
+			box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+
+		}
+
+		.result {
+			height: 70px;
+			margin-top: 5vh;
+			display: grid;
+			grid-template-columns: 1fr 1fr 1fr;
+			grid-gap: 10px;
+			width: 100%;
+		}
+
+
+		.result>div {
+			margin-bottom: 10px;
+		}
+
+		/* 호버 효과 */
+		.container button:hover {
+			background-color: rgb(192, 192, 192);
+		}
+
+		.button3:hover {
+			background-color: rgb(0, 147, 73);
+		}
+
+		#paymoney {
+
+			color: red;
+			font-size: 30px;
+			font-weight: bold;
+		}
+
+		#totalpay {
+			color: red;
+			font-size: 30px;
+			font-weight: bold;
+		}
+
+
+
+
+		#Bmemo {
+			margin-left: 11.5%;
+		}
+
+		table {
+			margin: 0 auto;
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+
+		th,
+		td {
+			border: 2px solid #dddddd;
+			text-align: center;
+			padding: 10px;
+			font-size: small;
+
+
+		}
+
+		td {
+			background-color: rgb(243, 243, 243, 0.1);
+		}
+
+		th {
+			background-color: rgb(243, 243, 243, 0.1);
+		}
+
+		#cart-list {
+			background-color: white;
+		}
+
+		.cursor {
+			cursor: pointer;
+		}
+
+		#tossPay {
+			margin-left: 10%;
+			border-radius: 8px;
+			border: none;
+			background-color: rgb(255, 255, 255);
+			padding: 0;
+			cursor: pointer;
+		}
+
+		#tossPay:hover {
+			background-color: rgb(255, 255, 255);
+			border-radius: 1px;
+		}
+
+		#Payco {
+			margin-left: 10%;
+			border-radius: 8px;
+			border: none;
+			background-color: rgb(255, 255, 255);
+			padding: 0;
+			cursor: pointer;
+		}
+
+		#Payco:hover {
+			background-color: rgb(255, 255, 255);
+			border-radius: 1px;
+		}
+
+		#kakaoPay {
+			margin-left: 10%;
+			border-radius: 8px;
+			border: none;
+			background-color: rgb(255, 255, 255);
+			padding: 0;
+			cursor: pointer;
+		}
+
+		#kakaoPay:hover {
+			background-color: rgb(255, 255, 255);
+			border-radius: 1px;
+		}
+
+		#cardPay {
+			margin-left: 10%;
+
+			border: none;
+			background-color: rgb(255, 255, 255);
+			padding: 0;
+			cursor: pointer;
+		}
+
+		#cardPay:hover {
+			background-color: rgb(255, 255, 255);
+			border-radius: 1px;
+		}
+
+
+		#resultTable {
+			border: black;
+		}
+
+		#payClick {
+			background-color: #58ac6e;
+			width: 100px;
+			border-radius: 4px;
+			padding: 8px;
+			color: white;
+			border: 1.0px solid rgb(0, 0, 0);
+		}
+
+
+		#userDesc>input {
+			margin-bottom: 20px;
+		}
+	</style>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<div class="container text-center">
+		<div class="gridDiv">
+			<br>
+			<!--주문 상품 정보-->
+			<div class="orderInfo">
+
+				<h3><b>주문 상품 정보</b></h3>
+
+				<table border="1">
+					<tr id="desc">
+						<td>상품 사진</td>
+						<td>상품 이름</td>
+						<td>상품 수량</td>
+						<td>상품 가격</td>
+						<td>상품 총가격</td>
+					</tr>
+					<tbody id="cart-list">
+
+					</tbody>
+				</table>
+			</div> <br>
+			<!--주문자 배송 정보-->
+			<div class="UserInfo">
+
+				<h3 style="text-align: center;"><b>주문자 배송 정보</b></h3>
+
+				<div id="userDesc" style="text-align: left; margin-left: 6%;">
+
+					이름<input id="uiName" class="form-control" disabled>
+					전화번호<input id="uiPhone" class="form-control" disabled>
+					주소
+					<input type="text" id="address" placeholder="주소" disabled class="form-control">
+					<input type="text" id="extraAddress" placeholder="참고항목" class="form-control" disabled>
+					<input type="text" id="postCode" placeholder="우편번호" class="form-control" disabled>
+					<input type="button" onclick="userPost()" value="우편번호 찾기" class="btn btn-outline-secondary"><br>
+
+					<b>상세주소(입력해주세요)</b><input type="text" id="detailAddress" placeholder="상세주소" class="form-control">
+					<button id="addbtn" type="button" onclick="addrRegister()" class="btn btn-primary">주소 변경</button>
+
+					<br><br>
+					배송메모
+					<textarea cols="38" rows="7" id="memo" placeholder="기사님께 하실 말씀을 적어주세요"
+						style="resize: none; width: 100%;" class="form-control"></textarea>
+
+
+				</div>
+			</div>
+			<br>
+			<!--쿠폰 정보-->
+			<div class="CouponInfo">
+
+				<h3><b>쿠폰 사용</b></h3>
+
+				<select id="couponInfos" onchange="applyCoupon()">
+					<option value="0원" data-condition="0" selected>적용할 쿠폰을 선택해주세요</option>
+				</select>
+			</div>
+			<br>
+			<!--최종 결제 정보-->
+			<div id="resultTable">
+				<div class="resultInfo">
+
+					<h3><b>최종 결제 정보</b></h3>
+
+					<div class="result">
+						<div>결제금액</div>
+						<div id="paymoney"></div><br>
+						<div>쿠폰할인</div>
+						<div id="discountmoney">0</div><br>
+						<div>배송비</div>
+						<div id="deliverymoney">0</div>
+					</div>
+					<hr style=" height: 4px; border: 0;  background: black; margin-top:15vh;">
+					<div class="result">
+						<div>총결제 금액</div>
+						<div id="totalpay">0</div>
+					</div>
+				</div>
+				<br>
+				<!--결제 방법-->
+				<div class="payInfo">
+
+					<h3><b>결제 방법</b></h3>
+
+					<div style="text-align: center;" id="pay">
+						<table>
+							<td>
+								<button id="tossPay">
+									<input type="radio" name="pay_info" value="toss"><img th:src="@{/imgs/toss.png}"
+										width="150px" height="50px" onclick="tossPay()" />
+									<p>토스페이</p>
+								</button>
+
+								<button id="Payco">
+									<input type="radio" name="pay_info" value="payco"><img th:src="@{/imgs/payco.png}"
+										width="150px" height="50px" onclick="Payco()" />
+									<p>페이코</p>
+								</button>
+							</td>
+							<td>
+								<button id="kakaoPay">
+									<input type="radio" name="pay_info" value="kakao"> <img th:src="@{/imgs/kakao.png}"
+										width="150px" height="50px" onclick="kakaoPay()" />
+									<p>카카오페이</p>
+								</button>
+
+								<button id="cardPay">
+									<input type="radio" name="pay_info" value="card"><img th:src="@{/imgs/card.png}"
+										width="100px" height="50px" onclick="cardPay()" />
+									<p>카드페이</p>
+								</button>
+							</td>
+
+						</table>
+					</div>
+					<br>
+					<button onclick="Pay()" id="payClick">결제하기</button>
+				</div>
+			</div>
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<script>
+		/*
+			cart-list에서 구매하기 버튼을통해서 이페이지로 들어오면 먼저 
+			상품, 유저, 주소, 쿠폰 을 조회해서 구매자에게 필요한 정보를 보여준다.
+			아임포트 api를 활용한 간단한 결제 구현 토스/KG이니시스/카카오페이/페이코
+			코드가 반복되는 부분이 조금있는데 함수화 시키려다가 비동기방식이라서 순서가 지멋대로 되더라고요 나중에 시간나면 뽑아놔서 다시 고치면되겠죠
+			
+			
+			
+			할일
+			쿠폰을 Radio 버튼이나 버튼을 만들어서 사용버튼을 누르면 
+			불리언타입변수 CouponUse 에따라서 결제금액을 다르게하고 표기도 다르게한다 결제할때의 상품가격은 결제할때 장바구니를 다시조회하고 
+			정산하는 느낌이다.
+		
+		*/
+		//상품전용 변수들
+		let productName = new Array();
+		let piNumArray = new Array();
+		//주소 전용
+		let addressData = {
+			type: '',
+			apartment: '',
+			jibunAddress: '',
+			jibunAddressEnglish: '',
+			roadAddress: '',
+			roadAddressEnglish: '',
+			buildingName: ''
+		};
+		//uiNum 활용용
+		let uiNum = 0;
+		//주문번호 생성
+		let uuid = '';
+		//
+		window.addEventListener('load', getInfo);
+		async function getInfo() {
+			uuid = uuidv();
+
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const shoppingRes = await fetch('/shopping-carts');
+
+			const shoppingObjs = await shoppingRes.text();
+
+			if (shoppingObjs != '') {
+				shoppingJson = JSON.parse(shoppingObjs);
+				let html = shoppingJson.length;
+				document.querySelector('#cart').innerText = html;
+			} else {
+				document.querySelector('#cart').innerText = '0';
+			}
+
+
+			//-------------------------주문정보 ----------------------------------------------------------------------------
+			const cartList = document.querySelector('#cart-list');
+			let result = 0;
+			//셀렉트용 GET요청
+			const CartRes = await fetch('/shopping-carts');
+			const objs = await CartRes.json();
+			console.log(objs);
+			if (objs == '') {
+				alert('장바구니에 상품을 담아주세요');
+				location.href = '/';
+			}
+			let html = '';
+			uiNum = objs[0].uiNum;
+			/*
+				상품이름 중복검사후 중복이있을시 화면에 표시해주는건 하나로하고 
+				삭제할때는 한꺼번에 삭제하도록하는거
+				
+				배열에 담은후 배열을 통해서 수량과 가격표시를 해준다
+				db랑 관련된 상품들의 번호들은 따로 배열에 저장하고 삭제할때 배열에 포함되있는경우에 한꺼번에 삭제요청하도록 함
+			*/
+			for (let obj of objs) {
+				let piName = obj.piName.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '').replaceAll('?', '').replaceAll('.', '').replaceAll('/', '');
+				//중복검사
+				if (productName.includes(`${piName}`)) {
+
+				} else {
+					productName.push(`${piName}`);
+					piNumArray.push(`${obj.piNum}`);
+
+					html += `<tr>`;
+					html += `<td><img src="${obj.productFiles[0].pfiImgPath}" alt="${piName}" width="	px" height="50px"></td>`;
+					html += `<td>${obj.piName}</td>`;
+					html += `<td id=a${piName}></td>`;
+					html += `<td>${obj.piPrice}</td>`;
+					html += `<td id=p${piName}>${obj.scAmount * obj.piPrice}</td>`; // 이게표시해주는건 의미없음
+					html += `<tr>`;
+
+
+				}
+				result += obj.scAmount * obj.piPrice;
+			}
+			cartList.innerHTML = html;
+
+
+			//상품가격을 합산한후 가격을 표시해준다
+			document.querySelector(`#paymoney`).innerText = result;
+
+			//상품 총금액에 따라 배송비표시가 달라진다
+			if (result >= 50000) {
+				deliverymoney.textContent = 0;
+				result += 0;
+			} else {
+				deliverymoney.textContent = 2500;
+				result += 2500;
+			}
+
+			//반복문을통해서 수량과 가격표시
+			//배열에 담은 상품들만 추려내서 가격과 수량 합산
+			for (let i = 0; i < productName.length; i++) {
+
+				let amount = 0;
+				let price = 0;
+				for (let obj of objs) {
+					let piName = obj.piName.replaceAll(' ', '').replaceAll('(', '').replaceAll(')', '').replaceAll('?', '').replaceAll('.', '').replaceAll('/', '');
+					if (productName[i] == piName) {
+						amount += obj.scAmount;
+						price += obj.scAmount * obj.piPrice;
+					}
+				}
+
+
+				document.querySelector('#totalpay').innerText = result; // 최종 결제금액
+				document.querySelector(`#a${productName[i]}`).innerText = amount;
+				document.querySelector(`#p${productName[i]}`).innerText = price;
+			}
+
+
+
+			//------------------------------------------------------------------------------
+
+			//--------------------------------------유저 정보 -------------------------------------------
+			const UserRes = await fetch(`/user-infos/${objs[0].uiNum}`);
+			const json = await UserRes.json();
+			console.log(json);
+			document.querySelector('#uiName').value = json.uiName;
+			document.querySelector('#uiPhone').value = json.uiPhone;
+
+
+
+			const addrRes = await fetch(`/addr-infos/${objs[0].uiNum}`);
+			const userAddr = await addrRes.json();
+			console.log(userAddr);
+
+			// 우편번호와 주소 정보를 해당 필드에 넣는다.
+			document.querySelector('#postCode').value = userAddr.aiZoneCode;
+			document.querySelector('#extraAddress').value = userAddr.aiExtraAddress;
+			document.querySelector('#address').value = userAddr.aiAddress;
+			document.querySelector('#detailAddress').value = userAddr.aiDetailAddress;
+
+			addressData.type = userAddr.aiType;
+
+			addressData.apartment = userAddr.aiApartment;
+			addressData.jibunAddress = userAddr.aiJibunAddress;
+			addressData.roadAddress = userAddr.aiRoadAddress;
+			addressData.roadAddressEnglish = userAddr.aiRoadAddressEnglish;
+			addressData.buildingName = userAddr.aiBuildingName;
+			addressData.jibunAddressEnglish = userAddr.aiJibunAddressEnglish;
+			//-------------------------------------------쿠폰 정보 불러오기 -------------------------------------------------
+
+			const CouponRes = await fetch('/coupon-infos');
+			const CouponObjs = await CouponRes.json();
+			console.log(CouponObjs.length);
+			let cpHtml = '';
+			//쿠폰을 옵션 셀렉션형태로 표현해준다
+			if (CouponObjs.length === 0) {
+				cpHtml += `<option value="0원" data-condition="0">쿠폰이 없습니다</option>`
+				document.querySelector('#couponInfos').innerHTML = cpHtml;
+			} else {
+				for (let CouponObj of CouponObjs) {
+
+					if (CouponObj.cptiDiscount != 0 && CouponObj.cptiDiscount != null) {
+
+						cpHtml += `<option value="${CouponObj.cptiDiscount}원" data-condition="${CouponObj.cptiCondition}" name="${CouponObj.cpiNum}">쿠폰명 : ${CouponObj.cptiName} , 쿠폰 할인 : ${CouponObj.cptiDiscount}원, 쿠폰 유효기간 : ${CouponObj.cpiExpire}, 쿠폰 사용조건: ${CouponObj.cptiCondition}원 이상</option>`
+					}
+					if (CouponObj.cptiDiscountRate != 0 && CouponObj.cptiDiscountRate != null) {
+						cpHtml += `<option value="${CouponObj.cptiDiscountRate}%" data-condition="${CouponObj.cptiCondition}" name="${CouponObj.cpiNum}">쿠폰명 : ${CouponObj.cptiName} , 쿠폰 할인 : ${CouponObj.cptiDiscountRate}%, 쿠폰 유효기간 : ${CouponObj.cpiExpire}, 쿠폰 사용조건: ${CouponObj.cptiCondition}원 이상</option>`
+					}
+				}
+
+
+				//이제 쿠폰 선택하고 적용누르면 금액도 변하게 해야함
+				//상품금액도 변하게하고 쿠폰적용금액도 표시되게하기
+				document.querySelector('#couponInfos').insertAdjacentHTML("beforeend", cpHtml);
+			}
+		}
+
+		//-------------------------------------------주소 api-------------------------------------------------
+		// 주소 등록할때 주소 찾아서 화면에 보여주는 부분
+		function userPost() {
+			new daum.Postcode({
+				oncomplete: function (data) {
+					console.log(data);
+					addressData.type = data.addressType;
+					addressData.apartment = data.apartment;
+					addressData.jibunAddress = data.jibunAddress;
+					addressData.roadAddress = data.roadAddress;
+					addressData.roadAddressEnglish = data.roadAddressEnglish;
+					addressData.buildingName = data.buildingName;
+					addressData.jibunAddressEnglish = data.jibunAddressEnglish;
+					// 팝업에서 검색결과 항목을 클릭했을때 실행하는 부분.
+					// 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+					let addr = ''; // 주소 변수
+					let extraAddr = ''; // 참고항목 변수
+
+					//사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+					if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+						addr = data.roadAddress;
+					} else { // 사용자가 지번 주소를 선택했을 경우(J)
+						addr = data.jibunAddress;
+					}
+
+					// 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+					if (data.userSelectedType === 'R') {
+						// 법정동명이 있을 경우 추가한다. (법정리는 제외)
+						// 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+						if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+							extraAddr += data.bname;
+						}
+						// 건물명이표시할 있고, 공동주택일 경우 추가한다.
+						if (data.buildingName !== '' && data.apartment === 'Y') {
+							extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+						}
+						// 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+						if (extraAddr !== '') {
+							extraAddr = ' (' + extraAddr + ')';
+						}
+						// 조합된 참고항목을 해당 필드에 넣는다.
+						document.querySelector('#extraAddress').value = extraAddr;
+
+					} else {
+						document.querySelector('#extraAddress').value = '';
+					}
+
+					// 우편번호와 주소 정보를 해당 필드에 넣는다.
+					document.querySelector('#postCode').value = data.zonecode;
+					document.querySelector('#address').value = addr;
+					// 커서를 상세주소 필드로 이동한다.
+					document.querySelector('#detailAddress').focus();
+				}
+			}).open();
+		}
+
+		//----------------------------------------------------------------------------------------------------
+		// 주소 등록하는 부분
+		async function addrRegister() {
+			console.log(addressData);
+			if (addressData.type == '') {
+				alert('우편번호를 먼저 찾아서 변경해 주세요');
+				return;
+			}
+
+			// 데이터값들을 VO속성에 맞게 정의f
+			const data = {
+				uiNum: uiNum,
+				aiZoneCode: document.querySelector('#postCode').value,
+				aiAddress: document.querySelector('#address').value,
+				aiDetailAddress: document.querySelector('#detailAddress').value,
+				aiExtraAddress: document.querySelector('#extraAddress').value,
+				aiType: addressData.type,
+				aiApartment: addressData.apartment,
+				aiJibunAddress: addressData.jibunAddress,
+				aiJibunAddressEnglish: addressData.jibunAddressEnglish,
+				aiRoadAddress: addressData.roadAddress,
+				aiRoadAddressEnglish: addressData.roadAddressEnglish,
+				aiBuildingName: addressData.buildingName
+			};
+			// 서버에 업데이트 요청 보냄                         
+			const res = await fetch(`/addr-infos`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8'
+				},
+				body: JSON.stringify(data)
+			});
+			if (res.status === 200) {
+				alert('등록 완료');
+			} else {
+				alert('에러');
+			}
+		}
+		//토스 결제 api
+		async function tossPay() {
+			const re = await checkAddress();
+			if (re == 1) {
+				return;
+			}
+			//유저
+			const UserRes = await fetch(`/user-infos/${uiNum}`);
+			const json = await UserRes.json();
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+			//장바구니
+			const CartRes = await fetch('/shopping-carts');
+			const objs = await CartRes.json();
+			let result = 0;
+			for (let obj of objs) {
+				result += obj.scAmount * obj.piPrice;
+			}
+
+
+			IMP.init('imp54100264');
+
+			IMP.request_pay({
+				pg: "tosspay.tosstest",
+				pay_method: "card",
+				merchant_uid: "order_no_" + uuid, // 상점에서 생성한 고유 주문번호 이거는 따로 새로만들어야할듯
+				name: "주문명:결제테스트", // 필수 파라미터 입니다.
+				amount: finalPay.textContent, //가격 0은안된다 
+				buyer_email: json.uiEmail,
+				buyer_name: json.uiName,
+				buyer_tel: json.uiPhone,
+				buyer_addr: userAddr.aiAddress,
+				buyer_postcode: userAddr.aiZoneCode,
+				m_redirect_url: `https://fbsports.co.kr/fbs/user/mypage` //{결제 완료 후 리디렉션 될 URL}
+			}, function (rsp) { // callback 로직
+				/* ...중략... */
+				if (rsp.success) {
+					//결제성공
+					console.log(rsp);
+					PaySuccess(rsp.pg_provider);
+				} else {
+					//결제 실패
+					console.log(rsp);
+				}
+
+			});
+		}
+
+		//card 결제 KG 이니시스 
+		async function cardPay() {
+			const re = await checkAddress();
+			if (re == 1) {
+				return;
+			}
+			//유저
+			const UserRes = await fetch(`/user-infos/${uiNum}`);
+			const json = await UserRes.json();
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+			//장바구니
+			const CartRes = await fetch('/shopping-carts');
+			const objs = await CartRes.json();
+			let result = 0;
+			for (let obj of objs) {
+				result += obj.scAmount * obj.piPrice;
+			}
+
+			IMP.init('imp54100264');
+
+
+			IMP.request_pay({
+				pg: 'html5_inicis.INIBillTst', //테스트 시 html5_inicis.INIpayTest 기재 
+				pay_method: 'card',
+				merchant_uid: "order_no_" + uuid, //상점에서 생성한 고유 주문번호
+				name: '주문명:결제테스트',
+				amount: finalPay.textContent, //가격
+				buyer_email: json.uiEmail,
+				buyer_name: json.uiName,
+				buyer_tel: json.uiPhone,   //필수 파라미터 입니다.
+				buyer_addr: userAddr.aiAddress,
+				buyer_postcode: userAddr.aiZoneCode,
+				m_redirect_url: `https://fbsports.co.kr/fbs/user/mypage`, //{모바일에서 결제 완료 후 리디렉션 될 URL}
+				escrow: true, //에스크로 결제인 경우 설정
+				vbank_due: 'YYYYMMDD',
+				bypass: {
+					acceptmethod: "noeasypay", // 간편결제 버튼을 통합결제창에서 제외(PC)
+					P_RESERVED: "noeasypay=Y", // 간편결제 버튼을 통합결제창에서 제외(모바일)
+					acceptmethod: 'cardpoint', // 카드포인트 사용시 설정(PC)
+					P_RESERVED: 'cp_yn=Y'     // 카드포인트 사용시 설정(모바일)
+				},
+				period: {
+					from: "20200101", //YYYYMMDD
+					to: "20201231"   //YYYYMMDD
+				}
+			}, function (rsp) { // callback 로직
+				//* ...중략... *//
+				if (rsp.success) {
+					//결제성공
+					console.log(rsp);
+					PaySuccess(rsp.pg_provider);
+				} else {
+					//결제 실패
+					console.log(rsp);
+				}
+
+			});
+
+
+		}
+
+		//payco 결제 
+		async function Payco() {
+			const re = await checkAddress();
+			if (re == 1) {
+				return;
+			}
+			//유저
+			const UserRes = await fetch(`/user-infos/${uiNum}`);
+			const json = await UserRes.json();
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+			//장바구니
+			const CartRes = await fetch('/shopping-carts');
+			const objs = await CartRes.json();
+			let result = 0;
+			for (let obj of objs) {
+				result += obj.scAmount * obj.piPrice;
+			}
+
+			IMP.init('imp54100264');
+
+			IMP.request_pay({
+				pg: "payco.AUTOPAY",
+				merchant_uid: "order_no_" + uuid, // 상점에서 관리하는 주문 번호
+				name: "주문명:결제테스트",
+				amount: finalPay.textContent, //결제금액
+				buyer_email: json.uiEmail,
+				buyer_name: json.uiName,
+				buyer_tel: json.uiPhone,
+				buyer_addr: userAddr.aiAddress,
+				buyer_postcode: userAddr.aiZoneCode
+			}, function (rsp) { // callback 로직
+				/* ...중략... */
+				if (rsp.success) {
+					//결제성공
+					console.log(rsp);
+					PaySuccess(rsp.pg_provider);
+				} else {
+					//결제 실패
+					console.log(rsp);
+				}
+			});
+		}
+
+		//kakaoPay결제
+		async function kakaoPay() {
+			const re = await checkAddress();
+			if (re == 1) {
+				return;
+			}
+			//유저
+			const UserRes = await fetch(`/user-infos/${uiNum}`);
+			const json = await UserRes.json();
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+			//장바구니
+			const CartRes = await fetch('/shopping-carts');
+			const objs = await CartRes.json();
+			let result = 0;
+			for (let obj of objs) {
+				result += obj.scAmount * obj.piPrice;
+			}
+
+
+			IMP.init('imp54100264');
+
+			IMP.request_pay({
+				pg: "kakaopay.TC0ONETIME",
+				pay_method: "card", // 생략가
+				merchant_uid: "order_no_" + uuid, // 상점에서 생성한 고유 주문번호
+				name: "주문명:결제테스트",
+				amount: finalPay.textContent,
+				buyer_email: json.uiEmail,
+				buyer_name: json.uiName,
+				buyer_tel: json.uiPhone,
+				buyer_addr: userAddr.aiAddress,
+				buyer_postcode: userAddr.aiZoneCode,
+				m_redirect_url: `https://fbsports.co.kr/fbs/user/mypage` //{모바일에서 결제 완료 후 리디렉션 될 URL}
+			}, function (rsp) { // callback 로직
+				/* ...중략... */
+				if (rsp.success) {
+					//결제성공
+					console.log(rsp);
+					PaySuccess(rsp.pg_provider);
+				} else {
+					//결제 실패
+					console.log(rsp);
+				}
+			});
+
+		}
+
+		function Pay() {
+
+			const payNames = document.querySelectorAll('input[name="pay_info"]');
+			const postCode = document.querySelector('input[id="postCode"]');
+			const address = document.querySelector('input[id="address"]');
+			const detailAddress = document.querySelector('input[id="detailAddress"]');
+			let payName = null;
+
+			for (let i = 0; i < payNames.length; i++) {
+				if (payNames[i].checked == true) {
+					payName = payNames[i].value;
+				}
+			}
+			if (postCode.value == '' || address.value == '') {
+				alert('우편번호 찾기를 진행해주세요.');
+				return;
+			}
+
+			if (detailAddress.value == '') {
+				alert('상세주소를 입력해주세요.');
+				detailAddress.focus();
+				return;
+			}
+
+			//선택된 라디오 버튼이 없으면 결제수단을 선택해주세요 라는 메세지 사용
+			if (!payName) {
+				alert('결제 수단을 선택해 주세요');
+				return;
+			}
+			if (!window.flutter_inappwebview) {
+				//선택된 결제 수단에 따라 사용되는 함수들
+				switch (payName) {
+					//토스 결제
+					case 'toss':
+						tossPay();
+						break;
+					//페이코
+					case 'payco':
+						Payco();
+						break;
+					//카카오페이
+					case 'kakao':
+						kakaoPay();
+						break;
+					//카드결제
+					case 'card':
+						cardPay();
+						break;
+				}
+			}
+
+
+		}
+		//ORDER하고 ODI테이블에 인서트되는 부분 
+		async function PaySuccess(payName) {
+			//1. 주문내역 ODER_DETAIL_INFO에 데이터 넣기
+			//2. ORDER_INFO에 데이터 넣기 
+			//3. 장바구니 비우기
+			//4. 결제 완료창으로 이동
+			//--------------------------------------------
+			//OrderInfoVO 객체 생성 , 반복문사용해서 객체담아서 JSON Stringify 로 POST요청으로 보냄
+			let result = 0;
+
+
+			const oi = {
+				oiTotalPrice: 0,
+				oiAddress: '',
+				oiMemo: '',
+				oiMerchantUid: uuid,
+				oiPay: payName,
+				oiCoupon: '',
+				orderDetails: [],
+				message: ''
+			}
+			//유저
+			const UserRes = await fetch(`/user-infos/${uiNum}`);
+			const userjson = await UserRes.json();
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+			//장바구니
+			const CartRes = await fetch('/shopping-carts');
+			const Cartobjs = await CartRes.json();
+			console.log(Cartobjs);
+			for (let Cartobj of Cartobjs) {
+				oi.orderDetails.push({
+					piNum: Cartobj.piNum,
+					odiAmount: Cartobj.scAmount,
+					odiPrice: Cartobj.scAmount * Cartobj.piPrice
+				});
+
+				//여기에 쿠폰이 사용되었으면 가격이 바뀌는것도 추가 해야함
+				//주석처리 해놓겠음
+				result = parseInt(finalPay.textContent);
+				//result += Cartobj.scAmount * Cartobj.piPrice;
+			}
+
+			if (discountMoney.textContent == 0) {
+				oi.oiCoupon = 'N';
+			} else {
+				oi.oiCoupon = 'Y';
+			}
+
+			oi.oiTotalPrice = result;
+			oi.oiAddress = ` ${userAddr.aiAddress} ${userAddr.aiBuildingName} ${userAddr.aiDetailAddress} (${userAddr.aiZoneCode})`;
+			oi.oiMemo = document.querySelector('#memo').value;
+			console.log(oi);
+			//주문내역에 넣으면서 장바구니 초기화
+			const orderRes = await fetch('/order-infos', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(oi)
+
+			}).then(response => {
+				if (response.ok) {
+					alert('결제완료');
+					location.href = `/fbs/order/order-complete?oiMerchantUid=${uuid}`;
+				} else {
+					alert('결제도중 오류가 생겼습니다 다시 시도해주십시오');
+				}
+			})
+			updateUsedCoupon();
+			console.log(orderRes);
+		}
+
+		const finalPay = document.querySelector('#totalpay'); // 최종결제 금액 객체
+		const discountMoney = document.querySelector('#discountmoney'); // 할인금액 객체
+		const deliverymoney = document.querySelector('#deliverymoney'); // 배달비 객체
+		//쿠폰 적용
+		function applyCoupon() {
+			const couponInfos = document.querySelector('#couponInfos'); // 쿠폰 객체
+			const couponselect = couponInfos.options[couponInfos.selectedIndex]; // 선택된 쿠폰의 객체
+			const couponparseInt = couponselect.getAttribute("name"); // 선택된 쿠폰의 name 속성값(쿠폰의 고유값)
+			const couponCondition = parseInt(couponselect.getAttribute("data-condition")); // 선택된 쿠폰의 data-condition 속성값
+			const coupon = couponInfos.value; // 선택한 쿠폰의 value 값
+			const couponValue = parseInt(coupon); // value값 정수화
+			const paymoneyValue = document.querySelector("#paymoney").textContent;
+			let discount = 0;
+			let discountRate = 0;
+			if (couponCondition > parseInt(finalPay.textContent)) {
+				alert('선택한 쿠폰 사용조건에 부합하지 않습니다.');
+				return resetSelect();
+			}
+
+			// 
+			if (coupon.includes("원")) {
+				discount = couponValue; // 할인가격
+				discountMoney.textContent = discount;
+			} else if (coupon.includes("%")) {
+				discountRate = couponValue; // 할인율
+				discountMoney.textContent = Math.ceil(`${paymoneyValue * discountRate * 0.001}`) * 10;
+			}
+
+			// 최종 금액에 따른 배달료 변화
+			if (parseInt(finalPay.textContent) < 50000) {
+				deliverymoney.textContent = 2500;
+			} else {
+				deliverymoney.textContent = 0;
+			}
+
+
+			//
+			finalPay.textContent = `${parseInt(paymoneyValue) - parseInt(discountMoney.textContent) + parseInt(deliverymoney.textContent)}`;
+
+
+			return couponparseInt;
+
+
+		}
+
+		//쿠폰상태를 사용햇다고 표시한다
+		function updateUsedCoupon() {
+			const coupon = applyCoupon();// couponparseInt(ciNum)값
+			const data = {
+				cpiNum: coupon
+			};
+			fetch('/coupon-infos', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json;charset=UTF-8',
+				},
+				body: JSON.stringify(data),
+			})
+		}
+
+		//주소가 들어있는지 확인 
+		async function checkAddress() {
+			//주소
+			const addrRes = await fetch(`/addr-infos/${uiNum}`);
+			const userAddr = await addrRes.json();
+
+			if (userAddr.aiAddress == null || userAddr.aiAddress == '') {
+				alert('주소 등록을 진행해주세요.');
+				return 1;
+			}
+
+			if (userAddr.aiDetailAddress == null || userAddr.aiDetailAddress == '') {
+				alert('상세주소를 입력하고 주소 등록버튼을 눌러주세요.');
+				detailAddress.focus();
+				return 1;
+			}
+		}
+
+		function resetSelect() {
+			document.querySelector("#couponInfos").value = "0원";
+		}
+
+		//uuid를 생성하기위한 함수 정규식을통해서 생성한다
+		function uuidv() {
+			return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+				(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+			);
+		}
+
+
+	</script>
+</body>
+
+</html>

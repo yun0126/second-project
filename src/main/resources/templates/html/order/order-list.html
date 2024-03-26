@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>FBSports 쇼핑몰 관리자 페이지</title>
+</head>
+
+<body>
+	<h1>주문내역</h1>
+	<table border="1">
+		<tr>
+			<td>주문번호</td>
+			<td>결제일</td>
+			<td>결제시간</td>
+			<td>주문 총 가격</td>
+			<td>상세보기</td>
+		</tr>
+		<tbody id="order-list">
+
+		</tbody>
+	</table>
+	<script>
+		window.addEventListener('load', async function () {
+			const res = await fetch('/order-infos');
+			const json = await res.json();
+			console.log(json);
+			let html = ``;
+			for (let obj of json) {
+				html += `<tr>`;
+				html += `<td>${obj.oiMerchantUid}</td>`;
+				html += `<td>${obj.oiCredat}</td>`;
+				html += `<td>${obj.oiCretim}</td>`;
+				html += `<td>${obj.oiTotalPrice}원</td>`;
+				html += `<td><a href="/fbs/order/order-complete?oiMerchantUid=${obj.oiMerchantUid}">[상세보기]</a></td>`;
+				html += `</tr>`;
+			}
+			document.querySelector('#order-list').innerHTML = html;
+		})
+	</script>
+</body>
+
+</html>

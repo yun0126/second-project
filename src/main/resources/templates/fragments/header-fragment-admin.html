@@ -1,0 +1,71 @@
+<!-- Header bootstrap header임-->
+<nav class="navbar navbar-expand-lg navbar-light shadow" th:fragment="header-admin-Fragment"
+	style="background-color: lightgrey">
+	<div class="container d-flex justify-content-between align-items-center">
+
+		<img th:src="@{/imgs/logo2.png}" onclick="location.href='/'" alt="logo" width="200px" class="logo"
+			style="margin-bottom: 5px; cursor: pointer;" />
+		<button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+			data-bs-target="#templatemo_main_nav" aria-controls="navbarSupportedContent" aria-expanded="false"
+			aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="align-self-center collapse navbar-collapse flex-fill  d-lg-flex justify-content-lg-between"
+			id="templatemo_main_nav">
+			<div class="flex-fill">
+				<ul class="nav navbar-nav d-flex justify-content-between mx-lg-auto">
+					<li class="nav-item">
+						<a class="nav-link" href="/html/product/product-list" style="margin-left: 0;">상품관리</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/product/product-insert" style="margin-left: 0;">상품추가</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/type/type-list" style="margin-left: 0;">타입생성</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/order/chart" style="margin-left: 0;">매출</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/user/list" style="margin-left: 0;">유저관리</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/board/list" style="margin-left: 0;">게시판 관리</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="/html/admin/list-admin" style="margin-left: 0;">문의 사항 관리</a>
+					</li>
+				</ul>
+			</div>
+			<div class="navbar align-self-center d-flex">
+				<div class="d-lg-none flex-sm-fill mt-3 mb-4 col-7 col-sm-auto pr-3">
+					<div class="input-group">
+						<input type="text" class="form-control" id="inputMobileSearch" placeholder="Search ...">
+						<div class="input-group-text">
+							<i class="fa fa-fw fa-search"></i>
+						</div>
+					</div>
+				</div>
+				<a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+					data-bs-target="#templatemo_search" style="margin-left: 0;">
+					<i class="fa fa-fw fa-search text-dark mr-2"></i>
+				</a>
+				<a class="nav-icon position-relative text-decoration-none" href="/fbs/shoppingcart/cart-list" style="margin-left: 0;">
+					<i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+					<span
+						class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
+						id="cart"></span>
+				</a>
+				<a class="nav-icon position-relative text-decoration-none" href="/fbs/user/mypage" style="margin-left: 0;">
+					<i class="fa fa-fw fa-user text-dark mr-3"></i>
+					<span
+						class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark"
+						id="coupon"></span>
+				</a>
+			</div>
+		</div>
+
+	</div>
+</nav>
+<!-- Close Header -->

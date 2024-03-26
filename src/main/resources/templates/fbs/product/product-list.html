@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>FBSports 쇼핑몰</title>
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		#subtypeName {
+			font-weight: bold;
+			text-align: center;
+		}
+
+		.card {
+			height: 500px;
+		}
+
+		.img-fluid {
+			max-width: 100%;
+		}
+
+		@media (min-width: 991px) {
+
+			#classificationMenu {
+				display: none;
+			}
+
+		}
+
+
+		@media (max-width: 990px) {
+			.list-unstyled.templatemo-accordion {
+				display: none;
+
+			}
+
+			#product-list {
+				min-height: 6000px;
+			}
+
+			#classificationMenu {
+				display: block;
+			}
+		}
+
+		@media (max-width: 425px) {
+			.pagination-lg .page-link {
+				padding: 0.1rem 0.5rem;
+				font-size: 1.25rem;
+			}
+		}
+	</style>
+
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+
+
+
+
+	<!-- Start Content -->
+
+	<div class="z-0">
+		<div class="container py-5" id="container">
+			<!--카테고리 -->
+			<div class="row">
+				<div class="col-lg-3" id="classification">
+					<h1 class="h2 pb-4" id="subtypeName">카테고리 (전체)</h1>
+					<ul class="list-unstyled templatemo-accordion">
+						<li class="pb-3">
+							<a class="collapsed d-flex justify-content-between h3 text-decoration-none"
+								href="javascript:void(0)" data-url="/fbs/product/product-list">
+								전체
+							</a>
+						</li>
+					</ul>
+
+					<div id="classificationMenu" style="cursor: pointer;" class="pb-3">
+						<a>카테고리
+							<i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+						</a>
+
+					</div>
+
+					<ul class="list-unstyled templatemo-accordion">
+						<li class="pb-3">
+							<a class="collapsed d-flex justify-content-between h3 text-decoration-none"
+								href="javascript:void(0)">
+								야구
+								<i class="fa fa-fw fa-chevron-circle-down mt-1"></i>
+							</a>
+							<ul id="collapse1" class="collapse show list-unstyled pl-3">
+
+							</ul>
+						</li>
+						<li class="pb-3">
+							<a class="collapsed d-flex justify-content-between h3 text-decoration-none"
+								href="/fbs/product/product-list?tiName=축구">
+								축구
+								<i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
+							</a>
+							<ul id="collapse2" class="collapse list-unstyled pl-3">
+
+							</ul>
+						</li>
+
+						<li class="pb-3">
+							<a class="collapsed d-flex justify-content-between h3 text-decoration-none"
+								href="/fbs/product/product-list?tiName=헬스">
+								헬스
+								<i class="pull-right fa fa-fw fa-chevron-circle-down mt-1"></i>
+							</a>
+							<ul id="collapse3" class="collapse list-unstyled pl-3">
+
+							</ul>
+						</li>
+					</ul>
+
+				</div>
+
+				<!--0---------------------------상품 -->
+				<div class="col-lg-9">
+					<div class="row">
+						<div class="col-md-6">
+							<ul class="list-inline shop-top-menu pb-3 pt-1">
+
+							</ul>
+						</div>
+						<div class="col-md-6 pb-4">
+							<div class="d-flex">
+								<select class="form-control" id="ChoosepageSize" onchange="ProductList()">
+									<option value="12" selected>12개</option>
+									<option value="24">24개</option>
+									<option value="36">36개</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<!-- 상품  -->
+					<div class="row" id="product-list">
+
+					</div>
+
+
+
+					<div class="row">
+						<ul class="pagination pagination-lg justify-content-center" id="pageNumber">
+
+							<li class="page-item">
+								<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark"
+									href="#">2</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link rounded-0 shadow-sm border-top-0 border-left-0 text-dark"
+									href="#">3</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+		<!-- End Content -->
+
+		<!-- Start Brands -->
+		<section class="bg-light py-5">
+			<div class="container my-4">
+				<div class="row text-center py-3">
+					<div class="col-lg-6 m-auto">
+						<h1 class="h1"><b>Our Brands</b></h1>
+						<p>
+							안전하고 믿을 수 있는 쇼핑 경험을 고객에게 제공합니다.<br>
+							다양한 브랜드와 제품을 안전하고 신속하게 제공하며,<br>
+							고객에게 최상의 품질과 서비스를 약속합니다
+						</p>
+					</div>
+					<div class="col-lg-9 m-auto tempaltemo-carousel">
+						<div class="row d-flex flex-row">
+							<!--Controls-->
+							<div class="col-1 align-self-center">
+								<a class="h1" href="#multi-item-example" role="button" data-bs-slide="prev">
+									<i class="text-light fas fa-chevron-left"></i>
+								</a>
+							</div>
+							<!--End Controls-->
+
+							<!--Carousel Wrapper-->
+							<div class="col">
+								<div class="carousel slide carousel-multi-item pt-2 pt-md-0" id="multi-item-example"
+									data-bs-ride="carousel">
+									<!--Slides-->
+									<div class="carousel-inner product-links-wap" role="listbox">
+
+										<!--First slide-->
+										<div class="carousel-item active">
+											<div class="row">
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_01.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_02.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_03.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_04.png}" alt="Brand Logo"></a>
+												</div>
+											</div>
+										</div>
+										<!--End First slide-->
+
+										<!--Second slide-->
+										<div class="carousel-item">
+											<div class="row">
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_01.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_02.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_03.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_04.png}" alt="Brand Logo"></a>
+												</div>
+											</div>
+										</div>
+										<!--End Second slide-->
+
+										<!--Third slide-->
+										<div class="carousel-item">
+											<div class="row">
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_01.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_02.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_03.png}" alt="Brand Logo"></a>
+												</div>
+												<div class="col-3 p-md-5">
+													<a href="#"><img class="img-fluid brand-img"
+															th:src="@{/assets/img/brand_04.png}" alt="Brand Logo"></a>
+												</div>
+											</div>
+										</div>
+										<!--End Third slide-->
+
+									</div>
+									<!--End Slides-->
+								</div>
+							</div>
+							<!--End Carousel Wrapper-->
+
+							<!--Controls-->
+							<div class="col-1 align-self-center">
+								<a class="h1" href="#multi-item-example" role="button" data-bs-slide="next">
+									<i class="text-light fas fa-chevron-right"></i>
+								</a>
+							</div>
+							<!--End Controls-->
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</section>
+		<!--End Brands-->
+
+		<!-- footer-fragment / script-fragment -->
+		<th:block th:replace="fragments/footer-fragment :: footer-bootstrap-Fragment"></th:block>
+		<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+	</div>
+	<script>
+		/*
+		   템플릿으로 가져와서 이젠 주석이 거의 의미가없어졋습니다..
+		*/
+		let pageSize = 0;
+		let i = 0;
+
+		const ProductList = async function (evt, page, pLink) {
+			//let targetMenu = $('#classificationMenu').next();
+			//targetMenu.removeClass('active').slideUp();
+			cartlength();
+			couponlength();
+			//페이징버튼을 클릭한 순간 매번 리스트 화면을 초기화 시켜준다. 항상 새로 삽입해주기때문에
+			document.querySelector('#product-list').innerHTML = '';
+
+			//옵션에 선택된 값을 사용해서 페이지 사이즈를 바꿈
+			const ChoosepageSize = document.querySelector('#ChoosepageSize');
+
+			//페이지 사이즈 이거바꾸면 바뀜 일단 테스트용으로 10했음
+			pageSize = ChoosepageSize.options[ChoosepageSize.selectedIndex].value;
+			//페이지 몇갠지 보여주는것
+			const blockSize = 5;
+
+			//검색을 위해서 파라미터들을 넣었음 페이징도 추가
+			const xhr = new XMLHttpRequest();
+			if (!page) {
+				page = 1;
+			}
+			let link = pLink || `/product-infos/helper?page=${page}&pageSize=${pageSize}`
+				+ '&piName=[[${param.piName}]]&stiName=[[${param.stiName}]]&tiName=[[${param.tiName}]]';
+			xhr.open('GET', link);
+			xhr.onreadystatechange = async function () {
+				if (xhr.readyState == 4) {
+					if (xhr.status == 200) {
+						//페이지 헬퍼를 통한 응답 객체
+						const res = JSON.parse(xhr.responseText);
+						console.log(res);
+						const totalCnt = res.total; // 검색된 상품 총 개수 
+						const pageBlock = Math.ceil(totalCnt / pageSize); // 총 페이지 개수
+						const startBlock = (Math.ceil(page / blockSize) - 1) * blockSize + 1; // 1~ 10일땐 페이지 시작점이 1
+						let endBlock = startBlock + blockSize - 1; // 1~10일땐 마지막페이지가 10이여야함
+						if (endBlock > pageBlock) {
+							endBlock = pageBlock;
+						}
+						let pageHtml = '';
+
+						//여기다가 id값 추가하면 css활용도가 높아지겠죠 ?^^
+						if (startBlock != 1) {
+							pageHtml += `<li class="page-item">
+                            				<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="javascript:void(0)" tabindex="-1" onclick="ProductList(event,${startBlock - 1})">◀</a>
+                        				 </li>`
+						}
+
+						for (let j = startBlock; j <= endBlock; j++) {
+							if (!pLink) {
+								// 페이지의 번호와 버튼의 번호가 일치하면 active 아니라면 삭제하는 식으로 현재페이지 표시
+								pageHtml += `<li class="page-item">
+                        						<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark ${page === j ? 'active' : ''}" href="#" tabindex="-1" onclick="ProductList(event,${j})" id="page${j}">${j} </a>
+                    						 </li>`;
+							} else {
+								//이게 문자열이 이상하게 들어가서 몇가지 테스트후 이렇게 했습니다 뭔가 이상하긴한데 작동은잘되네요 ㅠ 
+								pLink = pLink.replaceAll(`&page=${page}&pageSize=${pageSize}`, ``)
+								pLink = pLink.replaceAll(`page=${j}&pageSize=${pageSize}&`, ``) + `&page=${j}&pageSize=${pageSize}`;
+
+								pageHtml += `<li class="page-item">
+						                        <a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark ${page === j ? 'active' : ''}" href="#" tabindex="-1" onclick="ProductList(event ,${j}, '${pLink}')" id="page${j}">${j} </a>
+						                     </li>`;
+								pLink = pLink.replaceAll(`&page=${j}&pageSize=${pageSize}`, ``)
+
+
+							}
+						}
+
+						if (endBlock < pageBlock) { // 10 <= 21
+							pageHtml += `<li class="page-item">
+                            				<a class="page-link rounded-0 mr-3 shadow-sm border-top-0 border-left-0 text-dark" href="javascript:void(0)" tabindex="-1" onclick="ProductList(event,${endBlock + 1})">▶</a>
+                        				 </li>`
+
+
+						}
+
+						document.querySelector('#pageNumber').innerHTML = pageHtml;
+
+
+						//그중에 리스트 객체인데 결국 ProductVO입니다.
+						const objs = JSON.parse(xhr.responseText).list;
+
+						let html = '';
+						for (let obj of objs) {
+							const AvgRes = await fetch(`/comment-info/average?piNum=${obj.piNum}`);
+							const average = await AvgRes.text();
+							const avg = Number(average);
+
+							html += `<!-- 상품  -->
+									<div class="col-md-4">
+										<div class="card mb-4 product-wap rounded-0">
+											<div class="card rounded-0">
+												<img class="card-img rounded-0 img-fluid" src="${obj.pfiImgPath}" height="300px">
+												<div
+													class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
+													<ul class="list-unstyled">
+														<li><a class="btn btn-success text-white mt-2" href="/fbs/product/product-view?piNum=${obj.piNum}" onclick="addRecentInfo(${obj.piNum})"><i
+																	class="far fa-eye"></i></a></li>
+														<li onclick="insertCart(${obj.piNum})"><a class="btn btn-success text-white mt-2" href="#"><i
+																	class="fas fa-cart-plus"></i></a></li>
+													</ul>
+												</div>
+											</div>
+											<div class="card-body" onclick="location.href='/fbs/product/product-view?piNum=${obj.piNum}'" style="cursor:pointer;">
+												<a href="/fbs/product/product-view?piNum=${obj.piNum}" class="h3 text-decoration-none" onclick="addRecentInfo(${obj.piNum})">${obj.piName}</a>
+												<ul class="w-100 list-unstyled d-flex justify-content-between mb-0">
+													<li>M/L/X/XL</li>
+													<li class="pt-2">
+								 						<span
+															class="product-color-dot color-dot-red float-left rounded-circle ml-1"></span>
+														<span
+															class="product-color-dot color-dot-blue float-left rounded-circle ml-1"></span>
+														<span
+															class="product-color-dot color-dot-black float-left rounded-circle ml-1"></span>
+														<span
+															class="product-color-dot color-dot-light float-left rounded-circle ml-1"></span>
+														<span
+															class="product-color-dot color-dot-green float-left rounded-circle ml-1"></span>
+													</li>
+												</ul>
+												<ul class="list-unstyled d-flex justify-content-center mb-1">
+													<li>`
+							for (let is = 0; is < avg; is++) {
+								html += `<i class="text-warning fa fa-star"></i>`
+							}
+							for (let j = 0; j < 5 - avg; j++) {
+								html += `<i class="text-muted fa fa-star"></i>`
+							}
+
+
+							html += `
+													</li>
+												</ul>
+												<p class="text-center mb-0">${obj.piPrice}원</p>
+											</div>
+										</div>
+									</div>`
+
+
+
+						}
+						document.querySelector(`#product-list`).innerHTML = html;
+					}
+				}
+			}
+			xhr.send();
+
+			if (!pLink) {
+				getSubType();
+			}
+
+		}
+
+		//서브 타입
+		async function getSubType() {
+			const res = await fetch('/subtype-infos');
+			const objs = await res.json();
+			for (let obj of objs) {
+				let idSti = obj.stiName.replaceAll(' ', '').replaceAll('/', '').replaceAll('(', '').replaceAll(')', '');
+				const html = `<li><a class="text-decoration-none" href="javascript:void(0)" data-href="/product-infos/helper?page=1&pageSize=${pageSize}&stiName=${obj.stiName}" id="${idSti}">&nbsp;&nbsp;${obj.stiName}</a></li>`;
+				if (!document.querySelector(`#${idSti}`)) {
+					document.querySelector(`#collapse${obj.tiNum}`).insertAdjacentHTML("beforeend", html);
+				}
+
+			}
+
+			$('li>a[data-href]').on('click', async function () {
+				console.log(this);
+				//a[data-href] 요소 전부 가져옴
+				let links = document.querySelectorAll('a[data-href]');
+				//가져온 요소들 스타일 원래대로 적용
+				for (let link of links) {
+					link.style.fontWeight = '500';
+					link.style.color = 'black';
+				}
+				//클릭한 요소 아이디값가져와서 스타일 적용
+				document.querySelector(`#${this.getAttribute('id')}`).style.fontWeight = 'bolder';
+				document.querySelector(`#${this.getAttribute('id')}`).style.color = '#59ab6e';
+				document.querySelector('#subtypeName').innerText = this.getAttribute('id');
+
+
+				//신기하네요..
+				await ProductList(null, 1, this.getAttribute('data-href'));
+			})
+
+
+
+			$('a[data-url]').on('click', async function () {
+				console.log(this);
+				let pageSize = ChoosepageSize.options[ChoosepageSize.selectedIndex].value;
+				console.log(pageSize);
+				//a[data-href] 요소 전부 가져옴
+				let links = document.querySelectorAll('a[data-href]');
+				//가져온 요소들 스타일 원래대로 적용
+				for (let link of links) {
+					link.style.fontWeight = '500';
+					link.style.color = 'black';
+				}
+
+				await ProductList(null, 1, `/product-infos/helper?page=1&pageSize=${pageSize}`);
+				document.querySelector('#subtypeName').innerText = '카테고리 (전체)';
+			})
+		}
+
+		async function cartlength() {
+			//장바구니 수량 계산해서 몇개있는지 표시해줌
+			const CartRes = await fetch('/shopping-carts');
+
+			const Cartobjs = await CartRes.text();
+
+			if (Cartobjs != '') {
+				Cartjson = JSON.parse(Cartobjs);
+				let html = Cartjson.length;
+				document.querySelector('#cart').innerText = html;
+			}
+		}
+
+		async function couponlength() {
+			// 유저가 보유한 쿠폰 개수 계산해서 몇개있는지 표시
+			const CouponRes = await fetch('/coupon-infos');
+			const Couponobjs = await CouponRes.text();
+
+			if (Couponobjs != '') {
+				Couponjson = JSON.parse(Couponobjs);
+				let Couponhtml = Couponjson.length;
+				document.querySelector('#coupon').innerText = Couponhtml;
+			}
+
+		}
+
+
+		// 이미지 클릭 시 실행될 함수
+		function addRecentInfo(piNum, uiNum) {
+			// 서버에 요청을 보냅니다.
+			fetch('/recent-infos', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					piNum: piNum,
+					uiNum: uiNum
+				}),
+			})
+		}
+
+		//상품 쇼핑카트에 추가
+		async function insertCart(piNum) {
+			const pordRes = await fetch(`/product-infos/${piNum}`);
+			const prodInfo = await pordRes.json();
+
+			const cart = {
+				piNum: prodInfo.piNum,
+				scAmount: 1 // 상품 구매 수량
+			}
+			const res = await fetch('/shopping-carts', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(cart)
+			});
+			const text = await res.json();
+			if (text == 1) {
+				// 상품 쇼핑카트에 추가시 확인 메시지
+				if (confirm("장바구니에 추가 되었습니다. 장바구니로 이동하시겠습니까?") == true) {
+					//장바구니 화면으로 이동하게하기
+					location.href = '/fbs/shoppingcart/cart-list';
+				} else {
+					location.href = '/fbs/product/product-list';
+				}
+			}
+		}
+
+		$('#classificationMenu').click(function () {
+			var target = $(this).next();
+			if (!target.hasClass('active')) {
+				$(this).find('i').attr('class', 'fa fa-fw fa-chevron-circle-up mt-1');
+				target.addClass('active').slideDown();
+			} else {
+				target.removeClass('active').slideUp();
+				$(this).find('i').attr('class', 'fa fa-fw fa-chevron-circle-down mt-1')
+			}
+			return false;
+		});
+
+		var isOpenMenu = false;
+		$('.navbar-toggler.border-0').click(function () {
+
+			if (!isOpenMenu) {
+				isOpenMenu = true;
+				console.log(isOpenMenu);
+				if (isOpenMenu) {
+					document.querySelector('#classification').style.display = 'none';
+				}
+			} else {
+				isOpenMenu = false;
+				console.log(isOpenMenu);
+				document.querySelector('#classification').style.display = 'block';
+			}
+
+
+		});
+
+		//document.querySelector("#page3").onclick = function(){
+		//    this.style.backgroundColor ="blue";
+		//    document.querySelector("#page2").style.backgroundColor ="red";
+		//};
+
+		window.addEventListener('load', ProductList);
+	</script>
+
+
+</body>
+
+</html>

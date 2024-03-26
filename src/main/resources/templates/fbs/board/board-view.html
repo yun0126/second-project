@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>FBSports 쇼핑몰</title>
+
+	<link th:href="@{/css/navbar.css}" rel="stylesheet" />
+	<link rel="stylesheet" th:href="@{/css/common.css}">
+	<link rel="stylesheet" th:href="@{/css/main.css}">
+	<style>
+		h3 {
+			text-align: center;
+			color: cornflowerblue;
+		}
+
+		/* 게시판 테이블에 대한 스타일 정의 */
+		table {
+			border-collapse: collapse;
+
+			margin: 20px auto;
+			background-color: #fff;
+			border: 1px solid #ddd;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
+		}
+
+		th,
+		td {
+			border: 1px solid #ddd;
+			padding: 20px;
+			text-align: center;
+		}
+
+		th {
+			background-color: #667380;
+			color: #fff;
+			border-bottom: 2px solid #ddd;
+		}
+
+		/* 버튼에 대한 스타일 정의 */
+		table button {
+			padding: 8px;
+			margin: 2px;
+			background-color: cornflowerblue;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		#biNum {
+			padding: 15px;
+			color: #667380;
+			border-bottom: 2px solid #ddd;
+		}
+
+		#uiNum {
+			color: #888;
+		}
+
+
+		@media (max-width: 520px) {
+			.container {
+				width: 100vh auto;
+				box-sizing: border-box;
+				padding: 0 15px;
+			}
+
+			table {
+				width: 100%;
+				min-width: 300px;
+				box-sizing: border-box;
+				margin: 20px 0;
+				/* 마진을 위아래만 설정하여 좌우 여백 제거 */
+			}
+
+			.biContent {
+				width: 100vh auto;
+				min-width: 300px;
+
+			}
+
+
+			#biContent img {
+				max-width: 100%;
+				height: auto;
+			}
+
+			th,
+			td {
+				padding: 10px;
+				/* 모바일 환경에 맞게 패딩 줄임 */
+			}
+
+			.tbody {
+				width: 300px;
+				min-width: 300px;
+				margin: 20px 0;
+			}
+
+			/* 버튼에 대한 스타일을 조정하여 모바일 화면에 맞게 조정 가능 */
+			table button {
+				padding: 6px 10px;
+				margin: 5px;
+				/* 버튼의 마진 조정 */
+				font-size: 0.875rem;
+				/* 버튼의 글자 크기를 조정 */
+			}
+		}
+	</style>
+
+
+
+
+
+	<!-- head 태그들 -->
+	<th:block th:replace="fragments/header-script :: header-script-Fragment"></th:block>
+</head>
+
+<body>
+	<!-- nav header modal script(검색창)-->
+	<th:block th:replace="fragments/nav-fragment :: nav-Fragment"></th:block>
+	<th:block th:replace="fragments/header-fragment :: header-bootstrap-Fragment"></th:block>
+	<th:block th:replace="fragments/modal-fragment :: modal-Fragment"></th:block>
+	<th:block th:replace="fragments/script-fragment :: script-Fragment"></th:block>
+
+	<h3 style="margin-top: 30px;">[ 게시물 상세보기 ]</h3>
+	<div id="container">
+		<table border="1" style="text-align: center;">
+			<tr>
+				<td colspan="6" id="biNum"><input type="text" readonly></td>
+			</tr>
+			<tr>
+				<td id="uiNum"> </td>
+				<td id="biTitle"></td>
+				<td id="tiName"></td>
+				<td id="piName"></td>
+				<td id="biViews"></td>
+			</tr>
+
+			<tr>
+				<td colspan="6" id="biContent"></td>
+			</tr>
+			<tr>
+				<td colspan="6">
+					<button class="btn btn-secondary" onclick="goUpdate()">수정</button>
+					<button class="btn btn-danger" onclick="deleteBoard()">삭제</button>
+					<button class="btn btn-primary" onclick="location.href='/fbs/board/board-list'">게시판목록</button>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<script>
+			let boardFiles;
+			window.addEventListener('load', async function () {
+				//장바구니 수량 계산해서 몇개있는지 표시해줌
+				const CartRes = await fetch('/shopping-carts');
+				const Cartobjs = await CartRes.text();
+
+				if (Cartobjs != '') {
+					Cartjson = JSON.parse(Cartobjs);
+					let html = Cartjson.length;
+					document.querySelector('#cart').innerText = html;
+				} else {
+					document.querySelector('#cart').innerText = '0';
+				}
+
+				const res = await fetch('/board-infos/[[${param.biNum}]]');
+				console.log(res);
+				const boardInfo = await res.json();
+				console.log(boardInfo);
+				boardFiles = boardInfo.boardFiles;
+				console.log(boardFiles);
+				console.log(boardInfo.boardFiles);
+				document.querySelector('#biNum').innerHTML = `게시물 번호 : ${boardInfo.biNum}`;
+				document.querySelector('#uiNum').innerHTML = `작성자 : ${boardInfo.uiName}`;
+				document.querySelector('#biTitle').innerHTML = `제목 : ${boardInfo.biTitle}`;
+				document.querySelector('#biContent').innerHTML = boardInfo.biContent;
+				document.querySelector('#biViews').innerHTML = `조회수 : ${boardInfo.biViews}`;
+				document.querySelector('#piName').innerHTML = `상품명 : ${boardInfo.piName}`;
+				document.querySelector('#tiName').innerHTML = `타입 : ${boardInfo.tiName}`;
+
+				const btns = document.querySelectorAll('.btn');
+
+				const sessionRes = await fetch('/username');
+				let username = await sessionRes.text();
+				if (username !== boardInfo.uiId) {
+					for (let btn of btns) {
+						btn.style.display = 'none';
+					}
+				}
+			})
+
+			function goUpdate() {
+				const biNum = '[[${param.biNum}]]';
+				location.href = `/fbs/board/board-update?biNum=${biNum}`;
+			}
+
+			function deleteBoard() {
+				fetch('/board-infos/[[${param.biNum}]]', {
+					method: 'DELETE',
+				})
+					.then(response => {
+						if (response.ok) {
+							alert('게시물 삭제 완료');
+							location.href = '/fbs/board/board-list';
+						} else {
+							alert('삭제 도중 오류');
+						}
+					})
+			}
+		</script>
+		</script>
+</body>
+
+</html>
